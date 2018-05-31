@@ -3,7 +3,7 @@ exports.up = function(knex, Promise) {
 			table.increments('product_thumbnail_id')
 			table.string('thumbnail_url')
 			table.integer('product_id')
-			table.timestamps()
+			table.timestamps(true, true)
 
 			table.foreign('product_id')
 				.references('product_id')

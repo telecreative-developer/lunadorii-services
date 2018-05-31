@@ -16,11 +16,11 @@ router.get('/products', authentication, (req, res) => {
 		.catch(err => console.log('Error on GET_ALL_PRODUCTS', err))
 })
 
-// Get Product with Product Id
+// Get Single Product
 router.get('/product/:product_id', authentication, (req, res) => {
-	Promise.resolve(() => retrieveProductByProductId(req.params.product_id))
+	Promise.resolve(() => retrieveSingleProduct(req.params.product_id))
 		.then(response => res.status(response.status).json(response))
-		.catch(err => console.log('Error on GET_PRODUCT_BY_PRODUCT_ID', err))
+		.catch(err => console.log('Error on GET_SINGLE_PRODUCT', err))
 })
 
 // Update Product

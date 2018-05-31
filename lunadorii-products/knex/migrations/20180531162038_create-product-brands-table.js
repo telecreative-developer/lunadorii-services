@@ -2,8 +2,8 @@ exports.up = function(knex, Promise) {
   return knex.schema.createTable('product_brands', table => {
 			table.increments('product_brand_id')
 			table.string('brand')
-			table.text('brand_logo')
-			table.timestamps()
+			table.text('logo_url')
+			table.timestamps(true, true)
 		})
 		.then(() => console.log('Product Brands table created'))
 		.catch(() => console.log('There was an error with the Product Brands table'))
