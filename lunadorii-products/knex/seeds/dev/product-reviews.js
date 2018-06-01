@@ -1,4 +1,3 @@
-
 exports.seed = function(knex, Promise) {
   // Deletes ALL existing entries
   return knex('product_reviews').del()
@@ -33,3 +32,4 @@ exports.seed = function(knex, Promise) {
       ])
     })
 }
+

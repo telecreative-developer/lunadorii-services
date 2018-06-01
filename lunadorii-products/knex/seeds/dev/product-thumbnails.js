@@ -1,4 +1,3 @@
-
 exports.seed = function(knex, Promise) {
   // Deletes ALL existing entries
   return knex('product_thumbnails').del()
@@ -20,6 +19,6 @@ exports.seed = function(knex, Promise) {
         {thumbnail_url: 'https://cdns.klimg.com/vemale.com/headline/650x325/2017/07/ladies-ini-lho-manfaat-produk-skincare-natural-st-ives.jpg', product_id: 5},
         {thumbnail_url: 'https://cdn.sribu.com/assets/media/contest_detail/2017/10/pembuatan-label-arischa-59edbee49d68b10f2d0bde4e/a79e24beea.jpg', product_id: 5},
         {thumbnail_url: 'https://cdn.sribu.com/assets/media/contest_detail/2017/10/pembuatan-label-arischa-59edbee49d68b10f2d0bde4e/076df631da.jpg', product_id: 5}
-      ]);
-    });
-};
+      ])
+    })
+}

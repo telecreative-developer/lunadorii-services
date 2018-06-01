@@ -6,6 +6,8 @@ exports.up = function(knex, Promise) {
 			table.text('detail')
 			table.text('to_use')
 			table.integer('price')
+			table.boolean('discount').defaultTo(false)
+			table.integer('discount_percentage').defaultTo(0)
 			table.integer('product_category_id')
 			table.integer('product_brand_id')
 			table.timestamps(true, true)
