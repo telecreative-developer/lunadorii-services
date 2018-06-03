@@ -12,7 +12,7 @@ exports.seed = function(knex, Promise) {
           price: 200000,
           discount: true,
           discount_percentage: 100,
-          product_category_id: 1,
+          product_subcategory_id: 1,
           product_brand_id: 1
         },
         {
@@ -23,7 +23,7 @@ exports.seed = function(knex, Promise) {
           price: 100000,
           discount: true,
           discount_percentage: 50,
-          product_category_id: 2,
+          product_subcategory_id: 2,
           product_brand_id: 2
         },
         {
@@ -34,7 +34,7 @@ exports.seed = function(knex, Promise) {
           price: 300000,
           discount: true,
           discount_percentage: 30,
-          product_category_id: 2,
+          product_subcategory_id: 2,
           product_brand_id: 2
         },
         {
@@ -45,7 +45,7 @@ exports.seed = function(knex, Promise) {
           price: 100000,
           discount: false,
           discount_percentage: 0,
-          product_category_id: 3,
+          product_subcategory_id: 3,
           product_brand_id: 3
         },
         {
@@ -56,7 +56,7 @@ exports.seed = function(knex, Promise) {
           price: 200000,
           discount: false,
           discount_percentage: 0,
-          product_category_id: 4,
+          product_subcategory_id: 4,
           product_brand_id: 4
         },
         {
@@ -67,7 +67,7 @@ exports.seed = function(knex, Promise) {
           price: 500000,
           discount: true,
           discount_percentage: 20,
-          product_category_id: 5,
+          product_subcategory_id: 5,
           product_brand_id: 5
         }
       ])

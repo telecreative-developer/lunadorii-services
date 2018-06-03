@@ -3,24 +3,50 @@ const Promise = require('bluebird')
 const router = express.Router()
 const authentication = require('../../middleware/authentication')
 const {
-	retrieveProducts,
-	retrieveSingleProduct,
+	getAllProducts,
+	getSingleProduct,
+	getProductBrands,
+	getProductBrandsWithProducts,
+	getProductCategories,
+	getProductCategoriesWithSubcategories,
+	getProductSubcategories,
 	updateProduct,
 	deleteProduct
 } = require('../../dispatchers/products')
 
 // Get All Products
 router.get('/products', authentication, (req, res) => {
-	Promise.try(() => retrieveProducts())
+	Promise.try(() => getAllProducts())
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log('Error on GET_ALL_PRODUCTS', err))
 })
 
 // Get Single Product
-router.get('/product/:product_id', (req, res) => {
-	Promise.try(() => retrieveSingleProduct(req.params.product_id))
+router.get('/product/:product_id', authentication, (req, res) => {
+	Promise.try(() => getSingleProduct(req.params.product_id))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log('Error on GET_SINGLE_PRODUCT', err))
+})
+
+// Get All Product Brands
+router.get('/product-brands', authentication, (req, res) => {
+	Promise.try(() => req.query.with_product ? getProductBrandsWithProducts() : getProductBrands())
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log('Error on GET_ALL_PRODUCT_BRANDS', err))
+})
+
+// Get All Product Catgeories
+router.get('/product-categories', authentication, (req, res) => {
+	Promise.try(() => req.query.with_subcategories ? getProductCategoriesWithSubcategories() : getProductCategories() )
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log('Error on GET_ALL_PRODUCT_CATEGORIES', err))
+})
+
+// Get All Product Catgeories
+router.get('/product-subcategories', authentication, (req, res) => {
+	Promise.try(() => getProductSubcategories())
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log('Error on GET_ALL_PRODUCT_SUBCATEGORIES', err))
 })
 
 // Update Product
