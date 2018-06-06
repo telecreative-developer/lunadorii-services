@@ -15,3 +15,22 @@ Request Parameter data Structure
 | ------------- |:-------------:| --------------------------------------------------------|
 | Email         | String        | Input email ‘kevinhermawan@gmail.com’ has been provided |
 | Password      | String        | Input password ‘kevinhermawan‘ has been provided        |
+
+
+### Users
+
+##### Purpose: GET Information Users
+
+##### Method: HTTP GET
+##### Transport message format: JSON
+##### Response Code:  
+##### 200 Success, 400 Bad Request, 404 Not Found, 500 Internal Server Error
+
+Request Parameter data Structure
+
+| Property           |Data Type      | Description                                             |
+| ------------------ |:-------------:| ---------------|
+| First_name         | String        | Firstname user |
+| Last_name          | String        | Lastname user  |
+| Email              | String        | Email user     |
+| Password           | String        | Password user  |
