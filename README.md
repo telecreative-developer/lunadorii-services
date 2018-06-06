@@ -15,6 +15,6 @@ Response Code:
 Request Parameter data Structure
 
 | Property      | Data Type     | Description                                             |
-| ------------- |:-------------:| :------------------------------------------------------:|
+| ------------- |:-------------:| --------------------------------------------------------|
 | Email         | String        | Input email ‘kevinhermawan@gmail.com’ has been provided |
 | Password      | String        | Input password ‘kevinhermawan‘ has been provided        |
