@@ -1,13 +1,13 @@
 # Lunadorii Services
 
-### Authentication Access
+## Authentication Access
 
-##### Purpose: Get Token Access API
+### Purpose: Get Token Access API
 
-##### Method: HTTP POST
-##### Transport message format: JSON
-##### Response Code:  
-##### 200 Success, 400 Bad Request, 404 Not Found, 500 Internal Server Error
+###### Method: HTTP POST
+###### Transport message format: JSON
+###### Response Code:  
+###### 200 Success, 400 Bad Request, 404 Not Found, 500 Internal Server Error
 
 Request Parameter data Structure
 
@@ -17,14 +17,14 @@ Request Parameter data Structure
 | password      | String        | Input password ‘kevinhermawan‘ has been provided        |
 
 
-### Users
+## Users
 
-##### Purpose: Register Users
+### Purpose: Register Users
 
-##### Method: HTTP POST
-##### Transport message format: JSON
-##### Response Code:  
-##### 200 Success, 400 Bad Request, 404 Not Found, 500 Internal Server Error
+###### Method: HTTP POST
+###### Transport message format: JSON
+###### Response Code:  
+###### 200 Success, 400 Bad Request, 404 Not Found, 500 Internal Server Error
 
 Request Parameter data Structure
 
@@ -36,12 +36,12 @@ Request Parameter data Structure
 | password           | String        | Password user  |
 
 
-##### Purpose: GET Information Users
+### Purpose: GET Information Users
 
-##### Method: HTTP GET
-##### Transport message format: JSON
-##### Response Code:  
-##### 200 Success, 400 Bad Request, 404 Not Found, 500 Internal Server Error
+###### Method: HTTP GET
+Transport message format: JSON
+###### Response Code:  
+###### 200 Success, 400 Bad Request, 404 Not Found, 500 Internal Server Error
 
 Request Parameter data Structure
 
