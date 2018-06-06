@@ -39,7 +39,25 @@ Request Parameter data Structure
 ### Purpose: GET Information Users
 
 ###### Method: HTTP GET
-Transport message format: JSON
+###### Transport message format: JSON
+###### Response Code:  
+###### 200 Success, 400 Bad Request, 404 Not Found, 500 Internal Server Error
+
+Request Parameter data Structure
+
+| Property           |Data Type      | Description    |
+| ------------------ |:-------------:| ---------------|
+| id                 | Integer       | Id user        |
+| first_name         | String        | Firstname user |
+| last_name          | String        | Lastname user  |
+| email              | String        | Email user     |
+| password           | String        | Password user  |
+
+
+### Purpose: UPDATE Information Users
+
+###### Method: HTTP PUT
+###### Transport message format: JSON
 ###### Response Code:  
 ###### 200 Success, 400 Bad Request, 404 Not Found, 500 Internal Server Error
 
