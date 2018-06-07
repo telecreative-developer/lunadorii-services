@@ -12,6 +12,7 @@ This API reference is organized by resource type. Each resource type has one or 
 | 400       | Bad Request           |
 | 401       | Token is not provided |
 | 403       | Forbidden             |
+| 409       | Conflicts             |
 | 500       | Internal Server Error |
 
 ## Resource types
@@ -272,7 +273,6 @@ This API reference is organized by resource type. Each resource type has one or 
     "status": 409
 }
 ```
-
 ##### Field can not be empty
 ```javascript
 {
@@ -296,7 +296,7 @@ This API reference is organized by resource type. Each resource type has one or 
 |-----|-------------|----------------------------------------------------|---------------|--------------------|
 | 1   | GET         | /api/v1/products                                   | 200, 500      | :x:                |
 | 2   | GET         | /api/v1/product/:product_id                        | 200, 500      | :x:                |
-| 3   | PUT         | /api/v1/product/:product_id                        | 201, 400, 500 | :white_check_mark: |
+| 3   | PUT         | /api/v1/product/:product_id                        | 200, 400, 500 | :white_check_mark: |
 | 4   | DELETE      | /api/v1/product/:product_id                        | 200, 500      | :white_check_mark: |
 | 5   | GET         | /api/v1/product-brands                             | 200, 500      | :x:                |
 | 6   | GET         | /api/v1/product-brands?with_product=true           | 200, 500      | :x:                |
@@ -488,4 +488,54 @@ This API reference is organized by resource type. Each resource type has one or 
 }
 ```
 
+#### 3. UPDATE product
+### Request
+```javascript
+{
+    "product": "Product Name",
+    "description": "Product Description",
+    "detail": "Product Detail",
+    "to_use": "How to use",
+    "price": 200000,
+    "discount": true,
+    "discount_percentage": 100,
+    "product_subcategory_id": 1,
+    "product_brand_id": 1
+}
+```
+
+### Response
+#### Success
+
+```javascript
+{
+    "name": "success",
+    "message": "Success Update Product",
+    "status": 200,
+    "data": 1
+}
+```
+#### 3. DELETE product
+
+### Response
+#### Success
+
+```javascript
+{
+    "name": "success",
+    "message": "Success Delete Product",
+    "status": 200,
+    "data": 1
+}
+```
+
+#### Failed
+##### Field can not be empty
+```javascript
+{
+    "name": "error",
+    "message": {},
+    "status": 500
+}
+```
 #### Failed
