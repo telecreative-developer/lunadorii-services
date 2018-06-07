@@ -73,9 +73,10 @@ This API reference is organized by resource type. Each resource type has one or 
 |----|-------------|----------------------------------|--------------------|--------------------|
 | 1  | GET         | /api/v1/users                    | 200, 500           | :white_check_mark: |
 | 2  | GET         | /api/v1/user/:id                 | 200, 201, 400, 500 | :white_check_mark: |
-| 3  | PUT         | /api/v1/user/:id                 | 200, 201, 400, 500 | :white_check_mark: |
-| 4  | POST        | /api/v1/user/register            | 201, 400, 500      | :x:                |
-| 5  | PUT         | /api/v1/user/change-password/:id | 201, 400, 500      | :white_check_mark: |
+| 3  | PUT         | /api/v1/user/:id                 | 201, 400, 500      | :white_check_mark: |
+| 4  | POST        | /api/v1/user/register            | 201, 400, 409, 500 | :x:                |
+| 5  | PUT         | /api/v1/user/change-email/:id    | 201, 400, 409, 500 | :white_check_mark: |
+| 6  | PUT         | /api/v1/user/change-password/:id | 201, 400, 500      | :white_check_mark: |
 
 ### Description
 #### 1. GET all users information
@@ -110,6 +111,79 @@ This API reference is organized by resource type. Each resource type has one or 
         },
         ...
     ]
+}
+```
+
+#### 2. GET single user information
+
+### Response
+
+#### Success
+
+```javascript
+{
+    "name": "success",
+    "message": "Success Retrieving User",
+    "status": 200,
+    "data": [
+        {
+            "id": 1,
+            "first_name": "User first name",
+            "last_name": "User last name",
+            "email": "User email",
+            "password": "User password",
+            "created_at": "created at",
+            "updated_at": "updated at"
+        }
+    ]
+}
+```
+
+#### 3. UPDATE single user information
+### Request
+
+```javascript
+{
+    "first_name": "Kevin",
+    "last_name": "Hermawan"
+}
+```
+
+### Response
+
+#### Success
+
+```javascript
+{
+    "name": "success",
+    "message": "Success Update User",
+    "status": 200,
+    "data": 1
+}
+```
+
+#### 4. Register user
+### Request
+
+```javascript
+{
+    "first_name": "Kevin",
+    "last_name": "Hermawan",
+    "email": "kevinhermawanx@gmail.com",
+    "password": "kevinhermawan"
+}
+```
+
+### Response
+
+#### Success
+
+```javascript
+{
+    "name": "success",
+    "message": "Success Update User",
+    "status": 200,
+    "data": 1
 }
 ```
 
