@@ -57,7 +57,7 @@ This API reference is organized by resource type. Each resource type has one or 
     "status": 400
 }
 ```
-#### Error object name 
+##### Error object name 
 ```javascript
 {
     "name": "error",
@@ -114,7 +114,7 @@ This API reference is organized by resource type. Each resource type has one or 
 ```
 
 #### Failed
-
+##### Token not provided
 ```javascript
 {
     "name": "error",
@@ -122,7 +122,7 @@ This API reference is organized by resource type. Each resource type has one or 
     "status": 401
 }
 ```
-
+##### Token does not match
 ```javascript
 {
     "name": "error",
@@ -133,7 +133,7 @@ This API reference is organized by resource type. Each resource type has one or 
     "status": 401
 }
 ```
-
+##### Token expired
 ```javascript
 {
     "name": "error",
