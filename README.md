@@ -182,7 +182,52 @@ This API reference is organized by resource type. Each resource type has one or 
 {
     "name": "success",
     "message": "Success Update User",
-    "status": 201,
+    "status": 200,
+    "data": 1
+}
+```
+
+#### 5. UPDATE user email
+### Request
+
+```javascript
+{
+    "email": "kevinhermawanx@gmail.com"
+}
+```
+
+### Response
+
+#### Success
+
+```javascript
+{
+    "name": "success",
+    "message": "Success Update Email",
+    "status": 200,
+    "data": 1
+}
+```
+
+#### 6. UPDATE password
+### Request
+
+```javascript
+{
+    "old_password": "kevinhermawan",
+    "new_password": "kevin"
+}
+```
+
+### Response
+
+#### Success
+
+```javascript
+{{
+    "name": "success",
+    "message": "Success Update Password",
+    "status": 200,
     "data": 1
 }
 ```
@@ -233,6 +278,14 @@ This API reference is organized by resource type. Each resource type has one or 
 {
     "name": "error",
     "message": {},
+    "status": 500
+}
+```
+##### Old password is incorrect
+```javascript
+{
+    "name": "error",
+    "message": "Old password is incorrect",
     "status": 500
 }
 ```
