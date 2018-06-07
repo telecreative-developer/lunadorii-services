@@ -22,3 +22,13 @@ Lunadorii API Services 1.0 uses JSON Web Token to authenticate all services
 | HTTP Method         | HTTP Request           | HTTP Code     |
 | ------------------- |------------------------|---------------|
 | POST                | /api/v1/auth/user      | 201, 400, 500 |
+
+### Users
+
+| HTTP Method         | HTTP Request                     | HTTP Code     | Token Required     |
+|---------------------|----------------------------------|---------------|--------------------|
+| GET                 | /api/v1/users                    | 200, 500      | :white_check_mark: |
+| GET                 | /api/v1/user/:id                 | 200, 500      | :white_check_mark: |
+| POST                | /api/v1/user/register            | 201, 400, 500 | :x:                |
+| PUT                 | /api/v1/user/:id                 | 201, 400, 500 | :white_check_mark: |
+| PUT                 | /api/v1/user/change-password/:id | 201, 400, 500 | :white_check_mark: |
