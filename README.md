@@ -182,7 +182,7 @@ This API reference is organized by resource type. Each resource type has one or 
 {
     "name": "success",
     "message": "Success Update User",
-    "status": 200,
+    "status": 201,
     "data": 1
 }
 ```
@@ -217,6 +217,23 @@ This API reference is organized by resource type. Each resource type has one or 
         "expiredAt": "2018-06-05T16:22:09.000Z"
     },
     "status": 401
+}
+```
+##### Email is already in use
+```javascript
+{
+    "name": "error",
+    "message": "Email is already in use",
+    "status": 409
+}
+```
+
+##### Field can not be empty
+```javascript
+{
+    "name": "error",
+    "message": {},
+    "status": 500
 }
 ```
 
