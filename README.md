@@ -538,4 +538,3 @@ This API reference is organized by resource type. Each resource type has one or 
     "status": 500
 }
 ```
-#### Failed
