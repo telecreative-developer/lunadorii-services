@@ -22,6 +22,41 @@ This API reference is organized by resource type. Each resource type has one or 
 |----|-------------|-------------------|---------------|
 | 1  | POST        | /api/v1/auth/user | 201, 400, 500 |
 
+### Description
+1. POST email and password for authenticate all services
+
+### Request
+
+```javascript
+{
+    "email": "kevinhermawanx@gmail.com",
+    "password": "kevinhermawan"
+}
+```
+
+### Response
+#### Success
+
+```javascript
+{
+    "name": "success",
+    "message": "Login Success",
+    "status": 201,
+    "accessToken": "tokenxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "refreshToken": "refreshtokenxxxxxxxxxxxxxxxxxxxxxxxx"
+}
+```
+
+#### Failed
+
+```javascript
+{
+    "name": "error",
+    "message": "Incorrect email or password",
+    "status": 400
+}
+```
+
 ### Users
 #### For users services
 
