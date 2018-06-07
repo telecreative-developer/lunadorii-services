@@ -48,11 +48,20 @@ This API reference is organized by resource type. Each resource type has one or 
 ```
 
 #### Failed
+Incorrect email or password
 
 ```javascript
 {
     "name": "error",
     "message": "Incorrect email or password",
+    "status": 400
+}
+```
+Error object name 
+```javascript
+{
+    "name": "error",
+    "message": "Missing credentials",
     "status": 400
 }
 ```
@@ -67,6 +76,75 @@ This API reference is organized by resource type. Each resource type has one or 
 | 3  | PUT         | /api/v1/user/:id                 | 200, 201, 400, 500 | :white_check_mark: |
 | 4  | POST        | /api/v1/user/register            | 201, 400, 500      | :x:                |
 | 5  | PUT         | /api/v1/user/change-password/:id | 201, 400, 500      | :white_check_mark: |
+
+### Description
+1. GET all users information
+
+### Response
+
+#### Success
+
+```javascript
+{
+    "name": "success",
+    "message": "Success Retrieving Users",
+    "status": 200,
+    "data": [
+        {
+            "id": 1,
+            "first_name": "User first name",
+            "last_name": "User last name",
+            "email": "User email",
+            "password": "User password",
+            "created_at": "created at",
+            "updated_at": "updated at"
+        },
+        {
+            "id": 2,
+            "first_name": "User first name",
+            "last_name": "User last name",
+            "email": "User email",
+            "password": "User password",
+            "created_at": "created at",
+            "updated_at": "updated at"
+        },
+        ...
+    ]
+}
+```
+
+#### Failed
+
+```javascript
+{
+    "name": "error",
+    "message": "Token not provided",
+    "status": 401
+}
+```
+
+```javascript
+{
+    "name": "error",
+    "message": {
+        "name": "JsonWebTokenError",
+        "message": "invalid signature"
+    },
+    "status": 401
+}
+```
+
+```javascript
+{
+    "name": "error",
+    "message": {
+        "name": "TokenExpiredError",
+        "message": "jwt expired",
+        "expiredAt": "2018-06-05T16:22:09.000Z"
+    },
+    "status": 401
+}
+```
 
 ### Products
 #### For products services
