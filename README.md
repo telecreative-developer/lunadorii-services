@@ -19,16 +19,32 @@ This API reference is organized by resource type. Each resource type has one or 
 ### Authentication
 Lunadorii API Services 1.0 uses JSON Web Token to authenticate all services
 
-| HTTP Method         | HTTP Request           | HTTP Code     |
-| ------------------- |------------------------|---------------|
-| POST                | /api/v1/auth/user      | 201, 400, 500 |
+| No | HTTP Method | HTTP Request      | HTTP Code     |
+|----|-------------|-------------------|---------------|
+| 1  | POST        | /api/v1/auth/user | 201, 400, 500 |
 
 ### Users
 
-| HTTP Method         | HTTP Request                     | HTTP Code     | Token Required     |
-|---------------------|----------------------------------|---------------|--------------------|
-| GET                 | /api/v1/users                    | 200, 500      | :white_check_mark: |
-| GET                 | /api/v1/user/:id                 | 200, 500      | :white_check_mark: |
-| POST                | /api/v1/user/register            | 201, 400, 500 | :x:                |
-| PUT                 | /api/v1/user/:id                 | 201, 400, 500 | :white_check_mark: |
-| PUT                 | /api/v1/user/change-password/:id | 201, 400, 500 | :white_check_mark: |
+| No | HTTP Method | HTTP Request                     | HTTP Code          | Token Required     |
+|----|-------------|----------------------------------|--------------------|--------------------|
+| 1  | GET         | /api/v1/users                    | 200, 500           | :white_check_mark: |
+| 2  | GET         | /api/v1/user/:id                 | 200, 201, 400, 500 | :white_check_mark: |
+| 3  | PUT         | /api/v1/user/:id                 | 200, 201, 400, 500 | :white_check_mark: |
+| 4  | POST        | /api/v1/user/register            | 201, 400, 500      | :x:                |
+| 5  | PUT         | /api/v1/user/change-password/:id | 201, 400, 500      | :white_check_mark: |
+
+### Products
+
+| No  | HTTP Method | HTTP Request                                       | HTTP Code     | Token Required     |
+|-----|-------------|----------------------------------------------------|---------------|--------------------|
+| 1   | GET         | /api/v1/products                                   | 200, 500      | :x:                |
+| 2   | GET         | /api/v1/product/:product_id                        | 200, 500      | :x:                |
+| 3   | PUT         | /api/v1/product/:product_id                        | 201, 400, 500 | :white_check_mark: |
+| 4   | DELETE      | /api/v1/product/:product_id                        | 200, 500      | :white_check_mark: |
+| 5   | GET         | /api/v1/product-brands                             | 200, 500      | :x:                |
+| 6   | GET         | /api/v1/product-brands?with_product=true           | 200, 500      | :x:                |
+| 7   | GET         | /api/v1/product-categories                         | 200, 500      | :x:                |
+| 8   | GET         | /api/v1/product-categories?with_subcategories=true | 200, 500      | :x:                |
+| 9   | GET         | /api/v1/product-subcategories                      | 200, 500      | :x:                |
+| 10  | POST        | /api/v1/cart                                       | 201, 400, 500 | :white_check_mark: |
+| 11  | GET         | /api/v1/cart/:id                                   | 200, 500      | :x:                |
