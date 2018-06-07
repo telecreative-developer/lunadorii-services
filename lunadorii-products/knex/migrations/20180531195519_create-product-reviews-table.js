@@ -22,7 +22,7 @@ exports.down = function(knex, Promise) {
   return knex.schema
 		.dropTable('product_reviews')
 		.then(() => console.log('Product Reviews table deleted'))
-		.catch(() => console.log('there was an error deleting Product Reviews table'))
+		.catch(() => console.log('There was an error deleting Product Reviews table'))
 }
 
 exports.config = {
