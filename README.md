@@ -515,7 +515,7 @@ This API reference is organized by resource type. Each resource type has one or 
     "data": 1
 }
 ```
-#### 3. DELETE product
+#### 4. DELETE product
 
 ### Response
 #### Success
@@ -526,6 +526,94 @@ This API reference is organized by resource type. Each resource type has one or 
     "message": "Success Delete Product",
     "status": 200,
     "data": 1
+}
+```
+#### 5. GET product brands
+
+### Response
+#### Success
+
+```javascript
+{
+    "name": "success",
+    "message": "Success Get Product Brands",
+    "status": 200,
+    "data": [
+        {
+            "product_brand_id": 1,
+            "brand": "Brand name",
+            "logo_url": "logo url",
+            "created_at": "2018-06-04T06:34:04.196Z",
+            "updated_at": "2018-06-04T06:34:04.196Z"
+        },
+        {
+            "product_brand_id": 2,
+            "brand": "Brand name",
+            "logo_url": "logo url",
+            "created_at": "2018-06-04T06:34:04.196Z",
+            "updated_at": "2018-06-04T06:34:04.196Z"
+        },
+        ...
+    ]
+}
+```
+#### 6. GET product brands with product
+
+### Response
+#### Success
+
+```javascript
+{
+    "name": "success",
+    "message": "Success Get Product Brands with Products",
+    "status": 200,
+    "data": [
+        {
+            "product_brand_id": 1,
+            "brand": "Brand name",
+            "logo_url": "logo url",
+            "products": [
+                {
+                    "product_id": 1,
+                    "product": "Product Name",
+                    "description": "Product Description",
+                    "detail": "Product Detail",
+                    "to_use": "How to use",
+                    "price": 200000,
+                    "discount": true,
+                    "discount_percentage": 100
+                }
+            ]
+        },
+        {
+            "product_brand_id": 2,
+            "brand": "Brand name",
+            "logo_url": "logo url",
+            "products": [
+                {
+                    "product_id": 1,
+                    "product": "Product Name",
+                    "description": "Product Description",
+                    "detail": "Product Detail",
+                    "to_use": "How to use",
+                    "price": 200000,
+                    "discount": true,
+                    "discount_percentage": 100
+                },
+                {
+                    "product_id": 2,
+                    "product": "Product Name",
+                    "description": "Product Description",
+                    "detail": "Product Detail",
+                    "to_use": "How to use",
+                    "price": 200000,
+                    "discount": true,
+                    "discount_percentage": 100
+                }
+            ]
+        },
+        ...
+    ]
 }
 ```
 
