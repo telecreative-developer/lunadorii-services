@@ -133,7 +133,7 @@ This API reference is organized by resource type. Each resource type has one or 
             "email": "User email",
             "password": "User password",
             "created_at": "2018-06-04T06:35:42.443Z",
-            "updated_at": 2018-06-04T06:35:42.443Z"
+            "updated_at": "2018-06-04T06:35:42.443Z"
         }
     ]
 }
@@ -347,7 +347,7 @@ This API reference is organized by resource type. Each resource type has one or 
                 {
                     "product_brand_id": 1,
                     "brand": "Zara",
-                    "logo_url": logo url"
+                    "logo_url": "logo url"
                 }
             ],
             "thumbnails": [
