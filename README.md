@@ -616,6 +616,106 @@ This API reference is organized by resource type. Each resource type has one or 
     ]
 }
 ```
+#### 7. GET product categories
+
+### Response
+#### Success
+
+```javascript
+{
+    "name": "success",
+    "message": "Success Get Product Categories",
+    "status": 200,
+    "data": [
+        {
+            "product_category_id": 1,
+            "category": "Category name",
+            "created_at": "2018-06-04T06:34:04.201Z",
+            "updated_at": "2018-06-04T06:34:04.201Z"
+        },
+        {
+            "product_category_id": 2,
+            "category": "Category name",
+            "created_at": "2018-06-04T06:34:04.201Z",
+            "updated_at": "2018-06-04T06:34:04.201Z"
+        },
+        {
+            "product_category_id": 3,
+            "category": "Category name",
+            "created_at": "2018-06-04T06:34:04.201Z",
+            "updated_at": "2018-06-04T06:34:04.201Z"
+        }
+    ]
+}
+```
+#### 8. GET product categories with subcategories
+
+### Response
+#### Success
+
+```javascript
+{
+    "name": "success",
+    "message": "Success Get Product Categories with Subcategories",
+    "status": 200,
+    "data": [
+        {
+            "product_category_id": 1,
+            "category": "Category name",
+            "subcategories": [
+                {
+                    "product_subcategory_id": 1,
+                    "subcategory": "Subcategory name"
+                },
+                {
+                    "product_subcategory_id": 2,
+                    "subcategory": "Subcategory name"
+                },
+                {
+                    "product_subcategory_id": 3,
+                    "subcategory": "Subcategory name"
+                },
+                ...
+            ]
+        },
+        {
+            "product_category_id": 2,
+            "category": "Category name",
+            "subcategories": [
+                {
+                    "product_subcategory_id": 4,
+                    "subcategory": "Subcategory name"
+                },
+                {
+                    "product_subcategory_id": 5,
+                    "subcategory": "Subcategory name"
+                },
+                {
+                    "product_subcategory_id": 6,
+                    "subcategory": "Subcategory name"
+                },
+                ...
+            ]
+        },
+        {
+            "product_category_id": 3,
+            "category": "Category name",
+            "subcategories": [
+                {
+                    "product_subcategory_id": 11,
+                    "subcategory": "Subcategory name"
+                },
+                {
+                    "product_subcategory_id": 12,
+                    "subcategory": "Subcategory name"
+                },
+                ...
+            ]
+        },
+        ...
+    ]
+}
+```
 
 #### Failed
 ##### Field can not be empty
