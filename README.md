@@ -17,13 +17,13 @@ This API reference is organized by resource type. Each resource type has one or 
 ## Resource types
 
 ### Authentication
-Lunadorii API Services 1.0 uses JSON Web Token to authenticate all services
-
+#### For authentication services
 | No | HTTP Method | HTTP Request      | HTTP Code     |
 |----|-------------|-------------------|---------------|
 | 1  | POST        | /api/v1/auth/user | 201, 400, 500 |
 
 ### Users
+#### For users services
 
 | No | HTTP Method | HTTP Request                     | HTTP Code          | Token Required     |
 |----|-------------|----------------------------------|--------------------|--------------------|
@@ -34,7 +34,7 @@ Lunadorii API Services 1.0 uses JSON Web Token to authenticate all services
 | 5  | PUT         | /api/v1/user/change-password/:id | 201, 400, 500      | :white_check_mark: |
 
 ### Products
-
+#### For products services
 | No  | HTTP Method | HTTP Request                                       | HTTP Code     | Token Required     |
 |-----|-------------|----------------------------------------------------|---------------|--------------------|
 | 1   | GET         | /api/v1/products                                   | 200, 500      | :x:                |
