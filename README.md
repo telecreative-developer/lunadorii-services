@@ -23,7 +23,7 @@ This API reference is organized by resource type. Each resource type has one or 
 | 1  | POST        | /api/v1/auth/user | 201, 400, 500 |
 
 ### Description
-1. POST email and password for authenticate all services
+#### 1. POST email and password for authenticate all services
 
 ### Request
 
@@ -48,7 +48,7 @@ This API reference is organized by resource type. Each resource type has one or 
 ```
 
 #### Failed
-Incorrect email or password
+##### Incorrect email or password
 
 ```javascript
 {
@@ -57,7 +57,7 @@ Incorrect email or password
     "status": 400
 }
 ```
-Error object name 
+#### Error object name 
 ```javascript
 {
     "name": "error",
@@ -78,7 +78,7 @@ Error object name
 | 5  | PUT         | /api/v1/user/change-password/:id | 201, 400, 500      | :white_check_mark: |
 
 ### Description
-1. GET all users information
+#### 1. GET all users information
 
 ### Response
 
