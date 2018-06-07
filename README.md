@@ -716,6 +716,64 @@ This API reference is organized by resource type. Each resource type has one or 
     ]
 }
 ```
+#### 8. GET subcategories
+
+### Response
+#### Success
+
+```javascript
+{
+    "name": "success",
+    "message": "Success Get Product Subcategories",
+    "status": 200,
+    "data": [
+        {
+            "product_subcategory_id": 1,
+            "subcategory": "Subcategory name",
+            "product_category_id": 1,
+            "created_at": "2018-06-04T06:34:55.003Z",
+            "updated_at": "2018-06-04T06:34:55.003Z"
+        },
+        {
+            "product_subcategory_id": 2,
+            "subcategory": "Subcategory name",
+            "product_category_id": 1,
+            "created_at": "2018-06-04T06:34:55.003Z",
+            "updated_at": "2018-06-04T06:34:55.003Z"
+        },
+        {
+            "product_subcategory_id": 3,
+            "subcategory": "Subcategory name",
+            "product_category_id": 1,
+            "created_at": "2018-06-04T06:34:55.003Z",
+            "updated_at": "2018-06-04T06:34:55.003Z"
+        },
+        ...
+    ]
+}
+```
+#### 9. ADD Cart
+
+### Request
+
+```javascript
+{
+    "product_id": 1,
+    "id": 1
+}
+```
+
+### Response
+#### Success
+
+```javascript
+{
+    "name": "success",
+    "message": "Success Add Cart",
+    "status": 201,
+    "data": null
+}
+```
 
 #### Failed
 ##### Field can not be empty
