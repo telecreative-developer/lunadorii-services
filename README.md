@@ -1,72 +1,9 @@
-# Lunadorii Services
+# Lunadorii API Services v1.0 (Codename Arcanist)
 
-## Authentication Access
+With Lunadorii API Services 1.0, you can get users and products information, manage users and products, authentication all services, view and control automation workflows, and test different calls and endpoints before pushing to production.
 
-### Purpose: Get Token Access API
+This API reference is organized by resource type. Each resource type has one or more data representations and one or more methods.
 
-###### Method: HTTP POST
-###### Transport message format: JSON
-###### Response Code:  
-###### 200 Success, 400 Bad Request, 404 Not Found, 500 Internal Server Error
+## Resource types
 
-Request Parameter data Structure
-
-| Property      | Data Type     | Description                                             |
-| ------------- |:-------------:| --------------------------------------------------------|
-| email         | String        | Input email ‘kevinhermawan@gmail.com’ has been provided |
-| password      | String        | Input password ‘kevinhermawan‘ has been provided        |
-
-
-## Users
-
-### Purpose: Register Users
-
-###### Method: HTTP POST
-###### Transport message format: JSON
-###### Response Code:  
-###### 200 Success, 400 Bad Request, 404 Not Found, 500 Internal Server Error
-
-Request Parameter data Structure
-
-| Property           |Data Type      | Description    |
-| ------------------ |:-------------:| ---------------|
-| first_name         | String        | Firstname user |
-| last_name          | String        | Lastname user  |
-| email              | String        | Email user     |
-| password           | String        | Password user  |
-
-
-### Purpose: GET Information Users
-
-###### Method: HTTP GET
-###### Transport message format: JSON
-###### Response Code:  
-###### 200 Success, 400 Bad Request, 404 Not Found, 500 Internal Server Error
-
-Request Parameter data Structure
-
-| Property           |Data Type      | Description    |
-| ------------------ |:-------------:| ---------------|
-| id                 | Integer       | Id user        |
-| first_name         | String        | Firstname user |
-| last_name          | String        | Lastname user  |
-| email              | String        | Email user     |
-| password           | String        | Password user  |
-
-
-### Purpose: UPDATE Information Users
-
-###### Method: HTTP PUT
-###### Transport message format: JSON
-###### Response Code:  
-###### 200 Success, 400 Bad Request, 404 Not Found, 500 Internal Server Error
-
-Request Parameter data Structure
-
-| Property           |Data Type      | Description    |
-| ------------------ |:-------------:| ---------------|
-| id                 | Integer       | Id user        |
-| first_name         | String        | Firstname user |
-| last_name          | String        | Lastname user  |
-| email              | String        | Email user     |
-| password           | String        | Password user  |
+### Authentication
