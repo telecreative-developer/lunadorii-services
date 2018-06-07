@@ -97,8 +97,8 @@ This API reference is organized by resource type. Each resource type has one or 
             "last_name": "User last name",
             "email": "User email",
             "password": "User password",
-            "created_at": "created at",
-            "updated_at": "updated at"
+            "created_at": "2018-06-04T06:35:42.443Z",
+            "updated_at": "2018-06-04T06:35:42.443Z"
         },
         {
             "id": 2,
@@ -106,8 +106,8 @@ This API reference is organized by resource type. Each resource type has one or 
             "last_name": "User last name",
             "email": "User email",
             "password": "User password",
-            "created_at": "created at",
-            "updated_at": "updated at"
+            "created_at": "2018-06-04T06:35:42.443Z",
+            "updated_at": "2018-06-04T06:35:42.443Z"
         },
         ...
     ]
@@ -132,8 +132,8 @@ This API reference is organized by resource type. Each resource type has one or 
             "last_name": "User last name",
             "email": "User email",
             "password": "User password",
-            "created_at": "created at",
-            "updated_at": "updated at"
+            "created_at": "2018-06-04T06:35:42.443Z",
+            "updated_at": 2018-06-04T06:35:42.443Z"
         }
     ]
 }
@@ -305,3 +305,114 @@ This API reference is organized by resource type. Each resource type has one or 
 | 9   | GET         | /api/v1/product-subcategories                      | 200, 500      | :x:                |
 | 10  | POST        | /api/v1/cart                                       | 201, 400, 500 | :white_check_mark: |
 | 11  | GET         | /api/v1/cart/:id                                   | 200, 500      | :x:                |
+
+## Description
+#### 1. GET all products information
+
+### Response
+#### Success
+
+```javascript
+{
+    "name": "success",
+    "message": "Success Get Products",
+    "status": 200,
+    "data": [
+        {
+            "product_id": 1,
+            "product": "Product Name",
+            "description": "Product Description",
+            "detail": "Product Detail",
+            "to_use": "How to use",
+            "price": 200000,
+            "discount": true,
+            "discount_percentage": 100,
+            "created_at": "2018-06-04T06:35:42.443Z",
+            "updated_at": "2018-06-04T06:35:42.443Z",
+            "subcategories": [
+                {
+                    "product_subcategory_id": 3,
+                    "subcategory": "Eyes"
+                },
+                {
+                    "product_subcategory_id": 2,
+                    "subcategory": "Lips"
+                },
+                {
+                    "product_subcategory_id": 1,
+                    "subcategory": "Face"
+                }
+            ],
+            "brands": [
+                {
+                    "product_brand_id": 1,
+                    "brand": "Zara",
+                    "logo_url": logo url"
+                }
+            ],
+            "thumbnails": [
+                {
+                    "product_thumbnail_id": 1,
+                    "thumbnail_url": "thumbnail url"
+                },
+                {
+                    "product_thumbnail_id": 2,
+                    "thumbnail_url": "thumbnail url"
+                },
+                {
+                    "product_thumbnail_id": 3,
+                    "thumbnail_url": "thumbnail url"
+                }
+            ],
+            "reviews": [
+                {
+                    "product_review_id": 1,
+                    "review_rate": 1,
+                    "comment": "Recommend product!"
+                },
+                {
+                    "product_review_id": 2,
+                    "review_rate": 2,
+                    "comment": "Recommend product!"
+                },
+                {
+                    "product_review_id": 3,
+                    "review_rate": 3,
+                    "comment": "Recommend product!"
+                },
+                {
+                    "product_review_id": 4,
+                    "review_rate": 4,
+                    "comment": "Recommend product!"
+                },
+                {
+                    "product_review_id": 5,
+                    "review_rate": 5,
+                    "comment": "Recommend product!"
+                }
+            ],
+            "product_rate": 3
+        },
+        ...
+    ]
+}
+```
+
+#### Failed
+##### Incorrect email or password
+
+```javascript
+{
+    "name": "error",
+    "message": "Incorrect email or password",
+    "status": 400
+}
+```
+##### Error object name 
+```javascript
+{
+    "name": "error",
+    "message": "Missing credentials",
+    "status": 400
+}
+```
