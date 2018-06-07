@@ -54,8 +54,13 @@ const productCategoriesDefinition = [{
 	}]
 }]
 
+const cartDefinition = [{
+	cart_id: {column: 'cart_id', id: true}
+}]
+
 module.exports = {
 	productsDefinition,
 	productBrandsDefinition,
-	productCategoriesDefinition
+	productCategoriesDefinition,
+	cartDefinition
 }

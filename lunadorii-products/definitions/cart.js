@@ -4,4 +4,4 @@ const cartDefinition = [{
 	updated_at: {column: 'updated_at'}
 }]
 
-module.exports = cartDefinition
+module.exports = { cartDefinition }

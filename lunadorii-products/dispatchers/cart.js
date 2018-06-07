@@ -5,18 +5,18 @@ const configuration = require('../knexfile')[environment]
 const knex = require('knex')(configuration)
 const NestHydrationJS = require('nesthydrationjs')()
 const { successResponse, errorResponse } = require('../responsers')
-const cartDefinition = '../definitions/cart'
+const { cartDefinition } = '../definitions/products'
+
+exports.addCart = (data) => {
+	return knex('cart')
+		.insert(data)
+		.then(response => successResponse(null, 'Success Add Cart', 201))
+		.catch(err => errorResponse(err, 500))
+}
 
 exports.getCart = (id) => {
 	return knex('cart')
-		.where('cart.id', id)
-		.innerJoin('products', 'products.product_id', 'cart.product_id')
-		.innerJoin('product_thumbnails', 'product_thumbnails.product_id', 'cart.product_id')
-		.innerJoin('users', 'users.id', 'cart.id')
+		.innerJoin('users', 'cart.id', 'users.id')
 		.then(response => NestHydrationJS.nest(response, cartDefinition))
 		.then(response => successResponse(response, 'Success Get Cart', 200))
-		.catch(err => {
-			console.log(err)
-			errorResponse(err, 500)
-		})
 }
