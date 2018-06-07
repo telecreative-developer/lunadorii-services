@@ -209,7 +209,7 @@ This API reference is organized by resource type. Each resource type has one or 
 }
 ```
 
-#### 6. UPDATE password
+#### 6. UPDATE user password
 ### Request
 
 ```javascript
@@ -224,7 +224,7 @@ This API reference is organized by resource type. Each resource type has one or 
 #### Success
 
 ```javascript
-{{
+{
     "name": "success",
     "message": "Success Update Password",
     "status": 200,
