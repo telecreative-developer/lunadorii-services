@@ -5,7 +5,7 @@ const router = express.Router()
 const jwt = require('jsonwebtoken')
 const passport = require('passport')
 
-router.post('/auth/user', (req, res) => {
+router.post('/auth/admin', (req, res) => {
 	passport.authenticate('local', {session: false}, (error, response, info) => {
 		if (error || !response) {
       return res.status(400).json({
@@ -24,7 +24,7 @@ router.post('/auth/user', (req, res) => {
 				})
       }
 
-      const accessToken = jwt.sign({id: response.id, role: 'user'}, process.env.JWT_SECRET_KEY, {
+      const accessToken = jwt.sign({admin_id: response.admin_id, role: 'admin'}, process.env.JWT_SECRET_KEY, {
       	subject: 'lunadorii',
 		    algorithm: 'HS256',
 		    expiresIn: '7d',
@@ -34,7 +34,7 @@ router.post('/auth/user', (req, res) => {
 		    }
       })
 
-      const refreshToken = jwt.sign({id: response.id, role: 'user'}, process.env.JWT_SECRET_KEY, {
+      const refreshToken = jwt.sign({admin_id: response.admin_id, role: 'admin'}, process.env.JWT_SECRET_KEY, {
       	subject: 'lunadorii',
 		    algorithm: 'HS256',
 		    expiresIn: '10d',
