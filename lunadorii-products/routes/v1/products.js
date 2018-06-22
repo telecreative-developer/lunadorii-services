@@ -81,8 +81,8 @@ router.get('/wishlist/:id', authentication, (req, res) => {
 })
 
 // Delete Wishlist
-router.delete('/wishlist/:id', authentication, (req, res) => {
-	Promise.try(() => removeWishlist(req.params.id))
+router.delete('/wishlist/:wishlist_id', authentication, (req, res) => {
+	Promise.try(() => removeWishlist(req.params.wishlist_id))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log('Error on DELETE_WISHLIST', err))
 })
