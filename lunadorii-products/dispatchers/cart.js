@@ -32,7 +32,7 @@ exports.getCart = (id) => {
 		.then(response => successResponse(response, 'Success Get Cart', 200))
 }
 
-export.updateCartQty = (cart_id, qty) => {
+exports.updateCartQty = (cart_id, qty) => {
 	return knex('cart')
 		.where('cart_id', cart_id)
 		.update({
