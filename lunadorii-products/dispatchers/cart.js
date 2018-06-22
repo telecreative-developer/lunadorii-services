@@ -23,6 +23,10 @@ exports.getCart = (id) => {
 		.innerJoin('product_brands', 'products.product_brand_id', 'product_brands.product_brand_id')
 		.innerJoin('product_thumbnails', 'products.product_id', 'product_thumbnails.product_id')
 		.innerJoin('product_reviews', 'products.product_id', 'product_reviews.product_id')
+		.select(
+			'*',
+			'product_reviews.created_at as product_reviews_created_at',
+			'product_reviews.updated_at as product_reviews_updated_at')
 		.then(response => NestHydrationJS.nest(response, cartDefinition))
 		.then(response => response.map(res => ({
 			...res,

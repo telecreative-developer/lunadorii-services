@@ -24,7 +24,9 @@ const cartDefinition = [{
 	reviews: [{
 		product_review_id: {column: 'product_review_id', id: true},
 		review_rate: {column: 'rate'},
-		comment: {column: 'comment'}
+		comment: {column: 'comment'},
+		created_at: {column: 'product_reviews_created_at'},
+		updated_at: {column: 'product_reviews_updated_at'}
 	}],
 	created_at: {column: 'created_at'},
 	updated_at: {column: 'updated_at'}
