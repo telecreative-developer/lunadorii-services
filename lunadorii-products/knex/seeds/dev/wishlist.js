@@ -1,9 +1,9 @@
 exports.seed = function(knex, Promise) {
   // Deletes ALL existing entries
-  return knex('cart').del()
+  return knex('wishlist').del()
     .then(function () {
       // Inserts seed entries
-      return knex('cart').insert([
+      return knex('wishlist').insert([
         {product_id: 1, id: 1},
         {product_id: 2, id: 1},
         {product_id: 3, id: 1},

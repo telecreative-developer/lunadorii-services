@@ -41,7 +41,7 @@ const productBrandsDefinition = [{
 		to_use: {column: 'to_use'},
 		price: {column: 'price'},
 		discount: {column: 'discount'},
-		discount_percentage: {column: 'discount_percentage'},
+		discount_percentage: {column: 'discount_percentage'}
 	}]
 }]
 
@@ -50,17 +50,29 @@ const productCategoriesDefinition = [{
 	category: {column: 'category'},
 	subcategories: [{
 		product_subcategory_id: {column: 'product_subcategory_id', id: true},
+		thumbnail: {column: 'thumbnail'},
 		subcategory: {column: 'subcategory'}
 	}]
 }]
 
-const cartDefinition = [{
-	cart_id: {column: 'cart_id', id: true}
+const productSubcategoriesDefinition = [{
+	product_subcategory_id: {column: 'product_subcategory_id', id: true},
+	subcategory: {column: 'subcategory'},
+	products: [{
+		product_id: {column: 'product_id', id: true},
+		product: {column: 'product'},
+		description: {column: 'description'},
+		detail: {column: 'detail'},
+		to_use: {column: 'to_use'},
+		price: {column: 'price'},
+		discount: {column: 'discount'},
+		discount_percentage: {column: 'discount_percentage'}
+	}]
 }]
 
 module.exports = {
 	productsDefinition,
 	productBrandsDefinition,
 	productCategoriesDefinition,
-	cartDefinition
+	productSubcategoriesDefinition
 }

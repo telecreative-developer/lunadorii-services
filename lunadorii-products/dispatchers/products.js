@@ -5,7 +5,7 @@ const configuration = require('../knexfile')[environment]
 const knex = require('knex')(configuration)
 const NestHydrationJS = require('nesthydrationjs')()
 const { successResponse, errorResponse } = require('../responsers')
-const { productsDefinition, productBrandsDefinition, productCategoriesDefinition } = require('../definitions/products')
+const { productsDefinition, productBrandsDefinition, productCategoriesDefinition, productSubcategoriesDefinition } = require('../definitions/products')
 
 exports.getAllProducts = () => {
 	return knex('products')
@@ -69,6 +69,14 @@ exports.getProductCategoriesWithSubcategories = () => {
 exports.getProductSubcategories = () => {
 	return knex('product_subcategories')
 		.then(response => successResponse(response, 'Success Get Product Subcategories', 200))
+		.catch(err => errorResponse(err, 500))
+}
+
+exports.getProductSubcategoriesWithProducts = () => {
+	return knex('product_subcategories')
+		.innerJoin('products', 'product_subcategories.product_subcategory_id', 'products.product_subcategory_id')
+		.then(response => NestHydrationJS.nest(response, productSubcategoriesDefinition))
+		.then(response => successResponse(response, 'Success Get Product Subcategories with Products', 200))
 		.catch(err => errorResponse(err, 500))
 }
 
