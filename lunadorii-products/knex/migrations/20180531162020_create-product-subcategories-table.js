@@ -3,7 +3,7 @@ exports.up = function(knex, Promise) {
 		.createTable('product_subcategories', table => {
 			table.increments('product_subcategory_id')
 			table.string('subcategory')
-			table.string('thumbnail')
+			table.string('thumbnail_url')
 			table.integer('product_category_id')
 			table.timestamps(true, true)
 

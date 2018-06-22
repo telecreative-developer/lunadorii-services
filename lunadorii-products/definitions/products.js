@@ -50,14 +50,14 @@ const productCategoriesDefinition = [{
 	category: {column: 'category'},
 	subcategories: [{
 		product_subcategory_id: {column: 'product_subcategory_id', id: true},
-		thumbnail: {column: 'thumbnail'},
+		thumbnail_url: {column: 'thumbnail_url'},
 		subcategory: {column: 'subcategory'}
 	}]
 }]
 
 const productSubcategoriesDefinition = [{
 	product_subcategory_id: {column: 'product_subcategory_id', id: true},
-	thumbnail: {column: 'thumbnail'},
+	thumbnail_url: {column: 'thumbnail_url'},
 	subcategory: {column: 'subcategory'},
 	products: [{
 		product_id: {column: 'product_id', id: true},
