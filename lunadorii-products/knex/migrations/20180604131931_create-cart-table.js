@@ -3,6 +3,7 @@ exports.up = function(knex, Promise) {
 			table.increments('cart_id')
 			table.integer('product_id')
 			table.integer('id')
+			table.integer('qty')
 			table.timestamps(true, true)
 
 			table.foreign('product_id')

@@ -15,7 +15,7 @@ const {
 	deleteProduct
 } = require('../../dispatchers/products')
 const { addWishlist, getWishlist, removeWishlist } = require('../../dispatchers/wishlist')
-const { addCart, getCart } = require('../../dispatchers/cart')
+const { addCart, getCart, removeCart } = require('../../dispatchers/cart')
 
 // Get All Products
 router.get('/products', (req, res) => {
@@ -87,18 +87,25 @@ router.delete('/wishlist/:wishlist_id', authentication, (req, res) => {
 		.catch(err => console.log('Error on DELETE_WISHLIST', err))
 })
 
-// Add My Cart
+// Add Cart
 router.post('/cart', authentication, (req, res) => {
 	Promise.try(() => addCart(req.body))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log('Error on ADD_MY_CART', err))
 })
 
-// Get My Cart
+// Get Cart
 router.get('/cart/:id', authentication, (req, res) => {
 	Promise.try(() => getCart(req.params.id))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log('Error on GET_MY_CART', err))
+})
+
+// Delete Cart
+router.delete('/cart/:cart_id', authentication, (req, res) => {
+	Promise.try(() => removeCart(req.params.wishlist_id))
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log('Error on DELETE_WISHLIST', err))
 })
 
 module.exports = router
