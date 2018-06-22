@@ -25,6 +25,10 @@ const cartDefinition = [{
 		product_review_id: {column: 'product_review_id', id: true},
 		review_rate: {column: 'rate'},
 		comment: {column: 'comment'},
+		user: {
+			first_name: {column: 'product_reviews_first_name'},
+			last_name: {column: 'product_reviews_last_name'}
+		},
 		created_at: {column: 'product_reviews_created_at'},
 		updated_at: {column: 'product_reviews_updated_at'}
 	}],

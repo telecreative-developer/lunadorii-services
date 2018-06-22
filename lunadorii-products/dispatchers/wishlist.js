@@ -23,8 +23,11 @@ exports.getWishlist = (id) => {
 		.innerJoin('product_brands', 'products.product_brand_id', 'product_brands.product_brand_id')
 		.innerJoin('product_thumbnails', 'products.product_id', 'product_thumbnails.product_id')
 		.innerJoin('product_reviews', 'products.product_id', 'product_reviews.product_id')
+		.innerJoin('users as product_reviews_users', 'product_reviews.id', 'product_reviews_users.id')
 		.select(
 			'*',
+			'product_reviews_users.first_name as product_reviews_first_name',
+			'product_reviews_users.last_name as product_reviews_last_name',
 			'product_reviews.created_at as product_reviews_created_at',
 			'product_reviews.updated_at as product_reviews_updated_at')
 		.then(response => NestHydrationJS.nest(response, wishlistDefinition))
