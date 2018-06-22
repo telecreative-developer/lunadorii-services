@@ -15,7 +15,7 @@ const {
 	deleteProduct
 } = require('../../dispatchers/products')
 const { addWishlist, getWishlist, removeWishlist } = require('../../dispatchers/wishlist')
-const { addCart, getCart, removeCart } = require('../../dispatchers/cart')
+const { addCart, getCart, updateCartQty, removeCart } = require('../../dispatchers/cart')
 
 // Get All Products
 router.get('/products', (req, res) => {
@@ -91,21 +91,28 @@ router.delete('/wishlist/:wishlist_id', authentication, (req, res) => {
 router.post('/cart', authentication, (req, res) => {
 	Promise.try(() => addCart(req.body))
 		.then(response => res.status(response.status).json(response))
-		.catch(err => console.log('Error on ADD_MY_CART', err))
+		.catch(err => console.log('Error on ADD_CART', err))
 })
 
 // Get Cart
 router.get('/cart/:id', authentication, (req, res) => {
 	Promise.try(() => getCart(req.params.id))
 		.then(response => res.status(response.status).json(response))
-		.catch(err => console.log('Error on GET_MY_CART', err))
+		.catch(err => console.log('Error on GET_CART', err))
+})
+
+// Update Cart Qty
+router.put('/cart/:cart_id', authentication, (req, res) => {
+	Promise.try(() => updateCartQty(req.params.cart_id, req.body.qty))
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log('Error on UPDATE_CART_QTY', err))
 })
 
 // Delete Cart
 router.delete('/cart/:cart_id', authentication, (req, res) => {
 	Promise.try(() => removeCart(req.params.wishlist_id))
 		.then(response => res.status(response.status).json(response))
-		.catch(err => console.log('Error on DELETE_WISHLIST', err))
+		.catch(err => console.log('Error on DELETE_CART', err))
 })
 
 module.exports = router
