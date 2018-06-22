@@ -48,6 +48,7 @@ router.post('/auth/user', (req, res) => {
      		name: 'success',
 				message: 'Login Success',
 				status: 201,
+				id: response.id,
 				accessToken,
 				refreshToken
 			})
