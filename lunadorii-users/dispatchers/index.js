@@ -6,7 +6,7 @@ const configuration = require('../knexfile')[environment]
 const knex = require('knex')(configuration)
 const { successResponse, errorResponse } = require('../responsers')
 
-exports.retrieveUsers = () => {
+exports.getUsers = () => {
 	return knex
 		.select()
 		.table('users')
@@ -14,7 +14,7 @@ exports.retrieveUsers = () => {
 		.catch(err => errorResponse(err, 500))
 }
 
-exports.retrieveUserById = id => {
+exports.getUserById = id => {
 	return knex('users')
 		.where('id', id)
 		.then(response => successResponse(response, 'Success Retrieving User', 200))
@@ -92,5 +92,19 @@ exports.updatePassword = (id, data) => {
 				return errorResponse(null, 500)
 			}
 		})
+		.catch(err => errorResponse(err, 500))
+}
+
+exports.getUserAddresses = id => {
+	return knex('user_addresses')
+		.where('id', id)
+		.then(response => successResponse(response, 'Success Retrieving User Addresses', 200))
+		.catch(err => errorResponse(err, 500))
+}
+
+exports.getUserBanks = id => {
+	return knex('user_banks')
+		.where('id', id)
+		.then(response => successResponse(response, 'Success Retrieving User Banks', 200))
 		.catch(err => errorResponse(err, 500))
 }
