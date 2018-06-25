@@ -1,13 +1,58 @@
 
 exports.seed = function(knex, Promise) {
   // Deletes ALL existing entries
-  return knex('table_name').del()
+  return knex('districs').del()
     .then(function () {
       // Inserts seed entries
-      return knex('table_name').insert([
-        {id: 1, colName: 'rowValue1'},
-        {id: 2, colName: 'rowValue2'},
-        {id: 3, colName: 'rowValue3'}
-      ]);
-    });
-};
+      return knex('districs').insert([
+        {distric: 'Arongan Lambalek', city_id: 1},
+        {distric: 'Bubon', city_id: 1},
+        {distric: 'Johan Pahlawan', city_id: 1},
+        {distric: 'Kaway XVI', city_id: 1},
+        {distric: 'Meureubo', city_id: 1},
+        {distric: 'Pantai Ceuremen', city_id: 1},
+        {distric: 'Panton Reu', city_id: 1},
+        {distric: 'Samatiga', city_id: 1},
+        {distric: 'Sungai Mas', city_id: 1},
+        {distric: 'Woyla', city_id: 1},
+        {distric: 'Woyla Barat', city_id: 1},
+        {distric: 'Woyla Timur', city_id: 1},
+        {distric: 'Tangan-Tangan', city_id: 2},
+        {distric: 'Setia', city_id: 2},
+        {distric: 'Babah Rot', city_id: 2},
+        {distric: 'Blang Pidie', city_id: 2},
+        {distric: 'Kuala Batee', city_id: 2},
+        {distric: 'Jeumpa', city_id: 2},
+        {distric: 'Manggeng', city_id: 2},
+        {distric: 'Susoh', city_id: 2},
+        {distric: 'Kluet Selatan', city_id: 2},
+        {distric: 'Lembah Sabil', city_id: 2},
+        {distric: 'Ingin Jaya', city_id: 3},
+        {distric: 'Peukan Bada', city_id: 3},
+        {distric: 'Montasik', city_id: 3},
+        {distric: 'Seulimeum', city_id: 3},
+        {distric: 'Pulo Aceh', city_id: 3},
+        {distric: 'Suka Makmur', city_id: 3},
+        {distric: 'Indrapuri', city_id: 3},
+        {distric: 'Darussalam', city_id: 3},
+        {distric: 'Kuta Baro', city_id: 3},
+        {distric: 'Simpang Tiga', city_id: 3},
+        {distric: 'Lho\'nga', city_id: 3},
+        {distric: 'Kota Jantho', city_id: 3},
+        {distric: 'Baitussalam', city_id: 3},
+        {distric: 'Kuta Got Glie', city_id: 3},
+        {distric: 'Lhoong', city_id: 3},
+        {distric: 'Darul Imarah', city_id: 3},
+        {distric: 'Banda Mulia', city_id: 3},
+        {distric: 'Peukan Bada', city_id: 3},
+        {distric: 'Mesjid Raya', city_id: 3},
+        {distric: 'Darul Kamal', city_id: 3},
+        {distric: 'Johan Pahlawan', city_id: 3},
+        {distric: 'Johan Pahlawan', city_id: 3},
+        {distric: 'Johan Pahlawan', city_id: 3},
+        {distric: 'Johan Pahlawan', city_id: 3},
+        {distric: 'Johan Pahlawan', city_id: 1},
+        {distric: 'Johan Pahlawan', city_id: 1},
+      ])
+    })
+}

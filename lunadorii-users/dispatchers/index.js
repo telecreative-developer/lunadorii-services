@@ -48,6 +48,19 @@ exports.registerUser = data => {
 		.catch(err => errorResponse(err, 500))
 }
 
+exports.checkEmail = email => {
+	return knex('users')
+		.where('email', email)
+		.then(response => {
+			if (response.length) {
+				return errorResponse('Email is already in use', 409)
+			} else {
+				return successResponse(null, 'Email Available', 200)
+			}
+		})
+		.catch(err => errorResponse(err, 500))
+}
+
 exports.updateEmail = (id, data) => {
 	return knex('users')
 		.where('email', data.email)

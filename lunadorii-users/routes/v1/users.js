@@ -6,6 +6,7 @@ const {
 	getUsers,
 	getUserById,
 	registerUser,
+	checkEmail,
 	updateUser,
 	updateEmail,
 	updatePassword,
@@ -39,6 +40,13 @@ router.post('/user/register', (req, res) => {
 	Promise.try(() => registerUser(req.body))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log('Error on GET_REGISTER_USER', err))
+})
+
+// Check email
+router.post('/user/check-email', function(req, res) {
+	Promise.try(() => checkEmail(req.body.email))
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log('Error on CHECK_EMAIL', err))
 })
 
 // Change email

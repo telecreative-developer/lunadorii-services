@@ -10,7 +10,7 @@ exports.seed = function(knex, Promise) {
         {province: 'Banten'},
         {province: 'Bengkulu'},
         {province: 'Gorontalo'},
-        {province: 'Jakarta'},
+        {province: 'DKI Jakarta'},
         {province: 'Jambi'},
         {province: 'Jawa Barat'},
         {province: 'Jawa Tengah'},
