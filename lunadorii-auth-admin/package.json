@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./node_modules/.bin/pm2-runtime ./bin/www -i max"
   },
   "dependencies": {
     "bcrypt": "^2.0.1",
@@ -21,6 +21,7 @@
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "pg": "^7.4.3",
+    "pm2": "^2.10.4",
     "pug": "2.0.0-beta11",
     "signale": "^1.2.1"
   }

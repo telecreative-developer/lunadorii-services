@@ -86,6 +86,7 @@ pipelines:
     apiEndpoints:
       - auth
     policies:
+      - key-auth:
       - proxy:
           - action:
               serviceEndpoint: authService
@@ -95,6 +96,9 @@ pipelines:
     apiEndpoints:
       - authAdmin
     policies:
+      - key-auth:
+          apiKeyHeaderScheme: 'arcanist'
+          apiKeyHeader: AuthorizationGateway
       - proxy:
           - action:
               serviceEndpoint: authAdminService
@@ -104,6 +108,9 @@ pipelines:
     apiEndpoints:
       - users
     policies:
+      - key-auth:
+          apiKeyHeaderScheme: 'arcanist'
+          apiKeyHeader: AuthorizationGateway
       - proxy:
           - action:
               serviceEndpoint: usersService
@@ -113,6 +120,9 @@ pipelines:
     apiEndpoints:
       - admin
     policies:
+      - key-auth:
+          apiKeyHeaderScheme: 'arcanist'
+          apiKeyHeader: AuthorizationGateway
       - proxy:
           - action:
               serviceEndpoint: adminService
@@ -122,6 +132,9 @@ pipelines:
     apiEndpoints:
       - products
     policies:
+      - key-auth:
+          apiKeyHeaderScheme: 'arcanist'
+          apiKeyHeader: AuthorizationGateway
       - proxy:
           - action:
               serviceEndpoint: productsService
@@ -131,6 +144,7 @@ pipelines:
     apiEndpoints:
       - banners
     policies:
+      - key-auth:
       - proxy:
           - action:
               serviceEndpoint: bannersService
@@ -140,6 +154,9 @@ pipelines:
     apiEndpoints:
       - general
     policies:
+      - key-auth:
+          apiKeyHeaderScheme: 'arcanist'
+          apiKeyHeader: AuthorizationGateway
       - proxy:
           - action:
               serviceEndpoint: generalService
@@ -149,6 +166,9 @@ pipelines:
     apiEndpoints:
       - report
     policies:
+      - key-auth:
+          apiKeyHeaderScheme: 'arcanist'
+          apiKeyHeader: AuthorizationGateway
       - proxy:
           - action:
               serviceEndpoint: reportService
@@ -158,6 +178,9 @@ pipelines:
     apiEndpoints:
       - search
     policies:
+      - key-auth:
+          apiKeyHeaderScheme: 'arcanist'
+          apiKeyHeader: AuthorizationGateway
       - proxy:
           - action:
               serviceEndpoint: searchService

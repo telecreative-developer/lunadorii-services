@@ -4,8 +4,9 @@
   "repository": {},
   "license": "UNLICENSED",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "node ./node_modules/.bin/pm2-runtime server.js -i max",
   "dependencies": {
-    "express-gateway": "^1.9.1"
+    "express-gateway": "^1.9.1",
+    "pm2": "^2.10.4"
   }
 }
