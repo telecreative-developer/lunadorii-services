@@ -26,7 +26,8 @@ exports.updateUser = (id, data) => {
 		.where('id', id)
 		.update({
 			first_name: data.first_name,
-			last_name: data.last_name
+			last_name: data.last_name,
+			bod: data.bod
 		})
 		.then(response => successResponse(response, 'Success Update User', 200))
 		.catch(err => errorResponse(err, 500))
