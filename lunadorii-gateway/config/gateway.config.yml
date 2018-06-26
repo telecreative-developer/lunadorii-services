@@ -1,0 +1,160 @@
+http:
+  port: 8080
+admin:
+  port: 9876
+  hostname: localhost
+apiEndpoints:
+  auth:
+    host: localhost
+    paths:
+      - '/api/v1/auth/user'
+  authAdmin:
+    host: localhost
+    paths:
+      - '/api/v1/auth/admin'
+  users:
+    host: localhost
+    paths:
+      - '/api/v1/users'
+      - '/api/v1/user/*'
+      - '/api/v1/user-addresses'
+      - '/api/v1/user-banks'
+  admin:
+    host: localhost
+    paths:
+      - '/api/v1/admin/*'
+  products:
+    host: localhost
+    paths:
+      - '/api/v1/products'
+      - '/api/v1/product/*'
+      - '/api/v1/product-brands'
+      - '/api/v1/product-categories'
+      - '/api/v1/product-subcategories'
+      - '/api/v1/wishlist/*'
+      - '/api/v1/cart/*'
+  banners:
+    host: localhost
+    paths:
+      - '/api/v1/banners'
+  general:
+    host: localhost
+    paths:
+      - '/api/v1/general/*'
+  report:
+    host: localhost
+    paths:
+      - '/api/v1/reports'
+  search:
+    host: localhost
+    paths:
+      - '/api/v1/search/*'
+serviceEndpoints:
+  authService:
+    url: 'http://localhost:9001'
+  authAdminService:
+    url: 'http://localhost:9002'
+  usersService:
+    url: 'http://localhost:9003'
+  adminService:
+    url: 'http://localhost:9004'
+  productsService:
+    url: 'http://localhost:9005'
+  bannersService:
+    url: 'http://localhost:9006'
+  generalService:
+    url: 'http://localhost:9007'
+  reportService:
+    url: 'http://localhost:9008'
+  searchService:
+    url: 'http://localhost:9009'
+policies:
+  - basic-auth
+  - cors
+  - expression
+  - key-auth
+  - log
+  - oauth2
+  - proxy
+  - rate-limit
+pipelines:
+  - name: auth-service
+    apiEndpoints:
+      - auth
+    policies:
+      - proxy:
+          - action:
+              serviceEndpoint: authService
+              changeOrigin: true
+
+  - name: auth-admin-service
+    apiEndpoints:
+      - authAdmin
+    policies:
+      - proxy:
+          - action:
+              serviceEndpoint: authAdminService
+              changeOrigin: true
+
+  - name: users-service
+    apiEndpoints:
+      - users
+    policies:
+      - proxy:
+          - action:
+              serviceEndpoint: usersService
+              changeOrigin: true
+
+  - name: admin-service
+    apiEndpoints:
+      - admin
+    policies:
+      - proxy:
+          - action:
+              serviceEndpoint: adminService
+              changeOrigin: true
+
+  - name: products-service
+    apiEndpoints:
+      - products
+    policies:
+      - proxy:
+          - action:
+              serviceEndpoint: productsService
+              changeOrigin: true
+
+  - name: banners-service
+    apiEndpoints:
+      - banners
+    policies:
+      - proxy:
+          - action:
+              serviceEndpoint: bannersService
+              changeOrigin: true
+
+  - name: general-service
+    apiEndpoints:
+      - general
+    policies:
+      - proxy:
+          - action:
+              serviceEndpoint: generalService
+              changeOrigin: true
+
+  - name: report-service
+    apiEndpoints:
+      - report
+    policies:
+      - proxy:
+          - action:
+              serviceEndpoint: reportService
+              changeOrigin: true
+
+  - name: search-service
+    apiEndpoints:
+      - search
+    policies:
+      - proxy:
+          - action:
+              serviceEndpoint: searchService
+              changeOrigin: true
