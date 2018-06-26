@@ -10,14 +10,14 @@ exports.getUsers = () => {
 	return knex
 		.select()
 		.table('users')
-		.then(response => successResponse(response, 'Success Retrieving Users', 200))
+		.then(response => successResponse(response, 'Success Get Users', 200))
 		.catch(err => errorResponse(err, 500))
 }
 
 exports.getUserById = id => {
 	return knex('users')
 		.where('id', id)
-		.then(response => successResponse(response, 'Success Retrieving User', 200))
+		.then(response => successResponse(response, 'Success Get User', 200))
 		.catch(err => errorResponse(err, 500))
 }
 
@@ -111,20 +111,28 @@ exports.updatePassword = (id, data) => {
 exports.getUserAddresses = id => {
 	return knex('user_addresses')
 		.where('id', id)
-		.then(response => successResponse(response, 'Success Retrieving User Addresses', 200))
+		.then(response => successResponse(response, 'Success Get User Addresses', 200))
 		.catch(err => errorResponse(err, 500))
 }
 
 exports.getUserBanks = id => {
 	return knex('user_banks')
 		.where('id', id)
-		.then(response => successResponse(response, 'Success Retrieving User Banks', 200))
+		.then(response => successResponse(response, 'Success Get User Banks', 200))
 		.catch(err => errorResponse(err, 500))
 }
 
 exports.getUserReviews = id => {
 	return knex('product_reviews')
 		.where('id', id)
-		.then(response => successResponse(response, 'Success Retrieving User Reviews', 200))
+		.then(response => successResponse(response, 'Success Get User Reviews', 200))
+		.catch(err => errorResponse(err, 500))
+}
+
+exports.updateUserReviews = (product_review_id, data) => {
+	return knex('product_reviews')
+		.where('product_review_id', product_review_id)
+		.update(data)
+		.then(response => successResponse(response, 'Success Update User Reviews', 200))
 		.catch(err => errorResponse(err, 500))
 }
