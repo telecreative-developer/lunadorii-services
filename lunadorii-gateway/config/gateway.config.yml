@@ -18,7 +18,8 @@ apiEndpoints:
       - '/api/v1/users'
       - '/api/v1/user/*'
       - '/api/v1/user-addresses'
-      - '/api/v1/user-banks'
+      - '/api/v1/user-banks/*'
+      - '/api/v1/user-bank/*'
       - '/api/v1/user-reviews/*'
       - '/api/v1/user-review/*'
   admin:

@@ -5,6 +5,7 @@ const reviewsDefinition = [{
 	product: {
 		product_id: {column: 'product_id', id: true},
 		name: {column: 'product'},
+		price: {column: 'price'},
 		thumbnails: [{
 			product_thumbnail_id: {column: 'product_thumbnail_id', id: true},
 			thumbnail_url: {column: 'thumbnail_url'}

@@ -11,10 +11,12 @@ const {
 	updateEmail,
 	updatePassword,
 	getUserAdresses,
-	getUserBanks,
 	getUserReviews,
 	updateUserReviews,
-	addUserBank
+	addUserBank,
+	getUserBanks,
+	updateUserBank,
+	setDefaultUserBank
 } = require('../../dispatchers')
 
 // Get All Users
@@ -101,11 +103,11 @@ router.put('/user-bank/:user_bank_id', authentication, (req, res) => {
 		.catch(err => console.log('Error on UPDATE_USER_BANK', err))
 })
 
-// Get user banks
+// Set default user bank
 router.put('/user-bank/set-default/:user_bank_id', authentication, (req, res) => {
-	Promise.try(() => updateUserBank(req.params.user_bank_id, req.body))
+	Promise.try(() => setDefaultUserBank(req.params.user_bank_id, req.body))
 		.then(response => res.status(response.status).json(response))
-		.catch(err => console.log('Error on UPDATE_USER_BANK', err))
+		.catch(err => console.log('Error on SET_DEFAULT_USER_BANK', err))
 })
 
 // Get user reviews

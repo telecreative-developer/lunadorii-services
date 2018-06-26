@@ -6,11 +6,16 @@ exports.up = function(knex, Promise) {
 			table.string('account_name')
 			table.boolean('account_default')
 			table.integer('bank_id')
+			table.integer('id')
 			table.timestamps(true, true)
 
 			table.foreign('bank_id')
 				.references('bank_id')
 				.inTable('banks')
+
+			table.foreign('id')
+				.references('id')
+				.inTable('users')
 		})
 		.then(() => console.log('User banks table created'))
 		.catch(() => console.log('There was an error with the user banks table'))
