@@ -121,3 +121,10 @@ exports.getUserBanks = id => {
 		.then(response => successResponse(response, 'Success Retrieving User Banks', 200))
 		.catch(err => errorResponse(err, 500))
 }
+
+exports.getUserReviews = id => {
+	return knex('product_reviews')
+		.where('id', id)
+		.then(response => successResponse(response, 'Success Retrieving User Reviews', 200))
+		.catch(err => errorResponse(err, 500))
+}

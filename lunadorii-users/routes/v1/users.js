@@ -11,7 +11,8 @@ const {
 	updateEmail,
 	updatePassword,
 	getUserAdresses,
-	getUserBanks
+	getUserBanks,
+	getUserReviews
 } = require('../../dispatchers')
 
 // Get All Users
@@ -75,6 +76,13 @@ router.get('/user-banks/:id', authentication, (req, res) => {
 	Promise.try(() => getUserBanks(req.params.id))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log('Error on GET_USER_BANKS', err))
+})
+
+// Get user reviews
+router.get('/user-reviews/:id', authentication, (req, res) => {
+	Promise.try(() => getUserReviews(req.params.id))
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log('Error on GET_USER_REVIEWS', err))
 })
 
 module.exports = router
