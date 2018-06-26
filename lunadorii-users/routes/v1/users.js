@@ -13,7 +13,8 @@ const {
 	getUserAdresses,
 	getUserBanks,
 	getUserReviews,
-	updateUserReviews
+	updateUserReviews,
+	addUserBank
 } = require('../../dispatchers')
 
 // Get All Users
@@ -72,11 +73,39 @@ router.get('/user-addresses/:id', authentication, (req, res) => {
 		.catch(err => console.log('Error on GET_USER_ADDRESSES', err))
 })
 
+// Update user address
+router.put('/user-addresses/:id', authentication, (req, res) => {
+	Promise.try(() => updateUserAddress(req.params.user_address_id, req.body))
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log('Error on GET_USER_ADDRESSES', err))
+})
+
+// Add user bank
+router.post('/user-bank', authentication, (req, res) => {
+	Promise.try(() => addUserBank(req.body))
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log('Error on ADD_USER_BANK', err))
+})
+
 // Get user banks
 router.get('/user-banks/:id', authentication, (req, res) => {
 	Promise.try(() => getUserBanks(req.params.id))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log('Error on GET_USER_BANKS', err))
+})
+
+// Update user banks
+router.put('/user-bank/:user_bank_id', authentication, (req, res) => {
+	Promise.try(() => updateUserBank(req.params.user_bank_id, req.body))
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log('Error on UPDATE_USER_BANK', err))
+})
+
+// Get user banks
+router.put('/user-bank/set-default/:user_bank_id', authentication, (req, res) => {
+	Promise.try(() => updateUserBank(req.params.user_bank_id, req.body))
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log('Error on UPDATE_USER_BANK', err))
 })
 
 // Get user reviews

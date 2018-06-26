@@ -4,7 +4,9 @@ const bcrypt = require('bcrypt')
 const environment = process.env.NODE_ENV || 'development'
 const configuration = require('../knexfile')[environment]
 const knex = require('knex')(configuration)
+const NestHydrationJS = require('nesthydrationjs')()
 const { successResponse, errorResponse } = require('../responsers')
+const reviewsDefinition = require('../definitions/reviews')
 
 exports.getUsers = () => {
 	return knex
@@ -116,6 +118,33 @@ exports.getUserAddresses = id => {
 		.catch(err => errorResponse(err, 500))
 }
 
+exports.updateUserAddress = (user_address_id, data) => {
+	return knex('user_addresses')
+		.where('user_address_id', user_address_id)
+		.update(data)
+		.then(response => successResponse(response, 'Success Update User Address', 200))
+		.catch(err => errorResponse(err, 500))
+}
+
+exports.addUserBank = data => {
+	return knex('user_banks')
+		.where('id', data.id)
+		.then(response => {
+			if(response.length) {
+				return knex('user_banks')
+					.insert({...data, default: false})
+					.then(response => successResponse(response, 'Success Add User Banks', 200))
+					.catch(err => errorResponse(err, 500))
+			}else {
+				return knex('user_banks')
+					.insert({...data, default: true})
+					.then(response => successResponse(response, 'Success Add User Banks', 200))
+					.catch(err => errorResponse(err, 500))
+			}
+		})
+		.catch(err => errorResponse(err, 500))
+}
+
 exports.getUserBanks = id => {
 	return knex('user_banks')
 		.where('id', id)
@@ -125,9 +154,12 @@ exports.getUserBanks = id => {
 
 exports.getUserReviews = id => {
 	return knex('product_reviews')
-		.where('id', id)
+		.where('product_reviews.id', id)
+		.innerJoin('products', 'product_reviews.product_id', 'products.product_id')
+		.innerJoin('product_thumbnails', 'products.product_id', 'product_thumbnails.product_id')
+		.then(response => NestHydrationJS.nest(response, reviewsDefinition))
 		.then(response => successResponse(response, 'Success Get User Reviews', 200))
-		.catch(err => errorResponse(err, 500))
+		.catch(err => console.log(err))
 }
 
 exports.updateUserReviews = (product_review_id, data) => {
