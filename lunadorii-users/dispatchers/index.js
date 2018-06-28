@@ -1,6 +1,7 @@
 require('dotenv/config')
 const express = require('express')
 const bcrypt = require('bcrypt')
+const AWS = require('aws-sdk')
 const environment = process.env.NODE_ENV || 'development'
 const configuration = require('../knexfile')[environment]
 const knex = require('knex')(configuration)
@@ -8,6 +9,12 @@ const NestHydrationJS = require('nesthydrationjs')()
 const { successResponse, errorResponse } = require('../responsers')
 const reviewsDefinition = require('../definitions/reviews')
 const banksDefinition = require('../definitions/banks')
+
+const s3 = new AWS.S3({
+	accessKeyId: 'AKIAIDZ3JEHIHGIIFKDA',
+	secretAccessKey: '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',
+	Bucket: 'lunadorii'
+})
 
 exports.getUsers = () => {
 	return knex
@@ -34,6 +41,22 @@ exports.updateUser = (id, data) => {
 		})
 		.then(response => successResponse(response, 'Success Update User', 200))
 		.catch(err => errorResponse(err, 500))
+}
+
+exports.uploadAvatar = (id, file) => {
+	return s3.upload({
+		Bucket: 'lunadorii',
+		Key: file.name,
+		Body: file.data
+	}, (err, data) => {
+		if(err) {
+			console.log('Err', err)
+			return errorResponse(err, 500)
+		}
+
+		return successResponse(data, 'Success Upload Avatar', 200)
+		console.log('Data', data)
+	})
 }
 
 exports.registerUser = data => {

@@ -1,6 +1,8 @@
 const express = require('express')
 const Promise = require('bluebird')
 const router = express.Router()
+const Busyboy = require('busyboy')
+const form = new formidable.IncomingForm()
 const authentication = require('../../middleware/authentication')
 const {
 	getUsers,
@@ -18,6 +20,12 @@ const {
 	updateUserBank,
 	setDefaultUserBank
 } = require('../../dispatchers')
+const {
+	addUserAddress,
+	getUserAdresses,
+	updateUserAddress,
+	deleteUserAddress
+} = require('../../dispatchers/addresses')
 
 // Get All Users
 router.get('/users', authentication, (req, res) => {
@@ -38,6 +46,14 @@ router.put('/user/:id', authentication, (req, res) => {
 	Promise.try(() => updateUser(req.params.id, req.body))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log('Error on GET_UPDATE_USER', err))
+})
+
+// Upload avatar user
+router.post('/user/upload-avatar', (req, res) => {
+	const busyboy = new Busyboy({headers: req.headers})
+	Promise.try(() => busyboy.on('finish',  () => uploadAvatar(req.files.id, req.files.avatar)))
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log('Error on UPLOAD_AVATAR_USER', err))
 })
 
 // Register user
@@ -68,6 +84,13 @@ router.put('/user/change-password/:id', authentication, function(req, res) {
 		.catch(err => console.log('Error on CHANGE_PASSWORD', err))
 })
 
+// Add user address
+router.post('/user-addresses', authentication, (req, res) => {
+	Promise.try(() => addUserAddress(req.body))
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log('Error on ADD_USER_ADDRESSES', err))
+})
+
 // Get user addresses
 router.get('/user-addresses/:id', authentication, (req, res) => {
 	Promise.try(() => getUserAdresses(req.params.id))
@@ -76,8 +99,15 @@ router.get('/user-addresses/:id', authentication, (req, res) => {
 })
 
 // Update user address
-router.put('/user-addresses/:id', authentication, (req, res) => {
+router.put('/user-addresses/:user_address_id', authentication, (req, res) => {
 	Promise.try(() => updateUserAddress(req.params.user_address_id, req.body))
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log('Error on GET_USER_ADDRESSES', err))
+})
+
+// Delete user address
+router.put('/user-addresses/:user_address_id', authentication, (req, res) => {
+	Promise.try(() => deleteUserAddress(req.params.user_address_id))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log('Error on GET_USER_ADDRESSES', err))
 })
