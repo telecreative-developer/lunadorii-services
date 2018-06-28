@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./node_modules/.bin/pm2-runtime ./bin/www -i max"
+    "start": "node ./bin/www"
   },
   "dependencies": {
     "aws-sdk": "^2.263.1",

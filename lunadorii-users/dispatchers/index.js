@@ -135,21 +135,6 @@ exports.updatePassword = (id, data) => {
 		.catch(err => errorResponse(err, 500))
 }
 
-exports.getUserAddresses = id => {
-	return knex('user_addresses')
-		.where('id', id)
-		.then(response => successResponse(response, 'Success Get User Addresses', 200))
-		.catch(err => errorResponse(err, 500))
-}
-
-exports.updateUserAddress = (user_address_id, data) => {
-	return knex('user_addresses')
-		.where('user_address_id', user_address_id)
-		.update(data)
-		.then(response => successResponse(response, 'Success Update User Address', 200))
-		.catch(err => errorResponse(err, 500))
-}
-
 exports.addUserBank = data => {
 	return knex('users')
 		.where('users.id', data.id)
@@ -215,6 +200,14 @@ exports.updateUserBank = (user_bank_id, data) => {
 			}
 		})
 		.catch(err => errorResponse(err, 500))
+}
+
+exports.setDefaultUserBank = user_bank_id => {
+	return knex('user_banks')
+		.where('user_bank_id', user_bank_id)
+		.update({account_default: true})
+		.then(response => successResponse(response, 'Success Set Default Bank', 200))
+		.catch(err => errorResponse(err, 500)) 
 }
 
 exports.getUserReviews = id => {
