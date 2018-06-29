@@ -135,7 +135,7 @@ router.put('/user-address/:user_address_id', authentication, (req, res) => {
 
 // Set default user address
 router.put('/user-address/set-default/:user_address_id', authentication, (req, res) => {
-	Promise.try(() => setDefaultUserAddress(req.params.user_address_id))
+	Promise.try(() => setDefaultUserAddress(req.params.user_address_id, req.body.id))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log('Error on SET_DEFAULT_USER_ADDRESS', err))
 })

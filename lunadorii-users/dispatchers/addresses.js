@@ -36,15 +36,21 @@ exports.updateUserAddress = (user_address_id, data) => {
 		.catch(err => errorResponse(err, 500))
 }
 
-exports.setDefaultUserAddress = (user_address_id) => {
+exports.setDefaultUserAddress = (user_address_id, id) => {
 	return knex('user_addresses')
-		.where('user_address_id', user_address_id)
-		.update({address_default: true})
-		.then(response => successResponse(response, 'Success Set Default Address', 200))
+		.where('id', id)
+		.update({address_default: false})
+		.then(() => {
+			return knex('user_addresses')
+				.where('user_address_id', user_address_id)
+				.update({address_default: true})
+				.then(response => successResponse(response, 'Success Set Default Address', 200))
+				.catch(err => errorResponse(err, 500))
+		})
 		.catch(err => errorResponse(err, 500))
 }
 
-exports.updateUserAddress = (user_address_id, data) => {
+exports.deleteUserAddress = (user_address_id, data) => {
 	return knex('user_addresses')
 		.where('user_address_id', user_address_id)
 		.del()
