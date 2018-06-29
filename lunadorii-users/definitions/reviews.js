@@ -10,7 +10,9 @@ const reviewsDefinition = [{
 			product_thumbnail_id: {column: 'product_thumbnail_id', id: true},
 			thumbnail_url: {column: 'thumbnail_url'}
 		}]
-	}
+	},
+	created_at: {column: 'created_at'},
+	updated_at: {column: 'updated_at'}
 }]
 
 module.exports = reviewsDefinition

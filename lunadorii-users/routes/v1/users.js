@@ -1,6 +1,10 @@
+require('dotenv/config')
 const express = require('express')
 const Promise = require('bluebird')
 const router = express.Router()
+const AWS = require('aws-sdk')
+const multer = require('multer')
+const multerS3 = require('multer-s3')
 const NestHydrationJS = require('nesthydrationjs')()
 const authentication = require('../../middleware/authentication')
 const {
@@ -11,13 +15,8 @@ const {
 	updateUser,
 	updateEmail,
 	updatePassword,
-	getUserReviews,
-	updateUserReviews,
-	addUserBank,
-	getUserBanks,
-	updateUserBank,
-	setDefaultUserBank
-} = require('../../dispatchers')
+	uploadAvatar
+} = require('../../dispatchers/users')
 const {
 	addUserAddress,
 	getUserAddresses,
@@ -25,7 +24,36 @@ const {
 	setDefaultUserAddress,
 	deleteUserAddress
 } = require('../../dispatchers/addresses')
-const addressesDefinition = require('../../definitions/addresses')
+const {
+	addUserBank,
+	getUserBanks,
+	updateUserBank,
+	setDefaultUserBank
+} = require('../../dispatchers/banks')
+const {
+	getUserReviews,
+	updateUserReviews
+} = require('../../dispatchers/reviews')
+
+const s3 = new AWS.S3({
+	accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+	secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+	Bucket: process.env.AWS_S3_BUCKET
+})
+
+const upload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: process.env.AWS_S3_BUCKET,
+    acl: 'public-read',
+    metadata: function (req, file, cb) {
+      cb(null, {fieldName: file.fieldname})
+    },
+    key: function (req, file, cb) {
+      cb(null, Date.now().toString() + ".jpg")
+    }
+  })
+})
 
 // Get All Users
 router.get('/users', authentication, (req, res) => {
@@ -49,8 +77,9 @@ router.put('/user/:id', authentication, (req, res) => {
 })
 
 // Upload avatar user
-router.post('/user/upload-avatar', (req, res) => {
-	Promise.try(() => uploadAvatar(req.files.id, req.files.avatar))
+router.post('/user/upload-avatar/:id', upload.single('avatar'), (req, res) => {
+	const { key } = req.file
+	Promise.try(() => uploadAvatar(req.params.id, key))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log('Error on UPLOAD_AVATAR_USER', err))
 })
@@ -106,7 +135,7 @@ router.put('/user-address/:user_address_id', authentication, (req, res) => {
 
 // Set default user address
 router.put('/user-address/set-default/:user_address_id', authentication, (req, res) => {
-	Promise.try(() => setDefaultUserAddress(req.params.user_address_id, req.body))
+	Promise.try(() => setDefaultUserAddress(req.params.user_address_id))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log('Error on SET_DEFAULT_USER_ADDRESS', err))
 })

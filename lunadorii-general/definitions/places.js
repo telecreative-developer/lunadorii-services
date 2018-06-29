@@ -3,11 +3,8 @@ const placesDefinition = [{
 	province: {column: 'province'},
 	cities: [{
 		city_id: {column: 'city_id', id: true},
-		city: {column: 'city'},
-		districts: [{
-			district_id: {column: 'district_id', id: true},
-			district: 'district'
-		}]
+		city: {column: 'city_name'},
+		postal_code: {column: 'postal_code'}
 	}]
 }]
 

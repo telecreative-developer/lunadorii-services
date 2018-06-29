@@ -4,6 +4,7 @@ const Promise = require('bluebird')
 const router = express.Router()
 const jwt = require('jsonwebtoken')
 const passport = require('passport')
+const { authFacebook } = require('../../dispatchers/auth')
 
 router.post('/auth/user', (req, res) => {
 	passport.authenticate('local', {session: false}, (error, response, info) => {
@@ -54,6 +55,12 @@ router.post('/auth/user', (req, res) => {
 			})
     })
 	})(req, res)
+})
+
+router.post('/auth/user/facebook', (req, res) => {
+	Promise.try(() => authFacebook(req.body))
+		.then((response) => res.status(response.status).json(response))
+		.catch(err => console.log('Error on AUTH_FACEBOOK', err))
 })
 
 module.exports = router
