@@ -45,9 +45,9 @@ exports.setDefaultUserAddress = (user_address_id, id) => {
 				.where('user_address_id', user_address_id)
 				.update({address_default: true})
 				.then(response => successResponse(response, 'Success Set Default Address', 200))
-				.catch(err => errorResponse(err, 500))
+				.catch(err => console.log(err))
 		})
-		.catch(err => errorResponse(err, 500))
+		.catch(err => console.log(err))
 }
 
 exports.deleteUserAddress = (user_address_id, data) => {

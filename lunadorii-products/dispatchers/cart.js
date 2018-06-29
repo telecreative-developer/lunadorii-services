@@ -9,8 +9,22 @@ const cartDefinition = require('../definitions/cart')
 
 exports.addCart = (data) => {
 	return knex('cart')
-		.insert(data)
-		.then(response => successResponse(null, 'Success Add Cart', 201))
+		.where('id', data.id)
+		.andWhere('product_id', data.product_id)
+		.limit(1)
+		.then(response => {
+			if(response.length) {
+				return knex('cart')
+					.where('id', data.id)
+					.andWhere('product_id', data.product_id)
+					.update({qty: response[0].qty + data.qty})
+					.then(response => successResponse(null, 'Success Add Cart', 201))
+			}else {
+				return knex('cart')
+					.insert(data)
+					.then(response => successResponse(null, 'Success Add Cart', 201))
+			}
+		})
 		.catch(err => errorResponse(err, 500))
 }
 
@@ -30,6 +44,7 @@ exports.getCart = (id) => {
 			'product_reviews_users.last_name as product_reviews_last_name',
 			'product_reviews.created_at as product_reviews_created_at',
 			'product_reviews.updated_at as product_reviews_updated_at')
+		.then()
 		.then(response => NestHydrationJS.nest(response, cartDefinition))
 		.then(response => response.map(res => ({
 			...res,
