@@ -4,7 +4,9 @@ const router = express.Router()
 const authentication = require('../../middleware/authentication')
 const {
 	getAllProducts,
+	getAllProductsWithId,
 	getSingleProduct,
+	getSingleProductWithId,
 	getProductBrands,
 	getProductBrandsWithProducts,
 	getProductCategories,
@@ -19,14 +21,14 @@ const { addCart, getCart, updateCartQty, removeCart } = require('../../dispatche
 
 // Get All Products
 router.get('/products', (req, res) => {
-	Promise.try(() => getAllProducts())
+	Promise.try(() => req.query.id ? getAllProductsWithId(req.query.id) : getAllProducts())
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log('Error on GET_ALL_PRODUCTS', err))
 })
 
 // Get Single Product
 router.get('/product/:product_id', (req, res) => {
-	Promise.try(() => getSingleProduct(req.params.product_id))
+	Promise.try(() => req.query.id ? getSingleProductWithId(req.params.product_id, req.query.id) : getSingleProduct(req.params.product_id))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log('Error on GET_SINGLE_PRODUCT', err))
 })
