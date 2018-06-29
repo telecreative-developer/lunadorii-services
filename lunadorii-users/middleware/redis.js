@@ -1,4 +1,4 @@
-require('dotenv/config')
+require('dotenv').config({path: __dirname+'/./../../.env'})
 const Promise = require('bluebird')
 const redis = Promise.promisifyAll(require('redis'))
 const redisClient = redis.createClient()

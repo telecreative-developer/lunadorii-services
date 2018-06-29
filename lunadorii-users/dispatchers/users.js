@@ -1,4 +1,4 @@
-require('dotenv/config')
+require('dotenv').config({path: __dirname+'/./../../.env'})
 const express = require('express')
 const bcrypt = require('bcrypt')
 const environment = process.env.NODE_ENV || 'development'
@@ -54,8 +54,8 @@ exports.registerUser = data => {
 				return errorResponse('Email is already in use', 409)
 			} else {
 				return bcrypt.hash(data.password, 10)
-				.then(hash => knex('users').insert({...data, password: hash}))
-				.then(() => successResponse(null, 'Success Register User', 201))
+				.then(hash => knex('users').insert({...data, password: hash}).returning('id'))
+				.then(id => successResponse([{id: parseInt(id.toString())}], 'Success Register User', 201))
 				.catch(err => errorResponse(err, 500))
 			}
 		})

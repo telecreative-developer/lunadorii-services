@@ -1,4 +1,4 @@
-require('dotenv/config')
+require('dotenv').config({path: __dirname+'/./../../.env'})
 const jwt = require('jsonwebtoken')
 
 function errorResponse(res, messageEx, err) {

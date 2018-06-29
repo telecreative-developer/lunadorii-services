@@ -1,4 +1,4 @@
-require('dotenv/config')
+require('dotenv').config({path: __dirname+'/./../../.env'})
 const Promise = require('bluebird')
 const passport = require('passport')
 const passportJWT = require('passport-jwt')
