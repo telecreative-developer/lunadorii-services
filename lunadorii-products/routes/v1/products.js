@@ -7,6 +7,8 @@ const {
 	getAllProductsWithId,
 	getSingleProduct,
 	getSingleProductWithId,
+	getProductWithSubcategory,
+	getProductWithSubcategoryWithId,
 	getProductBrands,
 	getProductBrandsWithProducts,
 	getProductCategories,
@@ -31,6 +33,13 @@ router.get('/product/:product_id', (req, res) => {
 	Promise.try(() => req.query.id ? getSingleProductWithId(req.params.product_id, req.query.id) : getSingleProduct(req.params.product_id))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log('Error on GET_SINGLE_PRODUCT', err))
+})
+
+// Get Single Product
+router.get('/product/:product_subcategory_id', (req, res) => {
+	Promise.try(() => req.query.id ? getProductWithSubcategoryWithId(req.params.product_subcategory_id, req.query.id) : getProductWithSubcategory(req.params.product_subcategory_id))
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log('Error on GET_PRODUCT_WITH_SUBCATEGORY', err))
 })
 
 // Update Product

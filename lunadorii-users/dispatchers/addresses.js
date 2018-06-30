@@ -50,10 +50,10 @@ exports.setDefaultUserAddress = (user_address_id, id) => {
 		.catch(err => console.log(err))
 }
 
-exports.deleteUserAddress = (user_address_id, data) => {
+exports.deleteUserAddress = (user_address_id) => {
 	return knex('user_addresses')
 		.where('user_address_id', user_address_id)
 		.del()
 		.then(response => successResponse(response, 'Success Delete User Address', 200))
-		.catch(err => errorResponse(err, 500))
+		.catch(err => console.log(err))
 }
