@@ -1,6 +1,7 @@
 const productsDefinition = [{
 	product_id: {column: 'product_id', id: true},
 	product: {column: 'product'},
+	product_slug: {column: 'product_slug'},
 	description: {column: 'description'},
 	detail: {column: 'detail'},
 	to_use: {column: 'to_use'},
@@ -25,6 +26,8 @@ const productsDefinition = [{
 		review_rate: {column: 'rate'},
 		comment: {column: 'comment'},
 		user: {
+			id: {column: 'product_reviews_user_id', id: true},
+			avatar_url: {column: 'product_reviews_avatar_url'},
 			first_name: {column: 'product_reviews_first_name'},
 			last_name: {column: 'product_reviews_last_name'}
 		},

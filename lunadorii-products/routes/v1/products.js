@@ -4,11 +4,13 @@ const router = express.Router()
 const authentication = require('../../middleware/authentication')
 const {
 	getAllProducts,
-	getAllProductsWithId,
+	getAllProductsLogged,
 	getSingleProduct,
-	getSingleProductWithId,
+	getSingleProductLogged,
+	getSingleProductWithSlug,
+	getSingleProductWithSlugLogged,
 	getProductWithSubcategory,
-	getProductWithSubcategoryWithId,
+	getProductWithSubcategoryLogged,
 	getProductBrands,
 	getProductBrandsWithProducts,
 	getProductCategories,
@@ -23,21 +25,28 @@ const { addCart, getCart, updateCartQty, removeCart } = require('../../dispatche
 
 // Get All Products
 router.get('/products', (req, res) => {
-	Promise.try(() => req.query.id ? getAllProductsWithId(req.query.id) : getAllProducts())
+	Promise.try(() => req.query.id ? getAllProductsLogged(req.query.id) : getAllProducts())
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log('Error on GET_ALL_PRODUCTS', err))
 })
 
 // Get Single Product
 router.get('/product/:product_id', (req, res) => {
-	Promise.try(() => req.query.id ? getSingleProductWithId(req.params.product_id, req.query.id) : getSingleProduct(req.params.product_id))
+	Promise.try(() => req.query.id ? getSingleProductLogged(req.params.product_id, req.query.id) : getSingleProduct(req.params.product_id))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log('Error on GET_SINGLE_PRODUCT', err))
 })
 
+// Get Single Product with Slug
+router.get('/product/slug/:product_slug', (req, res) => {
+	Promise.try(() => req.query.id ? getSingleProductWithSlugLogged(req.params.product_slug, req.query.id) : getSingleProductWithSlug(req.params.product_slug))
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log('Error on GET_SINGLE_PRODUCT_WITH_SLUG', err))
+})
+
 // Get Single Product
 router.get('/product/:product_subcategory_id', (req, res) => {
-	Promise.try(() => req.query.id ? getProductWithSubcategoryWithId(req.params.product_subcategory_id, req.query.id) : getProductWithSubcategory(req.params.product_subcategory_id))
+	Promise.try(() => req.query.id ? getProductWithSubcategoryLogged(req.params.product_subcategory_id, req.query.id) : getProductWithSubcategory(req.params.product_subcategory_id))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log('Error on GET_PRODUCT_WITH_SUBCATEGORY', err))
 })
@@ -92,8 +101,8 @@ router.get('/wishlist/:id', authentication, (req, res) => {
 })
 
 // Delete Wishlist
-router.delete('/wishlist/:wishlist_id', authentication, (req, res) => {
-	Promise.try(() => removeWishlist(req.params.wishlist_id))
+router.delete('/wishlist', authentication, (req, res) => {
+	Promise.try(() => removeWishlist(req.body))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log('Error on DELETE_WISHLIST', err))
 })
