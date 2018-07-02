@@ -39,10 +39,19 @@ exports.getWishlist = (id) => {
 		.catch(err => console.log(err))
 }
 
-exports.removeWishlist = (wishlist_id) => {
-	return knex('wishlist')
-		.where('wishlist_id', wishlist_id)
-		.del()
-		.then(response => successResponse(null, 'Success Remove Wishlist', 200))
-		.catch(err => errorResponse(err, 500))
+exports.removeWishlist = (data) => {
+	if(data.wishlist_id) {
+		return knex('wishlist')
+			.where('wishlist_id', data.wishlist_id)
+			.del()
+			.then(response => successResponse(null, 'Success Remove Wishlist', 200))
+			.catch(err => errorResponse(err, 500))
+	}else {
+		return knex('wishlist')
+			.where('product_id', data.product_id)
+			.andWhere('id', data.id)
+			.del()
+			.then(response => successResponse(null, 'Success Remove Wishlist', 200))
+			.catch(err => errorResponse(err, 500))
+	}
 }

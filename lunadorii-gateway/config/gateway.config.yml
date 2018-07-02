@@ -2,18 +2,18 @@ http:
   port: 8080
 admin:
   port: 9876
-  hostname: ec2-18-191-197-128.us-east-2.compute.amazonaws.com
+  hostname: localhost
 apiEndpoints:
   auth:
-    host: ec2-18-191-197-128.us-east-2.compute.amazonaws.com
+    host: localhost
     paths:
       - '/api/v1/auth/user'
   authAdmin:
-    host: ec2-18-191-197-128.us-east-2.compute.amazonaws.com
+    host: localhost
     paths:
       - '/api/v1/auth/admin'
   users:
-    host: ec2-18-191-197-128.us-east-2.compute.amazonaws.com
+    host: localhost
     paths:
       - '/api/v1/users'
       - '/api/v1/user/*'
@@ -24,11 +24,11 @@ apiEndpoints:
       - '/api/v1/user-reviews/*'
       - '/api/v1/user-review/*'
   admin:
-    host: ec2-18-191-197-128.us-east-2.compute.amazonaws.com
+    host: localhost
     paths:
       - '/api/v1/admin/*'
   products:
-    host: ec2-18-191-197-128.us-east-2.compute.amazonaws.com
+    host: /
     paths:
       - '/api/v1/products'
       - '/api/v1/product/*'
@@ -38,19 +38,19 @@ apiEndpoints:
       - '/api/v1/wishlist/*'
       - '/api/v1/cart/*'
   banners:
-    host: ec2-18-191-197-128.us-east-2.compute.amazonaws.com
+    host: localhost
     paths:
       - '/api/v1/banners'
   general:
-    host: ec2-18-191-197-128.us-east-2.compute.amazonaws.com
+    host: localhost
     paths:
       - '/api/v1/general/*'
   report:
-    host: ec2-18-191-197-128.us-east-2.compute.amazonaws.com
+    host: localhost
     paths:
       - '/api/v1/reports'
   search:
-    host: ec2-18-191-197-128.us-east-2.compute.amazonaws.com
+    host: localhost
     paths:
       - '/api/v1/search/*'
 serviceEndpoints:

@@ -77,7 +77,7 @@ router.put('/user/:id', authentication, (req, res) => {
 })
 
 // Upload avatar user
-router.post('/user/upload-avatar/:id', upload.single('data'), (req, res) => {
+router.post('/user/upload-avatar/:id', upload.single('avatar'), (req, res) => {
 	const { key } = req.file
 	Promise.try(() => uploadAvatar(req.params.id, key))
 		.then(response => res.status(response.status).json(response))
