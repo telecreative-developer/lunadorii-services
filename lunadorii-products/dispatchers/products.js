@@ -5,7 +5,7 @@ const configuration = require('../knexfile')[environment]
 const knex = require('knex')(configuration)
 const NestHydrationJS = require('nesthydrationjs')()
 const { successResponse, errorResponse } = require('../responsers')
-const { productsDefinition, productBrandsDefinition, productCategoriesDefinition, productSubcategoriesDefinition } = require('../definitions/products')
+const { productsDefinition, singleProductDefinition, productBrandsDefinition, productCategoriesDefinition, productSubcategoriesDefinition } = require('../definitions/products')
 
 exports.getAllProducts = () => {
 	return knex('products')
@@ -14,18 +14,6 @@ exports.getAllProducts = () => {
 		.innerJoin('product_thumbnails', 'products.product_id', 'product_thumbnails.product_id')
 		.innerJoin('product_reviews', 'products.product_id', 'product_reviews.product_id')
 		.innerJoin('users', 'product_reviews.id', 'users.id')
-		.select(
-			'*',
-			'users.id as product_reviews_user_id',
-			'users.avatar_url as product_reviews_avatar_url',
-			'users.first_name as product_reviews_first_name',
-			'users.last_name as product_reviews_last_name',
-			'product_reviews.created_at as product_reviews_created_at',
-			'product_reviews.updated_at as product_reviews_updated_at')
-		.then(response => response.map(res => ({
-			...res,
-			product_reviews_avatar_url: res.product_reviews_avatar_url ? `https://s3.us-east-2.amazonaws.com/lunadorii/${res.product_reviews_avatar_url}` : 'https://s3.us-east-2.amazonaws.com/lunadorii/avatar.png'
-		})))
 		.then(response => NestHydrationJS.nest(response, productsDefinition))
 		.then(response => response.map(res => ({
 			...res,
@@ -42,24 +30,12 @@ exports.getAllProductsLogged = (id) => {
 		.innerJoin('product_thumbnails', 'products.product_id', 'product_thumbnails.product_id')
 		.innerJoin('product_reviews', 'products.product_id', 'product_reviews.product_id')
 		.innerJoin('users', 'product_reviews.id', 'users.id')
-		.select(
-			'*',
-			'users.id as product_reviews_user_id',
-			'users.avatar_url as product_reviews_avatar_url',
-			'users.first_name as product_reviews_first_name',
-			'users.last_name as product_reviews_last_name',
-			'product_reviews.created_at as product_reviews_created_at',
-			'product_reviews.updated_at as product_reviews_updated_at')
-		.then(response => response.map(res => ({
-			...res,
-			product_reviews_avatar_url: res.product_reviews_avatar_url ? `https://s3.us-east-2.amazonaws.com/lunadorii/${res.product_reviews_avatar_url}` : 'https://s3.us-east-2.amazonaws.com/lunadorii/avatar.png'
-		})))
 		.then(response => NestHydrationJS.nest(response, productsDefinition))
-		.then(response => {
-			return knex('wishlist')
+		.then(response => knex('wishlist')
 				.where('id', id)
-				.then(res => response.map(rproduct => ({...rproduct, wishlisted: !!res.filter(rwishlist => rwishlist.product_id === rproduct.product_id).length})))
-		})
+				.then(res => response.map(rproduct => ({
+					...rproduct,
+					wishlisted: !!res.filter(rwishlist => rwishlist.product_id === rproduct.product_id).length}))))
 		.then(response => response.map(res => ({
 			...res,
 			product_rate: res.reviews.map(r => r.review_rate).reduce((a, b) => a+b) / res.reviews.length
@@ -88,7 +64,7 @@ exports.getSingleProduct = (product_id) => {
 			...res,
 			product_reviews_avatar_url: res.product_reviews_avatar_url ? `https://s3.us-east-2.amazonaws.com/lunadorii/${res.product_reviews_avatar_url}` : 'https://s3.us-east-2.amazonaws.com/lunadorii/avatar.png'
 		})))
-		.then(response => NestHydrationJS.nest(response, productsDefinition))
+		.then(response => NestHydrationJS.nest(response, singleProductDefinition))
 		.then(response => response.map(res => ({
 			...res,
 			product_rate: res.reviews.map(r => r.review_rate).reduce((a, b) => a+b) / res.reviews.length
@@ -118,11 +94,11 @@ exports.getSingleProductLogged = (product_id, id) => {
 			product_reviews_avatar_url: res.product_reviews_avatar_url ? `https://s3.us-east-2.amazonaws.com/lunadorii/${res.product_reviews_avatar_url}` : 'https://s3.us-east-2.amazonaws.com/lunadorii/avatar.png'
 		})))
 		.then(response => NestHydrationJS.nest(response, productsDefinition))
-		.then(response => {
-			return knex('wishlist')
+		.then(response => knex('wishlist')
 				.where('id', id)
-				.then(res => response.map(rproduct => ({...rproduct, wishlisted: !!res.filter(rwishlist => rwishlist.product_id === rproduct.product_id).length})))
-		})
+				.then(res => response.map(rproduct => ({
+					...rproduct,
+					wishlisted: !!res.filter(rwishlist => rwishlist.product_id === rproduct.product_id).length}))))
 		.then(response => response.map(res => ({
 			...res,
 			product_rate: res.reviews.map(r => r.review_rate).reduce((a, b) => a+b) / res.reviews.length
@@ -181,11 +157,11 @@ exports.getSingleProductWithSlugLogged = (product_slug, id) => {
 			product_reviews_avatar_url: res.product_reviews_avatar_url ? `https://s3.us-east-2.amazonaws.com/lunadorii/${res.product_reviews_avatar_url}` : 'https://s3.us-east-2.amazonaws.com/lunadorii/avatar.png'
 		})))
 		.then(response => NestHydrationJS.nest(response, productsDefinition))
-		.then(response => {
-			return knex('wishlist')
+		.then(response => knex('wishlist')
 				.where('id', id)
-				.then(res => response.map(rproduct => ({...rproduct, wishlisted: !!res.filter(rwishlist => rwishlist.product_id === rproduct.product_id).length})))
-		})
+				.then(res => response.map(rproduct => ({
+					...rproduct,
+					wishlisted: !!res.filter(rwishlist => rwishlist.product_id === rproduct.product_id).length}))))
 		.then(response => response.map(res => ({
 			...res,
 			product_rate: res.reviews.map(r => r.review_rate).reduce((a, b) => a+b) / res.reviews.length
@@ -194,7 +170,7 @@ exports.getSingleProductWithSlugLogged = (product_slug, id) => {
 		.catch(err => errorResponse(err, 500))
 }
 
-exports.getProductWithSubcategory = (product_subcategory_id) => {
+exports.getProductsWithSubcategory = (product_subcategory_id) => {
 	return knex('products')
 		.where('products.product_subcategory_id', product_subcategory_id)
 		.innerJoin('product_subcategories', 'products.product_subcategory_id', 'product_subcategories.product_subcategory_id')
@@ -202,18 +178,6 @@ exports.getProductWithSubcategory = (product_subcategory_id) => {
 		.innerJoin('product_thumbnails', 'products.product_id', 'product_thumbnails.product_id')
 		.innerJoin('product_reviews', 'products.product_id', 'product_reviews.product_id')
 		.innerJoin('users', 'product_reviews.id', 'users.id')
-		.select(
-			'*',
-			'users.id as product_reviews_user_id',
-			'users.avatar_url as product_reviews_avatar_url',
-			'users.first_name as product_reviews_first_name',
-			'users.last_name as product_reviews_last_name',
-			'product_reviews.created_at as product_reviews_created_at',
-			'product_reviews.updated_at as product_reviews_updated_at')
-		.then(response => response.map(res => ({
-			...res,
-			product_reviews_avatar_url: res.product_reviews_avatar_url ? `https://s3.us-east-2.amazonaws.com/lunadorii/${res.product_reviews_avatar_url}` : 'https://s3.us-east-2.amazonaws.com/lunadorii/avatar.png'
-		})))
 		.then(response => NestHydrationJS.nest(response, productsDefinition))
 		.then(response => response.map(res => ({
 			...res,
@@ -223,7 +187,7 @@ exports.getProductWithSubcategory = (product_subcategory_id) => {
 		.catch(err => errorResponse(err, 500))
 }
 
-exports.getProductWithSubcategoryLogged = (product_subcategory_id, id) => {
+exports.getProductsWithSubcategoryLogged = (product_subcategory_id, id) => {
 	return knex('products')
 		.where('products.product_subcategory_id', product_subcategory_id)
 		.innerJoin('product_subcategories', 'products.product_subcategory_id', 'product_subcategories.product_subcategory_id')
@@ -231,24 +195,12 @@ exports.getProductWithSubcategoryLogged = (product_subcategory_id, id) => {
 		.innerJoin('product_thumbnails', 'products.product_id', 'product_thumbnails.product_id')
 		.innerJoin('product_reviews', 'products.product_id', 'product_reviews.product_id')
 		.innerJoin('users', 'product_reviews.id', 'users.id')
-		.select(
-			'*',
-			'users.id as product_reviews_user_id',
-			'users.avatar_url as product_reviews_avatar_url',
-			'users.first_name as product_reviews_first_name',
-			'users.last_name as product_reviews_last_name',
-			'product_reviews.created_at as product_reviews_created_at',
-			'product_reviews.updated_at as product_reviews_updated_at')
-		.then(response => response.map(res => ({
-			...res,
-			product_reviews_avatar_url: res.product_reviews_avatar_url ? `https://s3.us-east-2.amazonaws.com/lunadorii/${res.product_reviews_avatar_url}` : 'https://s3.us-east-2.amazonaws.com/lunadorii/avatar.png'
-		})))
 		.then(response => NestHydrationJS.nest(response, productsDefinition))
-		.then(response => {
-			return knex('wishlist')
+		.then(response => knex('wishlist')
 				.where('id', id)
-				.then(res => response.map(rproduct => ({...rproduct, wishlisted: !!res.filter(rwishlist => rwishlist.product_id === rproduct.product_id).length})))
-		})
+				.then(res => response.map(rproduct => ({
+					...rproduct,
+					wishlisted: !!res.filter(rwishlist => rwishlist.product_id === rproduct.product_id).length}))))
 		.then(response => response.map(res => ({
 			...res,
 			product_rate: res.reviews.map(r => r.review_rate).reduce((a, b) => a+b) / res.reviews.length

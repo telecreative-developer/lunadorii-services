@@ -15,8 +15,8 @@ const {
 	getProductBrandsWithProducts,
 	getProductCategories,
 	getProductCategoriesWithSubcategories,
-	getProductSubcategories,
-	getProductSubcategoriesWithProducts,
+	getProductsSubcategories,
+	getProductsSubcategoriesWithProducts,
 	updateProduct,
 	deleteProduct
 } = require('../../dispatchers/products')
@@ -81,7 +81,7 @@ router.get('/product-categories', (req, res) => {
 
 // Get All Product Categories
 router.get('/product-subcategories', (req, res) => {
-	Promise.try(() => req.query.with_products ? getProductSubcategoriesWithProducts() : getProductSubcategories())
+	Promise.try(() => req.query.with_products ? getProductsSubcategoriesWithProducts() : getProductsSubcategories())
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log('Error on GET_ALL_PRODUCT_SUBCATEGORIES', err))
 })
