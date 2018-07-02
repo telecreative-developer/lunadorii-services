@@ -9,14 +9,14 @@ const {
 	getSingleProductLogged,
 	getSingleProductWithSlug,
 	getSingleProductWithSlugLogged,
-	getProductWithSubcategory,
-	getProductWithSubcategoryLogged,
+	getProductsWithSubcategory,
+	getProductsWithSubcategoryLogged,
 	getProductBrands,
 	getProductBrandsWithProducts,
 	getProductCategories,
 	getProductCategoriesWithSubcategories,
-	getProductsSubcategories,
-	getProductsSubcategoriesWithProducts,
+	getProductSubcategories,
+	getProductSubcategoriesWithProducts,
 	updateProduct,
 	deleteProduct
 } = require('../../dispatchers/products')
@@ -44,9 +44,9 @@ router.get('/product/slug/:product_slug', (req, res) => {
 		.catch(err => console.log('Error on GET_SINGLE_PRODUCT_WITH_SLUG', err))
 })
 
-// Get Single Product
-router.get('/product/:product_subcategory_id', (req, res) => {
-	Promise.try(() => req.query.id ? getProductWithSubcategoryLogged(req.params.product_subcategory_id, req.query.id) : getProductWithSubcategory(req.params.product_subcategory_id))
+// Get Product with Subcategory
+router.get('/product/subcategory/:product_subcategory_id', (req, res) => {
+	Promise.try(() => req.query.id ? getProductsWithSubcategoryLogged(req.params.product_subcategory_id, req.query.id) : getProductsWithSubcategory(req.params.product_subcategory_id))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log('Error on GET_PRODUCT_WITH_SUBCATEGORY', err))
 })
@@ -81,7 +81,7 @@ router.get('/product-categories', (req, res) => {
 
 // Get All Product Categories
 router.get('/product-subcategories', (req, res) => {
-	Promise.try(() => req.query.with_products ? getProductsSubcategoriesWithProducts() : getProductsSubcategories())
+	Promise.try(() => req.query.with_products ? getProductSubcategoriesWithProducts() : getProductSubcategories())
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log('Error on GET_ALL_PRODUCT_SUBCATEGORIES', err))
 })
