@@ -13,6 +13,7 @@ exports.getUserReviews = (id) => {
 		.where('product_reviews.id', id)
 		.innerJoin('products', 'product_reviews.product_id', 'products.product_id')
 		.innerJoin('product_thumbnails', 'products.product_id', 'product_thumbnails.product_id')
+		.innerJoin('product_brands', 'products.product_id', 'product_brands.product_brand_id')
 		.select(
 			'*',
 			'product_reviews.created_at as created_at',
