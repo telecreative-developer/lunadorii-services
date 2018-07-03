@@ -191,7 +191,7 @@ router.put('/user-review/:product_review_id', authentication, (req, res) => {
 })
 
 // Delete user reviews
-router.get('/user-review/:product_review_id', authentication, (req, res) => {
+router.delete('/user-review/:product_review_id', authentication, (req, res) => {
 	Promise.try(() => deleteUserReview(req.params.product_review_id))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log('Error on DELETE_USER_REVIEW', err))
