@@ -54,20 +54,40 @@ exports.getCart = (id) => {
 		.then(response => successResponse(response, 'Success Get Cart', 200))
 }
 
-exports.updateCartQty = (cart_id, qty) => {
-	return knex('cart')
-		.where('cart_id', cart_id)
-		.update({
-			qty: qty
-		})
-		.then(response => successResponse(null, 'Success Update Cart Qty', 200))
-		.catch(err => errorResponse(err, 500)) 
+exports.updateCartQty = (data) => {
+	if(data.cart_id) {
+		return knex('cart')
+			.where('cart_id', cart_id)
+			.update({
+				qty: data.qty
+			})
+			.then(response => successResponse(null, 'Success Update Qty Cart', 200))
+			.catch(err => errorResponse(err, 500))
+	} else {
+		return knex('cart')
+			.where('product_id', data.product_id)
+			.andWhere('id', data.id)
+			.update({
+				qty: data.qty
+			})
+			.then(response => successResponse(null, 'Success Update Qty Cart', 200))
+			.catch(err => errorResponse(err, 500))
+	}
 }
 
-exports.removeCart = (cart_id) => {
-	return knex('cart')
-		.where('cart_id', cart_id)
-		.del()
-		.then(response => successResponse(null, 'Success Remove Cart', 200))
-		.catch(err => errorResponse(err, 500))
+exports.removeCart = (data) => {
+	if(data.cart_id) {
+		return knex('cart')
+			.where('cart_id', cart_id)
+			.del()
+			.then(response => successResponse(null, 'Success Remove Cart', 200))
+			.catch(err => errorResponse(err, 500))
+	} else {
+		return knex('cart')
+			.where('product_id', data.product_id)
+			.andWhere('id', data.id)
+			.del()
+			.then(response => successResponse(null, 'Success Remove Cart', 200))
+			.catch(err => errorResponse(err, 500))
+	}
 }

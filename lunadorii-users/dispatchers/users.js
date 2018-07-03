@@ -20,6 +20,10 @@ exports.getUsers = () => {
 exports.getUserById = id => {
 	return knex('users')
 		.where('id', id)
+		.then(response => response.map(res => ({
+			...res,
+			avatar_url: res.avatar_url ? process.env.AWS_IMAGE_URL+res.avatar_url : process.env.AWS_IMAGE_DEFAULT_URL
+		})))
 		.then(response => successResponse(response, 'Success Get User', 200))
 		.catch(err => errorResponse(err, 500))
 }
