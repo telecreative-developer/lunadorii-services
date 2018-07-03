@@ -18,16 +18,36 @@ const {
 	getProductSubcategories,
 	getProductSubcategoriesWithProducts,
 	updateProduct,
-	deleteProduct
+	deleteProduct,
+	getAllNewArrivalsProductsLogged,
+	getAllNewArrivalsProducts,
+	getAllTopProductsLogged,
+	getAllTopProducts,
+	getAllTodayOffersProductsLogged,
+	getAllTodayOffersProducts
 } = require('../../dispatchers/products')
 const { addWishlist, getWishlist, removeWishlist } = require('../../dispatchers/wishlist')
 const { addCart, getCart, updateCartQty, removeCart } = require('../../dispatchers/cart')
 
 // Get All Products
 router.get('/products', (req, res) => {
-	Promise.try(() => req.query.id ? getAllProductsLogged(req.query.id) : getAllProducts())
-		.then(response => res.status(response.status).json(response))
-		.catch(err => console.log('Error on GET_ALL_PRODUCTS', err))
+	if(req.query.type === 'new-arrivals') {
+		Promise.try(() => req.query.id ? getAllNewArrivalsProductsLogged(req.query.id) : getAllNewArrivalsProducts())
+			.then(response => res.status(response.status).json(response))
+			.catch(err => console.log('Error on GET_ALL_PRODUCTS_NEW_ARRIVALS', err))
+	}else if(req.query.type === 'top-products') {
+		Promise.try(() => req.query.id ? getAllTopProductsLogged(req.query.id) : getAllTopProducts())
+			.then(response => res.status(response.status).json(response))
+			.catch(err => console.log('Error on GET_ALL_PRODUCTS', err))
+	}else if(req.query.type === 'today-offers') {
+		Promise.try(() => req.query.id ? getAllTodayOffersProductsLogged(req.query.id) : getAllTodayOffersProducts())
+			.then(response => res.status(response.status).json(response))
+			.catch(err => console.log('Error on GET_ALL_PRODUCTS', err))
+	}else {
+		Promise.try(() => req.query.id ? getAllProductsLogged(req.query.id) : getAllProducts())
+			.then(response => res.status(response.status).json(response))
+			.catch(err => console.log('Error on GET_ALL_PRODUCTS', err))
+	}
 })
 
 // Get Single Product
