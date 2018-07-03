@@ -30,9 +30,7 @@ const wishlistDefinition = [{
 		},
 		created_at: {column: 'product_reviews_created_at'},
 		updated_at: {column: 'product_reviews_updated_at'}
-	}],
-	created_at: {column: 'created_at'},
-	updated_at: {column: 'updated_at'}
+	}]
 }]
 
 module.exports = wishlistDefinition
