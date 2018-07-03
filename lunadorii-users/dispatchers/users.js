@@ -8,11 +8,15 @@ const NestHydrationJS = require('nesthydrationjs')()
 const { successResponse, errorResponse } = require('../responsers')
 const reviewsDefinition = require('../definitions/reviews')
 const banksDefinition = require('../definitions/banks')
+const userDefinition = require('../definitions/users')
 
 exports.getUsers = () => {
-	return knex
-		.select()
-		.table('users')
+	return knex('users')
+		.then(response => NestHydrationJS.nest(response, userDefinition))
+		.then(response => response.map(res => ({
+			...res,
+			avatar_url: res.avatar_url.length < 20 ? res.avatar_url ? process.env.AWS_IMAGE_URL+res.avatar_url : process.env.AWS_IMAGE_DEFAULT_URL : res.avatar_url
+		})))
 		.then(response => successResponse(response, 'Success Get Users', 200))
 		.catch(err => errorResponse(err, 500))
 }
@@ -20,9 +24,10 @@ exports.getUsers = () => {
 exports.getUserById = id => {
 	return knex('users')
 		.where('id', id)
+		.then(response => NestHydrationJS.nest(response, userDefinition))
 		.then(response => response.map(res => ({
 			...res,
-			avatar_url: res.avatar_url ? process.env.AWS_IMAGE_URL+res.avatar_url : process.env.AWS_IMAGE_DEFAULT_URL
+			avatar_url: res.avatar_url.length < 20 ? res.avatar_url ? process.env.AWS_IMAGE_URL+res.avatar_url : process.env.AWS_IMAGE_DEFAULT_URL : res.avatar_url
 		})))
 		.then(response => successResponse(response, 'Success Get User', 200))
 		.catch(err => errorResponse(err, 500))

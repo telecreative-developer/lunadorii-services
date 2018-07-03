@@ -24,10 +24,18 @@ exports.getUserReviews = (id) => {
 		.catch(err => errorResponse(err, 500))
 }
 
-exports.updateUserReviews = (product_review_id, data) => {
+exports.updateUserReview = (product_review_id, data) => {
 	return knex('product_reviews')
 		.where('product_review_id', product_review_id)
 		.update(data)
-		.then(response => successResponse(response, 'Success Update User Reviews', 200))
+		.then(response => successResponse(response, 'Success Update User Review', 200))
+		.catch(err => errorResponse(err, 500))
+}
+
+exports.deleteUserReview = (product_review_id) => {
+	return knex('product_reviews')
+		.where('product_review_id', product_review_id)
+		.delete()
+		.then(response => successResponse(response, 'Success Delete User Review', 200))
 		.catch(err => errorResponse(err, 500))
 }
