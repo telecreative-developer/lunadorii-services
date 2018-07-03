@@ -18,7 +18,8 @@ const {
 	getProductSubcategories,
 	getProductSubcategoriesWithProducts,
 	updateProduct,
-	deleteProduct
+	deleteProduct,
+	getAllProductsTest
 } = require('../../dispatchers/products')
 const { addWishlist, getWishlist, removeWishlist } = require('../../dispatchers/wishlist')
 const { addCart, getCart, updateCartQty, removeCart } = require('../../dispatchers/cart')
@@ -29,6 +30,14 @@ router.get('/products', (req, res) => {
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log('Error on GET_ALL_PRODUCTS', err))
 })
+
+// Get All Products
+router.get('/products/test', (req, res) => {
+	Promise.try(() => getAllProductsTest())
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log('Error on GET_ALL_PRODUCTS', err))
+})
+
 
 // Get Single Product
 router.get('/product/:product_id', (req, res) => {
@@ -123,14 +132,14 @@ router.get('/cart/:id', authentication, (req, res) => {
 
 // Update Cart Qty
 router.put('/cart/:cart_id', authentication, (req, res) => {
-	Promise.try(() => updateCartQty(req.params.cart_id, req.body.qty))
+	Promise.try(() => updateCartQty(req.body))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log('Error on UPDATE_CART_QTY', err))
 })
 
 // Delete Cart
-router.delete('/cart/:cart_id', authentication, (req, res) => {
-	Promise.try(() => removeCart(req.params.wishlist_id))
+router.delete('/cart', authentication, (req, res) => {
+	Promise.try(() => removeCart(req.body))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log('Error on DELETE_CART', err))
 })
