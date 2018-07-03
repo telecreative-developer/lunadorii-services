@@ -6,6 +6,11 @@ const reviewsDefinition = [{
 		product_id: {column: 'product_id', id: true},
 		name: {column: 'product'},
 		price: {column: 'price'},
+		brands: [{
+			product_brand_id: {column: 'product_brand_id', id: true},
+			brand: {column: 'brand'},
+			logo_url: {column: 'logo_url'}
+		}],
 		thumbnails: [{
 			product_thumbnail_id: {column: 'product_thumbnail_id', id: true},
 			thumbnail_url: {column: 'thumbnail_url'}

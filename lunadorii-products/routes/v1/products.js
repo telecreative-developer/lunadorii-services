@@ -24,37 +24,39 @@ const {
 	getAllTopProductsLogged,
 	getAllTopProducts,
 	getAllTodayOffersProductsLogged,
-	getAllTodayOffersProducts
+	getAllTodayOffersProducts,
+	getRelatedProducts,
+	getRelatedProductsLogged
 } = require('../../dispatchers/products')
 const { addWishlist, getWishlist, removeWishlist } = require('../../dispatchers/wishlist')
 const { addCart, getCart, updateCartQty, removeCart } = require('../../dispatchers/cart')
 
 // Get All Products
 router.get('/products', (req, res) => {
-	if(req.query.type === 'new-arrivals') {
-		Promise.try(() => req.query.id ? getAllNewArrivalsProductsLogged(req.query.id) : getAllNewArrivalsProducts())
+	Promise.try(() => req.query.id ? getAllProductsLogged(req.query.id) : getAllProducts())
+			.then(response => res.status(response.status).json(response))
+			.catch(err => console.log('Error on GET_ALL_PRODUCTS', err))
+})
+
+// Get New Arrivals Products
+router.get('/products/new-arrivals', (req, res) => {
+	Promise.try(() => req.query.id ? getAllNewArrivalsProductsLogged(req.query.id) : getAllNewArrivalsProducts())
 			.then(response => res.status(response.status).json(response))
 			.catch(err => console.log('Error on GET_ALL_PRODUCTS_NEW_ARRIVALS', err))
-	}else if(req.query.type === 'top-products') {
-		Promise.try(() => req.query.id ? getAllTopProductsLogged(req.query.id) : getAllTopProducts())
+})
+
+// Get Related Products
+router.get('/products/related/:product_id', (req, res) => {
+	Promise.try(() => req.query.id ? getRelatedProductsLogged(req.params.product_id, req.query.id) : getRelatedProducts(req.params.product_id))
 			.then(response => res.status(response.status).json(response))
-			.catch(err => console.log('Error on GET_ALL_PRODUCTS', err))
-	}else if(req.query.type === 'today-offers') {
-		Promise.try(() => req.query.id ? getAllTodayOffersProductsLogged(req.query.id) : getAllTodayOffersProducts())
-			.then(response => res.status(response.status).json(response))
-			.catch(err => console.log('Error on GET_ALL_PRODUCTS', err))
-	}else {
-		Promise.try(() => req.query.id ? getAllProductsLogged(req.query.id) : getAllProducts())
-			.then(response => res.status(response.status).json(response))
-			.catch(err => console.log('Error on GET_ALL_PRODUCTS', err))
-	}
+			.catch(err => console.log('Error on GET_RELATED_PRODUCTS', err))
 })
 
 // Get Single Product
 router.get('/product/:product_id', (req, res) => {
 	Promise.try(() => req.query.id ? getSingleProductLogged(req.params.product_id, req.query.id) : getSingleProduct(req.params.product_id))
-		.then(response => res.status(response.status).json(response))
-		.catch(err => console.log('Error on GET_SINGLE_PRODUCT', err))
+			.then(response => res.status(response.status).json(response))
+			.catch(err => console.log('Error on GET_SINGLE_PRODUCT', err))
 })
 
 // Get Single Product with Slug
