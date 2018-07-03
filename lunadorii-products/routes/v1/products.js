@@ -18,8 +18,7 @@ const {
 	getProductSubcategories,
 	getProductSubcategoriesWithProducts,
 	updateProduct,
-	deleteProduct,
-	getAllProductsTest
+	deleteProduct
 } = require('../../dispatchers/products')
 const { addWishlist, getWishlist, removeWishlist } = require('../../dispatchers/wishlist')
 const { addCart, getCart, updateCartQty, removeCart } = require('../../dispatchers/cart')
@@ -30,14 +29,6 @@ router.get('/products', (req, res) => {
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log('Error on GET_ALL_PRODUCTS', err))
 })
-
-// Get All Products
-router.get('/products/test', (req, res) => {
-	Promise.try(() => getAllProductsTest())
-		.then(response => res.status(response.status).json(response))
-		.catch(err => console.log('Error on GET_ALL_PRODUCTS', err))
-})
-
 
 // Get Single Product
 router.get('/product/:product_id', (req, res) => {

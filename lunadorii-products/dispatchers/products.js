@@ -33,7 +33,7 @@ exports.getAllProducts = () => {
 			product_rate: res.reviews.length ? res.reviews.map(r => r.review_rate).reduce((a, b) => a+b) / res.reviews.length : 0
 		})))
 		.then(response => successResponse(response, 'Success Get Products', 200))
-		.catch(err => console.log(err))
+		.catch(err => errorResponse(err, 500))
 }
 
 exports.getAllProductsLogged = (id) => {
@@ -45,6 +45,7 @@ exports.getAllProductsLogged = (id) => {
 		.innerJoin('users', 'product_reviews.id', 'users.id')
 		.select(
 			'*',
+			'products.product_id as product_id',
 			'users.id as product_reviews_user_id',
 			'users.avatar_url as product_reviews_avatar_url',
 			'users.first_name as product_reviews_first_name',
