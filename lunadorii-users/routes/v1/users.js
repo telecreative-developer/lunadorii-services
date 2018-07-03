@@ -32,7 +32,8 @@ const {
 } = require('../../dispatchers/banks')
 const {
 	getUserReviews,
-	updateUserReviews
+	updateUserReview,
+	deleteUserReview
 } = require('../../dispatchers/reviews')
 
 const s3 = new AWS.S3({
@@ -184,9 +185,16 @@ router.get('/user-reviews/:id', authentication, (req, res) => {
 
 // Update user review
 router.put('/user-review/:product_review_id', authentication, (req, res) => {
-	Promise.try(() => updateUserReviews(req.params.product_review_id, req.body))
+	Promise.try(() => updateUserReview(req.params.product_review_id, req.body))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log('Error on UPDATE_USER_REVIEWS', err))
+})
+
+// Delete user reviews
+router.get('/user-review/:product_review_id', authentication, (req, res) => {
+	Promise.try(() => deleteUserReview(req.params.product_review_id))
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log('Error on DELETE_USER_REVIEW', err))
 })
 
 module.exports = router
