@@ -31,6 +31,7 @@ apiEndpoints:
     host: /
     paths:
       - '/api/v1/products'
+      - '/api/v1/products/*'
       - '/api/v1/product/*'
       - '/api/v1/product-brands'
       - '/api/v1/product-categories'
