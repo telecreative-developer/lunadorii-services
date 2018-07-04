@@ -5,7 +5,6 @@ exports.up = function(knex, Promise) {
 			table.string('order_no').unique()
 			table.integer('user_address_id')
 			table.integer('id')
-			table.integer('')
 			table.timestamps(true, true)
 
 			table.foreign('user_address_id')

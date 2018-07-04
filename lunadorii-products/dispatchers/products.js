@@ -205,7 +205,6 @@ exports.getSingleProductLogged = (product_id, id) => {
 exports.getRelatedProducts = (product_id) => {
 	return knex('products')
 		.where('products.product_id', product_id)
-		.limit(1)
 		.then(response => knex('products')
 			.where('products.product_subcategory_id', response[0].product_subcategory_id)
 			.innerJoin('product_subcategories', 'products.product_subcategory_id', 'product_subcategories.product_subcategory_id')
@@ -222,8 +221,7 @@ exports.getRelatedProducts = (product_id) => {
 				'users.last_name as product_reviews_last_name',
 				'product_reviews.created_at as product_reviews_created_at',
 				'product_reviews.updated_at as product_reviews_updated_at')
-			.limit(10)
-			.then(response => response.map(res => ({
+			.then(response => response.splice(0, 10).map(res => ({
 				...res,
 				product_reviews_avatar_url: res.product_reviews_avatar_url ? process.env.AWS_IMAGE_URL+res.product_reviews_avatar_url : process.env.AWS_IMAGE_DEFAULT_URL
 			})))
@@ -256,8 +254,7 @@ exports.getRelatedProductsLogged = (product_id, id) => {
 				'users.last_name as product_reviews_last_name',
 				'product_reviews.created_at as product_reviews_created_at',
 				'product_reviews.updated_at as product_reviews_updated_at')
-			.limit(10)
-			.then(response => response.map(res => ({
+			.then(response => response.splice(0, 10).map(res => ({
 				...res,
 				product_reviews_avatar_url: res.product_reviews_avatar_url ? process.env.AWS_IMAGE_URL+res.product_reviews_avatar_url : process.env.AWS_IMAGE_DEFAULT_URL
 			})))
