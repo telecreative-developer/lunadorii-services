@@ -15,7 +15,7 @@ exports.getUsers = () => {
 		.then(response => NestHydrationJS.nest(response, userDefinition))
 		.then(response => response.map(res => ({
 			...res,
-			avatar_url: res.avatar_url.length < 20 ? res.avatar_url ? process.env.AWS_IMAGE_URL+res.avatar_url : process.env.AWS_IMAGE_DEFAULT_URL : res.avatar_url
+			avatar_url: res.avatar_url ? res.avatar_url.length < 20 ? process.env.AWS_IMAGE_URL+res.avatar_url : res.avatar_url : process.env.AWS_IMAGE_DEFAULT_URL
 		})))
 		.then(response => successResponse(response, 'Success Get Users', 200))
 		.catch(err => errorResponse(err, 500))
@@ -27,7 +27,7 @@ exports.getUserById = id => {
 		.then(response => NestHydrationJS.nest(response, userDefinition))
 		.then(response => response.map(res => ({
 			...res,
-			avatar_url: res.avatar_url.length < 20 ? res.avatar_url ? process.env.AWS_IMAGE_URL+res.avatar_url : process.env.AWS_IMAGE_DEFAULT_URL : res.avatar_url
+			avatar_url: res.avatar_url ? res.avatar_url.length < 20 ? process.env.AWS_IMAGE_URL+res.avatar_url : res.avatar_url : process.env.AWS_IMAGE_DEFAULT_URL
 		})))
 		.then(response => successResponse(response, 'Success Get User', 200))
 		.catch(err => errorResponse(err, 500))
