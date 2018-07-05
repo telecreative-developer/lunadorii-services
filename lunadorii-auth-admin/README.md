@@ -40,7 +40,7 @@ This API reference is organized by resource type. Each resource type has one or 
 ```javascript
 {
     "name": "error",
-    "message": "Incorrect username or password",
+    "message": "Username or password incorrect",
     "status": 400
 }
 ```
@@ -51,5 +51,14 @@ This API reference is organized by resource type. Each resource type has one or 
     "name": "error",
     "message": "Missing credentials",
     "status": 400
+}
+```
+
+##### Field can not be empty
+```javascript
+{
+    "name": "error",
+    "message": {},
+    "status": 500
 }
 ```
