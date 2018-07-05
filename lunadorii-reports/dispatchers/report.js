@@ -8,7 +8,8 @@ const { successResponse, errorResponse } = require('../responsers')
 exports.sendReport = (data) => {
 	return knex('reports')
 		.insert(data)
-		.then(response => successResponse(null, 'Success Send Report', 201))
+		.returning('report_id')
+		.then(report_id => successResponse(parseInt(report_id.toString()), 'Success Send Report', 201))
 		.catch(err => errorResponse(err, 500))
 }
 

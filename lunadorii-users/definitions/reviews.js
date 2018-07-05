@@ -4,6 +4,7 @@ const reviewsDefinition = [{
 	comment: {column: 'comment'},
 	product: {
 		product_id: {column: 'product_id', id: true},
+		product_slug: {column: 'product_slug'},
 		name: {column: 'product'},
 		price: {column: 'price'},
 		brands: [{

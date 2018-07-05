@@ -38,7 +38,7 @@ exports.authFacebook = (data) => {
 				if(check) {
 					const accessToken = jwt.sign({id: response[0].id, role: 'user'}, process.env.JWT_SECRET_KEY, accessTokenObject)
 				  const refreshToken = jwt.sign({id: response[0].id, role: 'user'}, process.env.JWT_SECRET_KEY, refreshTokenObject)
-				  return successResponse({id: response[0].id, accessToken, refreshToken}, 'Success Auth Facebook', 201)
+				  return successResponse({id: response[0].id, accessToken, refreshToken}, 'Success Authenticate with Facebook', 201)
 				}else {
 					return errorResponse('Email is already exist', 500)
 				}
@@ -58,7 +58,7 @@ exports.authFacebook = (data) => {
 							.then(id => {
 								const accessToken = jwt.sign({id: parseInt(id.toString()), role: 'user'}, process.env.JWT_SECRET_KEY, accessTokenObject)
 							  const refreshToken = jwt.sign({id: parseInt(id.toString()), role: 'user'}, process.env.JWT_SECRET_KEY, refreshTokenObject)
-							  return successResponse({id: parseInt(id.toString()), accessToken, refreshToken}, 'Success Auth Facebook', 201)
+							  return successResponse({id: parseInt(id.toString()), accessToken, refreshToken}, 'Success Authenticate with Facebook', 201)
 							})
 							.catch(err => errorResponse(err, 500))
 					})
