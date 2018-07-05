@@ -53,6 +53,15 @@ This API reference is organized by resource type. Each resource type has one or 
 }
 ```
 
+##### Error object name 
+```javascript
+{
+    "name": "error",
+    "message": "Missing credentials",
+    "status": 400
+}
+```
+
 ##### Field can not be empty
 ```javascript
 {
