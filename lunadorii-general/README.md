@@ -4,10 +4,10 @@ This API reference is organized by resource type. Each resource type has one or 
 
 ## Resource types
 
-| No | HTTP Method | HTTP Request           | HTTP Code      | Token Required     |
-|----|-------------|------------------------|----------------|--------------------|
-| 1  | GET         | /api/v1/general/banks  | 201, 400, 500  | :x:                |
-| 2  | GET         | /api/v1/general/places | 201, 400, 500  | :x:                |
+| No | HTTP Method | HTTP Request           | HTTP Code | Token Required     |
+|----|-------------|------------------------|-----------|--------------------|
+| 1  | GET         | /api/v1/general/banks  | 200, 500  | :x:                |
+| 2  | GET         | /api/v1/general/places | 200, 500  | :x:                |
 
 ### Description
 
