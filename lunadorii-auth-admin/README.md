@@ -16,14 +16,13 @@ This API reference is organized by resource type. Each resource type has one or 
 
 ```javascript
 {
-    "username": "example",
-    "password": "example"
+    "username": "kevinhermawan",
+    "password": "kevinhermawan"
 }
 ```
 
 ### Response
 #### Success
-
 ```javascript
 {
     "name": "success",
@@ -35,7 +34,7 @@ This API reference is organized by resource type. Each resource type has one or 
 }
 ```
 
-#### Failed
+## Failed
 ##### Incorrect username or password
 
 ```javascript
@@ -45,6 +44,7 @@ This API reference is organized by resource type. Each resource type has one or 
     "status": 400
 }
 ```
+
 ##### Error object name 
 ```javascript
 {
