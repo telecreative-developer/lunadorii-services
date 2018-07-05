@@ -1,6 +1,8 @@
 const addressesDefinition = [{
 	user_address_id: {column: 'user_address_id', id: true},
+  label: {column: 'label'},
 	recepient: {column: 'recepient'},
+  phone: {column: 'phone'},
 	longitude: {column: 'longitude'},
   latitude: {column: 'latitude'},
   city: {column: 'city'},

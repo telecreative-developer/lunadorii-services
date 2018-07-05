@@ -29,6 +29,6 @@ exports.search = (attributes) => {
 
 			return response
 		})
-		.then(response => successResponse(response, `Success Search: ${attributes.payload}`, 201))
+		.then(response => successResponse(response, `Success Search (keyword: ${attributes.payload})`, 201))
 		.catch(err => errorResponse(err, 500))
 }
