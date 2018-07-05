@@ -3,7 +3,6 @@
 This API reference is organized by resource type. Each resource type has one or more data representations and one or more methods.
 
 ## Resource types
-### Admin services
 
 | No | HTTP Method | HTTP Request                            | HTTP Code          | Token Required     |
 |----|-------------|-----------------------------------------|--------------------|--------------------|
