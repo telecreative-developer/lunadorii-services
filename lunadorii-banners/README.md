@@ -6,7 +6,7 @@ This API reference is organized by resource type. Each resource type has one or 
 
 | No | HTTP Method | HTTP Request    | HTTP Code      | Token Required     |
 |----|-------------|-----------------|----------------|--------------------|
-| 1  | GET         | /api/v1/banners | 201, 400, 500  | :x:                |
+| 1  | GET         | /api/v1/banners | 200, 500  | :x:                |
 
 ### Description
 #### 1. GET banner
