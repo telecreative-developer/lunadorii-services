@@ -4,6 +4,8 @@ const bcrypt = require('bcrypt')
 const environment = process.env.NODE_ENV || 'development'
 const configuration = require('../knexfile')[environment]
 const knex = require('knex')(configuration)
+const NestHydrationJS = require('nesthydrationjs')()
+const addressesDefinition = require('../definitions/addresses')
 const { successResponse, errorResponse } = require('../responsers')
 
 exports.addUserAddress = (data) => {
@@ -20,10 +22,10 @@ exports.addUserAddress = (data) => {
 
 exports.getUserAddresses = (id) => {
 	return knex('user_addresses')
-		.where('user_addresses.id', id)
+		.where('id', id)
 		.innerJoin('provinces', 'user_addresses.province_id', 'provinces.province_id')
 		.innerJoin('cities', 'user_addresses.city_id', 'cities.city_id')
-		.innerJoin('districts', 'user_addresses.district_id', 'districts.district_id')
+		.then(response => NestHydrationJS.nest(response, addressesDefinition))
 		.then(response => successResponse(response, 'Success Get User Addresses', 200))
 		.catch(err => errorResponse(err, 500))
 }

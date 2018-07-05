@@ -15,7 +15,7 @@ router.get('/general/banks', (req, res) => {
 		.catch(err => console.log('Error on GET_BANKS', err))
 })
 
-// Get all banks
+// Get all places
 router.get('/general/places', (req, res) => {
 	Promise.try(() => getPlaces())
 		.then(response => res.status(response.status).json(response))
