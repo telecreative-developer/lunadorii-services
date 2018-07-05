@@ -6,9 +6,7 @@ const knex = require('knex')(configuration)
 const { successResponse, errorResponse } = require('../responsers')
 
 exports.getBanners = () => {
-	return knex
-		.select()
-		.table('banners')
+	return knex('banners')
 		.then(response => successResponse(response, 'Success Retrieving Banners', 200))
 		.catch(err => errorResponse(err, 500))
 }

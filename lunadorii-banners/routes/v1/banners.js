@@ -9,7 +9,7 @@ const {
 router.get('/banners', (req, res) => {
 	Promise.try(() => getBanners())
 		.then(response => res.status(response.status).json(response))
-		.catch(err => console.log('Error on GET_ALL_BANNERS', err))
+		.catch(err => console.log('Error on GET_BANNERS', err))
 })
 
 module.exports = router
