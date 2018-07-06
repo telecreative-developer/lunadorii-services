@@ -51,6 +51,8 @@ apiEndpoints:
   report:
     host: ec2-18-222-130-109.us-east-2.compute.amazonaws.com
     paths:
+      - '/api/v1/report'
+      - '/api/v1/report/*'
       - '/api/v1/reports'
   search:
     host: ec2-18-222-130-109.us-east-2.compute.amazonaws.com
