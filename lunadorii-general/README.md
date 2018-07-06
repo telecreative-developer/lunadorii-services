@@ -36,7 +36,7 @@ This API reference is organized by resource type. Each resource type has one or 
 }
 ```
 
-#### 1. GET places
+#### 2. GET places
 ### Response
 ```javascript
 {
