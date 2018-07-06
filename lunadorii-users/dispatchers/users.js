@@ -29,7 +29,7 @@ exports.getUserById = id => {
 			...res,
 			avatar_url: res.avatar_url ? res.avatar_url.length < 20 ? process.env.AWS_IMAGE_URL+res.avatar_url : res.avatar_url : process.env.AWS_IMAGE_DEFAULT_URL
 		})))
-		.then(response => successResponse(response, 'Success Get User', 200))
+		.then(response => successResponse(response, `Success Get User (id: ${id})`, 200))
 		.catch(err => errorResponse(err, 500))
 }
 
@@ -41,7 +41,7 @@ exports.updateUser = (id, data) => {
 			last_name: data.last_name,
 			bod: data.bod
 		})
-		.then(response => successResponse(response, 'Success Update User', 200))
+		.then(response => successResponse(parseInt(id), `Success Update User (id: ${id})`, 201))
 		.catch(err => errorResponse(err, 500))
 }
 
@@ -51,7 +51,7 @@ exports.uploadAvatar = (id, image) => {
 		.update({
 			avatar_url: image
 		})
-		.then(response => successResponse(response, 'Success Upload Avatar User', 200))
+		.then(response => successResponse(response, `Success Upload User Avatar (id: ${id})`, 201))
 		.catch(err => errorResponse(err, 500))
 }
 
@@ -60,11 +60,11 @@ exports.registerUser = data => {
 		.where('email', data.email)
 		.then(response => {
 			if (response.length) {
-				return errorResponse('Email is already in use', 409)
+				return errorResponse('Email is already exists', 409)
 			} else {
 				return bcrypt.hash(data.password, 10)
 				.then(hash => knex('users').insert({...data, password: hash}).returning('id'))
-				.then(id => successResponse([{id: parseInt(id.toString())}], 'Success Register User', 201))
+				.then(id => successResponse([{id: parseInt(id.toString())}], `Success Register User (id: ${parseInt(id.toString())})`, 201))
 				.catch(err => errorResponse(err, 500))
 			}
 		})
@@ -76,9 +76,9 @@ exports.checkEmail = email => {
 		.where('email', email)
 		.then(response => {
 			if (response.length) {
-				return errorResponse('Email is already in use', 409)
+				return errorResponse('Email is already exists', 409)
 			} else {
-				return successResponse(null, 'Email Available', 200)
+				return successResponse(null, 'Email available', 200)
 			}
 		})
 		.catch(err => errorResponse(err, 500))
@@ -86,26 +86,25 @@ exports.checkEmail = email => {
 
 exports.updateEmail = (id, data) => {
 	return knex('users')
-		.where('email', data.email)
+		.where('id', id)
 		.then(response => {
 			if(response.length) {
 				if(response[0].email === data.email) {
+						return successResponse(parseInt(id), `Success Update User Email (id: ${id})`, 201)
+					}else {
+						return errorResponse('Email is already exists', 409)
+					}
+				}else {
 					return knex('users')
 						.where('id', id)
-						.update(data)
-						.then(response => successResponse(response, 'Success Update Email', 200))
+						.update({
+							email: data.email
+						})
+						.then(() => successResponse(parseInt(id), `Success Update User Email (id: ${id})`, 201))
 						.catch(err => errorResponse(err, 500))
-				}else {
-					return errorResponse('Email is already in use', 409)
 				}
-			}else {
-				return knex('users')
-					.where('id', id)
-					.update(data)
-					.then(response => successResponse(response, 'Success Update Email', 200))
-					.catch(err => errorResponse(err, 500))
-			}
 		})
+		.catch(err => errorResponse(err, 500))
 }
 
 exports.updatePassword = (id, data) => {
@@ -118,7 +117,7 @@ exports.updatePassword = (id, data) => {
 						if(res) {
 							return bcrypt.hash(data.new_password, 10)
 								.then((hash) => knex('users').where('id', id).update({password: hash})
-								.then(response => successResponse(response, 'Success Update Password', 200))
+								.then(response => successResponse(parseInt(id), `Success Update User Password (id: ${id})`, 201))
 								.catch(err => errorResponse(err, 500)))
 						}else {
 							return errorResponse('Old password is incorrect', 500)

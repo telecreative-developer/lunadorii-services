@@ -67,14 +67,14 @@ router.get('/users', authentication, (req, res) => {
 router.get('/user/:id', authentication, (req, res) => {
 	Promise.try(() => getUserById(req.params.id))
 		.then(response => res.status(response.status).json(response))
-		.catch(err => console.log('Error on GET_ALL_USER_BY_ID', err))
+		.catch(err => console.log('Error on GET_USER_BY_ID', err))
 })
 
 // Update user
 router.put('/user/:id', authentication, (req, res) => {
 	Promise.try(() => updateUser(req.params.id, req.body))
 		.then(response => res.status(response.status).json(response))
-		.catch(err => console.log('Error on GET_UPDATE_USER', err))
+		.catch(err => console.log('Error on UPDATE_USER', err))
 })
 
 // Upload avatar user
@@ -89,7 +89,7 @@ router.post('/user/upload-avatar/:id', upload.single('avatar'), (req, res) => {
 router.post('/user/register', (req, res) => {
 	Promise.try(() => registerUser(req.body))
 		.then(response => res.status(response.status).json(response))
-		.catch(err => console.log('Error on GET_REGISTER_USER', err))
+		.catch(err => console.log('Error on REGISTER_USER', err))
 })
 
 // Check email
