@@ -57,7 +57,7 @@ apiEndpoints:
   search:
     host: ec2-18-222-130-109.us-east-2.compute.amazonaws.com
     paths:
-      - '/api/v1/search/*'
+      - '/api/v1/search'
 serviceEndpoints:
   authService:
     url: 'http://localhost:9001'
