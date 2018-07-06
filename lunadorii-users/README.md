@@ -212,3 +212,40 @@ This API reference is organized by resource type. Each resource type has one or 
     "data": 1
 }
 ```
+
+## Failed
+##### Email is already exists
+```javascript
+{
+    "name": "error",
+    "message": "Email is already exists",
+    "status": 409
+}
+```
+
+##### Username is already exists
+```javascript
+{
+    "name": "error",
+    "message": "Username is already exists",
+    "status": 409
+}
+```
+
+##### Old password is incorrect
+```javascript
+{
+    "name": "error",
+    "message": "Old password is incorrect",
+    "status": 500
+}
+```
+
+##### Internal server error
+```javascript
+{
+    "name": "error",
+    "message": {},
+    "status": 500
+}
+```
