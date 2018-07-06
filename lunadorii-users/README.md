@@ -4,15 +4,28 @@ This API reference is organized by resource type. Each resource type has one or 
 
 ## Resource types
 
-| No | HTTP Method | HTTP Request                     | HTTP Code          | Token Required     |
-|----|-------------|----------------------------------|--------------------|--------------------|
-| 1  | GET         | /api/v1/users                    | 200, 500           | :white_check_mark: |
-| 2  | GET         | /api/v1/user/:id                 | 200, 201, 400, 500 | :white_check_mark: |
-| 3  | PUT         | /api/v1/user/:id                 | 201, 400, 500      | :white_check_mark: |
-| 4  | POST        | /api/v1/user/register            | 201, 400, 409, 500 | :x:                |
-| 5  | POST        | /api/v1/user/check-email         | 201, 400, 409, 500 | :x:                |
-| 6  | PUT         | /api/v1/user/change-email/:id    | 201, 400, 409, 500 | :white_check_mark: |
-| 7  | PUT         | /api/v1/user/change-password/:id | 201, 400, 500      | :white_check_mark: |
+| No  | HTTP Method | HTTP Request                               | HTTP Code          | Token Required     |
+|-----|-------------|--------------------------------------------|--------------------|--------------------|
+| 1   | GET         | /api/v1/users                              | 200, 500           | :white_check_mark: |
+| 2   | GET         | /api/v1/user/:id                           | 200, 201, 400, 500 | :white_check_mark: |
+| 3   | PUT         | /api/v1/user/:id                           | 201, 400, 500      | :white_check_mark: |
+| 4   | POST        | /api/v1/user/upload-avatar/:id             | 201, 400, 500      | :white_check_mark: |
+| 5   | POST        | /api/v1/user/register                      | 201, 400, 409, 500 | :x:                |
+| 6   | POST        | /api/v1/user/check-email                   | 200, 400, 409, 500 | :x:                |
+| 7   | PUT         | /api/v1/user/change-email/:id              | 201, 400, 409, 500 | :white_check_mark: |
+| 8   | PUT         | /api/v1/user/change-password/:id           | 201, 400, 500      | :white_check_mark: |
+| 9   | POST        | /user-address                              | 201, 400, 500      | :white_check_mark: |
+| 10  | GET         | /user-addresses/:id                        | 200, 400, 500      | :white_check_mark: |
+| 11  | PUT         | /user-address/:user_address_id             | 201, 400, 500      | :white_check_mark: |
+| 12  | POST        | /user-address/set-default/:user_address_id | 201, 400, 500      | :white_check_mark: |
+| 13  | DELETE      | /user-address/:user_address_id             | 200, 400, 500      | :white_check_mark: |
+| 14  | POST        | /user-bank                                 | 201, 400, 500      | :white_check_mark: |
+| 15  | GET         | /user-banks/:id                            | 200, 400, 500      | :white_check_mark: |
+| 16  | PUT         | /user-bank/:user_bank_id                   | 201, 400, 500      | :white_check_mark: |
+| 17  | GET         | /user-reviews/:id                          | 200, 400, 500      | :white_check_mark: |
+| 18  | PUT         | /user-review/:product_review_id            | 201, 400, 500      | :white_check_mark: |
+| 19  | PUT         | /user-bank/set-default/:user_bank_id       | 201, 400, 500      | :white_check_mark: |
+| 20  | DELETE      | /user-review/:product_review_id            | 200, 400, 500      | :white_check_mark: |
 
 ### Description
 #### 1. GET Users
