@@ -38,7 +38,9 @@ apiEndpoints:
       - '/api/v1/product-brands'
       - '/api/v1/product-categories'
       - '/api/v1/product-subcategories'
+      - '/api/v1/wishlist'
       - '/api/v1/wishlist/*'
+      - '/api/v1/cart'
       - '/api/v1/cart/*'
   banners:
     host: ec2-18-222-130-109.us-east-2.compute.amazonaws.com
