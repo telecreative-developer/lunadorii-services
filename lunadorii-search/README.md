@@ -12,10 +12,10 @@ This API reference is organized by resource type. Each resource type has one or 
 | No | Query                        | HTTP Query     | Query Type| Required                                               | Example                       |
 |----|------------------------------|----------------|-----------|--------------------------------------------------------|-------------------------------|
 | 1  | Search Keyword               | payload        | String    | :white_check_mark:                                     | /search?payload=Product Keren |
-| 1  | Filter with ID Subcategories | subcategories  | Array     | :x:                                                    | /search?subcategories=[1,2,3] |
-| 1  | Filter with ID Product Brand | productBrand   | Integer   | :x:                                                    | /search?productBrand=1        |
-| 1  | Filter with maxPrice         | maxPrice       | Integer   | :white_check_mark: if minPrice Inserted (default: :x:) | /search?maxPrice=100000       |
-| 1  | Filter with minPrice         | minPrice       | Integer   | :white_check_mark: if maxPrice Inserted (default: :x:) | /search?minPrice=10000        |
+| 2  | Filter with ID Subcategories | subcategories  | Array     | :x:                                                    | /search?subcategories=[1,2,3] |
+| 3  | Filter with ID Product Brand | productBrand   | Integer   | :x:                                                    | /search?productBrand=1        |
+| 4  | Filter with maxPrice         | maxPrice       | Integer   | :white_check_mark: if minPrice Inserted (default: :x:) | /search?maxPrice=100000       |
+| 5  | Filter with minPrice         | minPrice       | Integer   | :white_check_mark: if maxPrice Inserted (default: :x:) | /search?minPrice=10000        |
 
 ### Description
 
