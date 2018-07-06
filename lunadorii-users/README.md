@@ -95,8 +95,34 @@ This API reference is organized by resource type. Each resource type has one or 
     "data": 1
 }
 ```
+#### 4. Upload Avatar
+### Request
+```javascript
+{
+    "avatar": "..." // multipart/form-data
+}
+```
 
-#### 4. Check user email
+### Response if available
+```javascript
+{
+    "name": "success",
+    "message": "Email available",
+    "status": 200,
+    "data": null
+}
+```
+
+### Response if already exists
+```javascript
+{
+    "name": "error",
+    "message": "Email is already exists",
+    "status": 409
+}
+```
+
+#### 5. Check user email
 ### Request
 ```javascript
 {
@@ -124,7 +150,7 @@ This API reference is organized by resource type. Each resource type has one or 
 ```
 
 
-#### 5. Register user
+#### 6. Register user
 ### Request
 ```javascript
 {
@@ -149,7 +175,7 @@ This API reference is organized by resource type. Each resource type has one or 
 }
 ```
 
-#### 6. UPDATE user email
+#### 7. UPDATE user email
 ### Request
 ```javascript
 {
@@ -167,7 +193,7 @@ This API reference is organized by resource type. Each resource type has one or 
 }
 ```
 
-#### 7. UPDATE user password
+#### 8. UPDATE user password
 ### Request
 
 ```javascript
