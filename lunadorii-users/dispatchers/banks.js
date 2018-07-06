@@ -26,7 +26,7 @@ exports.addUserBank = data => {
 										bank_id: data.bank_id,
 										id: data.id,
 										account_default: responseUserBank.length ? false : true})
-									.then(response => successResponse(null, 'Success Add User Banks', 200))
+									.then(response => successResponse(null, 'Success Add User Banks', 201))
 									.catch(err => errorResponse(err, 500))
 							}else {
 								return errorResponse('Password is incorrect', 500)
@@ -62,7 +62,7 @@ exports.updateUserBank = (user_bank_id, data) => {
 									account_default: data.account_default,
 									bank_id: data.bank_id
 								})
-								.then(response => successResponse(response, 'Success Update User Banks', 200))
+								.then(response => successResponse(response, 'Success Update User Banks', 201))
 								.catch(err => errorResponse(err, 500))
 						}else {
 							return errorResponse('Password is incorrect', 500)
@@ -79,6 +79,6 @@ exports.setDefaultUserBank = user_bank_id => {
 	return knex('user_banks')
 		.where('user_bank_id', user_bank_id)
 		.update({account_default: true})
-		.then(response => successResponse(response, 'Success Set Default Bank', 200))
+		.then(response => successResponse(response, 'Success Set Default Bank', 201))
 		.catch(err => errorResponse(err, 500)) 
 }

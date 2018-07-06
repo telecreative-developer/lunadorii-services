@@ -28,7 +28,7 @@ exports.updateUserReview = (product_review_id, data) => {
 	return knex('product_reviews')
 		.where('product_review_id', product_review_id)
 		.update(data)
-		.then(response => successResponse(response, 'Success Update User Review', 200))
+		.then(response => successResponse(response, 'Success Update User Review', 201))
 		.catch(err => errorResponse(err, 500))
 }
 
