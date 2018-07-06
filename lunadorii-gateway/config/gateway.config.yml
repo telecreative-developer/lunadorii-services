@@ -2,18 +2,18 @@ http:
   port: 8080
 admin:
   port: 9876
-  hostname: ec2-18-222-130-109.us-east-2.compute.amazonaws.com
+  hostname: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
 apiEndpoints:
   auth:
-    host: ec2-18-222-130-109.us-east-2.compute.amazonaws.com
+    host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
     paths:
       - '/api/v1/auth/user'
   authAdmin:
-    host: ec2-18-222-130-109.us-east-2.compute.amazonaws.com
+    host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
     paths:
       - '/api/v1/auth/admin'
   users:
-    host: ec2-18-222-130-109.us-east-2.compute.amazonaws.com
+    host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
     paths:
       - '/api/v1/users'
       - '/api/v1/user/*'
@@ -26,11 +26,11 @@ apiEndpoints:
       - '/api/v1/user-reviews/*'
       - '/api/v1/user-review/*'
   admin:
-    host: ec2-18-222-130-109.us-east-2.compute.amazonaws.com
+    host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
     paths:
       - '/api/v1/admin/*'
   products:
-    host: ec2-18-222-130-109.us-east-2.compute.amazonaws.com
+    host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
     paths:
       - '/api/v1/products'
       - '/api/v1/products/*'
@@ -43,21 +43,21 @@ apiEndpoints:
       - '/api/v1/cart'
       - '/api/v1/cart/*'
   banners:
-    host: ec2-18-222-130-109.us-east-2.compute.amazonaws.com
+    host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
     paths:
       - '/api/v1/banners'
   general:
-    host: ec2-18-222-130-109.us-east-2.compute.amazonaws.com
+    host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
     paths:
       - '/api/v1/general/*'
   report:
-    host: ec2-18-222-130-109.us-east-2.compute.amazonaws.com
+    host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
     paths:
       - '/api/v1/report'
       - '/api/v1/report/*'
       - '/api/v1/reports'
   search:
-    host: ec2-18-222-130-109.us-east-2.compute.amazonaws.com
+    host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
     paths:
       - '/api/v1/search'
 serviceEndpoints:
