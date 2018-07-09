@@ -115,10 +115,10 @@ exports.checkEmail = email => {
 
 exports.updateEmail = (id, data) => {
 	return knex("users")
-		.where("id", id)
+		.where("email", data.email)
 		.then(response => {
 			if (response.length) {
-				if (response[0].email === data.email) {
+				if (response[0].id === parseInt(id)) {
 					return successResponse(
 						parseInt(id),
 						`Success Update User Email (id: ${id})`,
