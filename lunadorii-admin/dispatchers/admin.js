@@ -106,10 +106,10 @@ exports.updateUsername = (admin_id, data) => {
 
 exports.updateEmail = (admin_id, data) => {
 	return knex("admin")
-		.where("admin_id", admin_id)
+		.where("email", data.email)
 		.then(response => {
 			if (response.length) {
-				if (response[0].email === data.email) {
+				if (response[0].admin_id === parseInt(admin_id)) {
 					return successResponse(
 						parseInt(admin_id),
 						`Success Update Admin Email (admin_id: ${admin_id})`,
