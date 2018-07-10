@@ -117,7 +117,7 @@ exports.updateCartQty = data => {
 exports.removeCart = data => {
 	if (data.cart_id) {
 		return knex("cart")
-			.where("cart_id", cart_id)
+			.where("cart_id", data.cart_id)
 			.del()
 			.then(response => successResponse(null, "Success Remove Cart", 200))
 			.catch(err => errorResponse(err, 500))
