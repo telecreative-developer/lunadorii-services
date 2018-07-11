@@ -30,7 +30,8 @@ const {
 	getAllTodayOffersProductsLogged,
 	getAllTodayOffersProducts,
 	getRelatedProducts,
-	getRelatedProductsLogged
+	getRelatedProductsLogged,
+	getBestSellerProducts
 } = require("../../dispatchers/products")
 const {
 	addWishlist,
@@ -63,6 +64,13 @@ router.get("/products/new-arrivals", (req, res) => {
 	)
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on GET_ALL_PRODUCTS_NEW_ARRIVALS", err))
+})
+
+// Get Products Best Seller
+router.get("/products/best-seller", (req, res) => {
+	Promise.try(() => getBestSellerProducts())
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log("Error on GET_ALL_PRODUCTS_BEST_SELLER", err))
 })
 
 // Get Related Products
