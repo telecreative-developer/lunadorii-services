@@ -60,6 +60,11 @@ apiEndpoints:
     host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
     paths:
       - '/api/v1/search'
+  orders:
+    host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
+    paths:
+      - '/api/v1/order'
+      - '/api/v1/order/*'
 serviceEndpoints:
   authService:
     url: 'http://localhost:9001'
@@ -79,6 +84,8 @@ serviceEndpoints:
     url: 'http://localhost:9008'
   searchService:
     url: 'http://localhost:9009'
+  ordersService:
+    url: 'http://localhost:9010'
 policies:
   - basic-auth
   - cors
@@ -168,4 +175,12 @@ pipelines:
       - proxy:
           - action:
               serviceEndpoint: searchService
+              changeOrigin: true
+  - name: orders-service
+    apiEndpoints:
+      - orders
+    policies:
+      - proxy:
+          - action:
+              serviceEndpoint: ordersService
               changeOrigin: true
