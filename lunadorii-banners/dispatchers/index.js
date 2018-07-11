@@ -16,11 +16,7 @@ exports.getBanners = () => {
 exports.getProductBanners = banner_id => {
 	return knex("product_banners")
 		.where("product_banners.banner_id", banner_id)
-		.innerJoin(
-			"products",
-			"product_banners.product_id",
-			"product_banners.product_id"
-		)
+		.innerJoin("products", "product_banners.product_id", "products.product_id")
 		.innerJoin(
 			"product_subcategories",
 			"products.product_subcategory_id",
@@ -84,11 +80,7 @@ exports.getProductBanners = banner_id => {
 exports.getProductBannersLogged = (banner_id, id) => {
 	return knex("product_banners")
 		.where("product_banners.banner_id", banner_id)
-		.innerJoin(
-			"products",
-			"product_banners.product_id",
-			"product_banners.product_id"
-		)
+		.innerJoin("products", "product_banners.product_id", "products.product_id")
 		.innerJoin(
 			"product_subcategories",
 			"products.product_subcategory_id",
