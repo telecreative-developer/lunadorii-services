@@ -5,6 +5,7 @@ const environment = process.env.NODE_ENV || "development"
 const configuration = require("../knexfile")[environment]
 const knex = require("knex")(configuration)
 const NestHydrationJS = require("nesthydrationjs")()
+const moment = require("moment-timezone")
 const { successResponse, errorResponse } = require("../responsers")
 const reviewsDefinition = require("../definitions/reviews")
 const banksDefinition = require("../definitions/banks")
@@ -53,7 +54,10 @@ exports.updateUser = (id, data) => {
 		.update({
 			first_name: data.first_name,
 			last_name: data.last_name,
-			bod: data.bod
+			bod: data.bod,
+			updated_at: moment()
+				.tz("Asia/Jakarta")
+				.format()
 		})
 		.then(response =>
 			successResponse(parseInt(id), `Success Update User (id: ${id})`, 201)

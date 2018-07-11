@@ -3,12 +3,13 @@ const express = require("express")
 const Promise = require("bluebird")
 const router = express.Router()
 const authentication = require("../../middleware/authentication")
+const { checkoutOrder } = require("../../dispatchers/order")
 
-// Post order
+// Checkout order
 router.post("/order/checkout", (req, res) => {
-	Promise.try(() => postOrder(req.body))
+	Promise.try(() => checkoutOrder(req.body))
 		.then(response => res.status(response.status).json(response))
-		.catch(err => console.log("Error on SEND_ORDER", err))
+		.catch(err => console.log("Error on CHECKOUT_ORDER", err))
 })
 
 module.exports = router
