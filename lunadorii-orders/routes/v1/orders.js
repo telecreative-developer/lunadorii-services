@@ -10,21 +10,21 @@ const {
 } = require("../../dispatchers/order")
 
 // Checkout order
-router.post("/order/checkout", (req, res) => {
+router.post("/order/checkout", authentication, (req, res) => {
 	Promise.try(() => checkoutOrder(req.body))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on CHECKOUT_ORDER", err))
 })
 
 // Order history
-router.get("/order/history/:id", (req, res) => {
+router.get("/order/history/:id", authentication, (req, res) => {
 	Promise.try(() => getOrderHistory(req.params.id))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on GET_ORDER_HISTORY", err))
 })
 
 // Order recent
-router.get("/order/recent/:id", (req, res) => {
+router.get("/order/recent/:id", authentication, (req, res) => {
 	Promise.try(() => getOrderRecent(req.params.id))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on GET_ORDER_RECENT", err))
