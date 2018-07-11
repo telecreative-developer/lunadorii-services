@@ -5,6 +5,7 @@ const configuration = require("../knexfile")[environment]
 const knex = require("knex")(configuration)
 const NestHydrationJS = require("nesthydrationjs")()
 const { successResponse, errorResponse } = require("../responsers")
+const { historyDefinition } = require("../definitions/orders")
 
 exports.checkoutOrder = data => {
 	return knex("orders")
@@ -30,7 +31,7 @@ exports.checkoutOrder = data => {
 			data.data.forEach(d =>
 				knex("order_products")
 					.insert({
-						purchase_number: Math.floor(100000 + Math.random() * 900000),
+						purchase_number: Math.floor(100000 + Math.random() * 9000000000000),
 						delivery_service: d.delivery_service,
 						delivery_price: d.delivery_price,
 						qty: d.qty,
@@ -44,4 +45,39 @@ exports.checkoutOrder = data => {
 		)
 		.then(() => successResponse(null, "Success Checkout Order", 201))
 		.catch(err => errorResponse(err, 500))
+}
+
+exports.getOrderHistory = id => {
+	return knex("orders")
+		.where("orders.id", id)
+		.innerJoin("order_products", "orders.order_id", "order_products.order_id")
+		.innerJoin("products", "order_products.product_id", "products.product_id")
+		.innerJoin(
+			"product_thumbnails",
+			"products.product_id",
+			"product_thumbnails.product_id"
+		)
+		.orderBy("orders.created_at", "desc")
+		.then(response => NestHydrationJS.nest(response, historyDefinition))
+		.then(response =>
+			successResponse(response, "Success Get Order History", 200)
+		)
+}
+
+exports.getOrderRecent = id => {
+	return knex("orders")
+		.where("orders.id", id)
+		.innerJoin("order_products", "orders.order_id", "order_products.order_id")
+		.innerJoin("products", "order_products.product_id", "products.product_id")
+		.innerJoin(
+			"product_thumbnails",
+			"products.product_id",
+			"product_thumbnails.product_id"
+		)
+		.orderBy("orders.created_at", "desc")
+		.limit(5)
+		.then(response => NestHydrationJS.nest(response, historyDefinition))
+		.then(response =>
+			successResponse(response, "Success Get Order Recent", 200)
+		)
 }
