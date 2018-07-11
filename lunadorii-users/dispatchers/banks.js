@@ -29,7 +29,7 @@ exports.addUserBank = data => {
 										account_default: responseUserBank.length ? false : true
 									})
 									.then(response =>
-										successResponse(null, "Success Add User Banks", 201)
+										successResponse(null, "Success Add User Bank", 201)
 									)
 									.catch(err => errorResponse(err, 500))
 							} else {
@@ -66,7 +66,7 @@ exports.updateUserBank = (user_bank_id, data) => {
 								bank_id: data.bank_id
 							})
 							.then(response =>
-								successResponse(response, "Success Update User Banks", 201)
+								successResponse(response, "Success Update User Bank", 201)
 							)
 							.catch(err => errorResponse(err, 500))
 					} else {
@@ -80,12 +80,30 @@ exports.updateUserBank = (user_bank_id, data) => {
 		.catch(err => errorResponse(err, 500))
 }
 
-exports.setDefaultUserBank = user_bank_id => {
+exports.setDefaultUserBank = (user_bank_id, id) => {
+	return knex("user_banks")
+		.where("id", id)
+		.update({ card_default: false })
+		.then(() => {
+			return knex("user_banks")
+				.where("user_bank_id", user_bank_id)
+				.update({ card_default: true })
+				.then(response =>
+					successResponse(
+						parseInt(user_bank_id),
+						"Success Set Default User Bank",
+						201
+					)
+				)
+				.catch(err => errorResponse(err, 500))
+		})
+		.catch(err => errorResponse(err, 500))
+}
+
+exports.deleteUserBank = user_bank_id => {
 	return knex("user_banks")
 		.where("user_bank_id", user_bank_id)
-		.update({ account_default: true })
-		.then(response =>
-			successResponse(response, "Success Set Default Bank", 201)
-		)
+		.del()
+		.then(() => successResponse(response, "Success Delete User Bank", 201))
 		.catch(err => errorResponse(err, 500))
 }

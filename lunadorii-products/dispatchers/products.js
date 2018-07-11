@@ -11,6 +11,10 @@ const {
 	productCategoriesDefinition,
 	productSubcategoriesDefinition
 } = require("../definitions/products")
+const {
+	topBrandsDefinition,
+	topBrandsWithProductsDefinition
+} = require("../definitions/brands")
 
 exports.getAllProducts = () => {
 	return knex("products")
@@ -982,6 +986,42 @@ exports.getProductBrands = () => {
 		.catch(err => errorResponse(err, 500))
 }
 
+exports.getTopProductBrands = () => {
+	return knex("order_products")
+		.innerJoin("products", "order_products.product_id", "products.product_id")
+		.innerJoin(
+			"product_brands",
+			"products.product_brand_id",
+			"product_brands.product_brand_id"
+		)
+		.orderBy("order_products.created_at", "desc")
+		.limit(5)
+		.then(response => NestHydrationJS.nest(response, topBrandsDefinition))
+		.then(response =>
+			successResponse(response, "Success Get Top Product Brands", 200)
+		)
+		.catch(err => errorResponse(err, 500))
+}
+
+exports.getTopProductBrandsWithProducts = () => {
+	return knex("order_products")
+		.innerJoin("products", "order_products.product_id", "products.product_id")
+		.innerJoin(
+			"product_brands",
+			"products.product_brand_id",
+			"product_brands.product_brand_id"
+		)
+		.orderBy("order_products.created_at", "desc")
+		.limit(5)
+		.then(response =>
+			NestHydrationJS.nest(response, topBrandsWithProductsDefinition)
+		)
+		.then(response =>
+			successResponse(response, "Success Get Top Product Brands", 200)
+		)
+		.catch(err => errorResponse(err, 500))
+}
+
 exports.getProductBrandsWithProducts = () => {
 	return knex("product_brands")
 		.innerJoin(
@@ -1066,4 +1106,4 @@ exports.deleteProduct = product_id => {
 		.del()
 		.then(response => successResponse(response, "Success Delete Product", 200))
 		.catch(err => errorResponse(err, 500))
-} 
+}

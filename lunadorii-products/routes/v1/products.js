@@ -15,6 +15,8 @@ const {
 	getProductsWithBrandLogged,
 	getProductBrands,
 	getProductBrandsWithProducts,
+	getTopProductBrands,
+	getTopProductBrandsWithProducts,
 	getProductCategories,
 	getProductCategoriesWithSubcategories,
 	getProductSubcategories,
@@ -150,6 +152,18 @@ router.get("/product-brands", (req, res) => {
 	)
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on GET_ALL_PRODUCT_BRANDS", err))
+})
+
+// Get Top Product Brands
+router.get("/product-brands/top", (req, res) => {
+	Promise.try(
+		() =>
+			req.query.with_product
+				? getTopProductBrandsWithProducts()
+				: getTopProductBrands()
+	)
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log("Error on GET_TOP_PRODUCT_BRANDS", err))
 })
 
 // Get All Product Categories
