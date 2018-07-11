@@ -1,15 +1,29 @@
-const express = require('express')
-const Promise = require('bluebird')
+const express = require("express")
+const Promise = require("bluebird")
 const router = express.Router()
 const {
-	getBanners
-} = require('../../dispatchers')
+	getBanners,
+	getProductBanners,
+	getProductBannersLogged
+} = require("../../dispatchers")
 
 // Get all banners
-router.get('/banners', (req, res) => {
+router.get("/banners", (req, res) => {
 	Promise.try(() => getBanners())
 		.then(response => res.status(response.status).json(response))
-		.catch(err => console.log('Error on GET_BANNERS', err))
+		.catch(err => console.log("Error on GET_BANNERS", err))
+})
+
+// Get all banners
+router.get("/product-banners/:banner_id", (req, res) => {
+	Promise.try(
+		() =>
+			req.query.id
+				? getProductBannersLogged(req.params.banner_id, req.query.id)
+				: getProductBanners(req.params.banner_id)
+	)
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log("Error on GET_BANNERS", err))
 })
 
 module.exports = router
