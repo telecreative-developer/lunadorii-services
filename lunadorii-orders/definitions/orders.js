@@ -5,6 +5,8 @@ const historyDefinition = [
 		order_status: { column: "order_status" },
 		total: { column: "total" },
 		address: { column: "address" },
+		created_at: { column: "created_at" },
+		updated_at: { column: "updated_at" },
 		list: [
 			{
 				order_product_id: { column: "order_product_id", id: true },

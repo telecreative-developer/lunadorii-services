@@ -9,9 +9,7 @@ const productsDefinition = require("../definitions/products")
 
 exports.getBanners = () => {
 	return knex("banners")
-		.then(response =>
-			successResponse(response, "Success Retrieving Banners", 200)
-		)
+		.then(response => successResponse(response, "Success Get Banners", 200))
 		.catch(err => errorResponse(err, 500))
 }
 
@@ -78,9 +76,9 @@ exports.getProductBanners = banner_id => {
 			}))
 		)
 		.then(response =>
-			successResponse(response, "Success Retrieving Products from Banner", 200)
+			successResponse(response, "Success Get Products from Banner", 200)
 		)
-		.catch(err => console.log(err))
+		.catch(err => errorResponse(err, 500))
 }
 
 exports.getProductBannersLogged = (banner_id, id) => {
@@ -158,7 +156,7 @@ exports.getProductBannersLogged = (banner_id, id) => {
 			}))
 		)
 		.then(response =>
-			successResponse(response, "Success Retrieving Products from Banner", 200)
+			successResponse(response, "Success Get Products from Banner Logged", 200)
 		)
-		.catch(err => console.log(err))
+		.catch(err => errorResponse(err, 500))
 }

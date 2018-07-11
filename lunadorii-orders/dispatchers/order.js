@@ -57,6 +57,11 @@ exports.getOrderHistory = id => {
 			"products.product_id",
 			"product_thumbnails.product_id"
 		)
+		.select(
+			"*",
+			"orders.created_at as created_at",
+			"orders.updated_at as updated_at"
+		)
 		.orderBy("orders.created_at", "desc")
 		.then(response => NestHydrationJS.nest(response, historyDefinition))
 		.then(response =>
@@ -73,6 +78,11 @@ exports.getOrderRecent = id => {
 			"product_thumbnails",
 			"products.product_id",
 			"product_thumbnails.product_id"
+		)
+		.select(
+			"*",
+			"orders.created_at as created_at",
+			"orders.updated_at as updated_at"
 		)
 		.orderBy("orders.created_at", "desc")
 		.limit(5)
