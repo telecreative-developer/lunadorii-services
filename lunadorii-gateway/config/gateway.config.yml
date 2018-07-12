@@ -4,62 +4,10 @@ admin:
   port: 9876
   hostname: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
 apiEndpoints:
-  auth:
-    host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
-    paths:
-      - '/api/v1/auth/user'
-  authAdmin:
-    host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
-    paths:
-      - '/api/v1/auth/admin'
-  users:
-    host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
-    paths:
-      - '/api/v1/users'
-      - '/api/v1/user/*'
-      - '/api/v1/user-addresses/*'
-      - '/api/v1/user-address'
-      - '/api/v1/user-address/*'
-      - '/api/v1/user-banks/*'
-      - '/api/v1/user-bank'
-      - '/api/v1/user-bank/*'
-      - '/api/v1/user-creditcard'
-      - '/api/v1/user-creditcard/*'
-      - '/api/v1/user-reviews/*'
-      - '/api/v1/user-review/*'
-  admin:
-    host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
-    paths:
-      - '/api/v1/admin/*'
-  products:
+  apiVersion1:
     host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
     paths:
       - '/api/v1/*'
-  banners:
-    host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
-    paths:
-      - '/api/v1/banners'
-      - '/api/v1/product-banners'
-      - '/api/v1/product-banners/*'
-  general:
-    host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
-    paths:
-      - '/api/v1/general/*'
-  report:
-    host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
-    paths:
-      - '/api/v1/report'
-      - '/api/v1/report/*'
-      - '/api/v1/reports'
-  search:
-    host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
-    paths:
-      - '/api/v1/search'
-  orders:
-    host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
-    paths:
-      - '/api/v1/order'
-      - '/api/v1/order/*'
 serviceEndpoints:
   authService:
     url: 'http://localhost:9001'
@@ -93,7 +41,7 @@ policies:
 pipelines:
   - name: auth-service
     apiEndpoints:
-      - auth
+      - apiVersion1
     policies:
       - proxy:
           - action:
@@ -102,7 +50,7 @@ pipelines:
 
   - name: auth-admin-service
     apiEndpoints:
-      - authAdmin
+      - apiVersion1
     policies:
       - proxy:
           - action:
@@ -111,7 +59,7 @@ pipelines:
 
   - name: users-service
     apiEndpoints:
-      - users
+      - apiVersion1
     policies:
       - proxy:
           - action:
@@ -120,7 +68,7 @@ pipelines:
 
   - name: admin-service
     apiEndpoints:
-      - admin
+      - apiVersion1
     policies:
       - proxy:
           - action:
@@ -129,7 +77,7 @@ pipelines:
 
   - name: products-service
     apiEndpoints:
-      - products
+      - apiVersion1
     policies:
       - proxy:
           - action:
@@ -138,7 +86,7 @@ pipelines:
 
   - name: banners-service
     apiEndpoints:
-      - banners
+      - apiVersion1
     policies:
       - proxy:
           - action:
@@ -147,7 +95,7 @@ pipelines:
 
   - name: general-service
     apiEndpoints:
-      - general
+      - apiVersion1
     policies:
       - proxy:
           - action:
@@ -156,7 +104,7 @@ pipelines:
 
   - name: report-service
     apiEndpoints:
-      - report
+      - apiVersion1
     policies:
       - proxy:
           - action:
@@ -165,7 +113,7 @@ pipelines:
 
   - name: search-service
     apiEndpoints:
-      - search
+      - apiVersion1
     policies:
       - proxy:
           - action:
@@ -173,7 +121,7 @@ pipelines:
               changeOrigin: true
   - name: orders-service
     apiEndpoints:
-      - orders
+      - apiVersion1
     policies:
       - proxy:
           - action:
