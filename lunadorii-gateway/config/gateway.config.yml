@@ -4,7 +4,43 @@ admin:
   port: 9876
   hostname: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
 apiEndpoints:
-  apiVersion1:
+  auth:
+    host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
+    paths:
+      - '/api/v1/*'
+  authAdmin:
+    host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
+    paths:
+      - '/api/v1/*'
+  users:
+    host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
+    paths:
+      - '/api/v1/*'
+  admin:
+    host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
+    paths:
+      - '/api/v1/*'
+  products:
+    host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
+    paths:
+      - '/api/v1/*'
+  banners:
+    host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
+    paths:
+      - '/api/v1/*'
+  general:
+    host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
+    paths:
+      - '/api/v1/*'
+  report:
+    host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
+    paths:
+      - '/api/v1/*'
+  search:
+    host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
+    paths:
+      - '/api/v1/*'
+  orders:
     host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
     paths:
       - '/api/v1/*'
@@ -41,7 +77,7 @@ policies:
 pipelines:
   - name: auth-service
     apiEndpoints:
-      - apiVersion1
+      - auth
     policies:
       - proxy:
           - action:
@@ -50,7 +86,7 @@ pipelines:
 
   - name: auth-admin-service
     apiEndpoints:
-      - apiVersion1
+      - authAdmin
     policies:
       - proxy:
           - action:
@@ -59,7 +95,7 @@ pipelines:
 
   - name: users-service
     apiEndpoints:
-      - apiVersion1
+      - users
     policies:
       - proxy:
           - action:
@@ -68,7 +104,7 @@ pipelines:
 
   - name: admin-service
     apiEndpoints:
-      - apiVersion1
+      - admin
     policies:
       - proxy:
           - action:
@@ -77,7 +113,7 @@ pipelines:
 
   - name: products-service
     apiEndpoints:
-      - apiVersion1
+      - products
     policies:
       - proxy:
           - action:
@@ -86,7 +122,7 @@ pipelines:
 
   - name: banners-service
     apiEndpoints:
-      - apiVersion1
+      - banners
     policies:
       - proxy:
           - action:
@@ -95,7 +131,7 @@ pipelines:
 
   - name: general-service
     apiEndpoints:
-      - apiVersion1
+      - general
     policies:
       - proxy:
           - action:
@@ -104,7 +140,7 @@ pipelines:
 
   - name: report-service
     apiEndpoints:
-      - apiVersion1
+      - report
     policies:
       - proxy:
           - action:
@@ -113,7 +149,7 @@ pipelines:
 
   - name: search-service
     apiEndpoints:
-      - apiVersion1
+      - search
     policies:
       - proxy:
           - action:
@@ -121,7 +157,7 @@ pipelines:
               changeOrigin: true
   - name: orders-service
     apiEndpoints:
-      - apiVersion1
+      - orders
     policies:
       - proxy:
           - action:
