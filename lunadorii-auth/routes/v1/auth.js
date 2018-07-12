@@ -4,7 +4,7 @@ const Promise = require("bluebird")
 const router = express.Router()
 const jwt = require("jsonwebtoken")
 const passport = require("passport")
-const { authFacebook } = require("../../dispatchers/auth")
+const { authFacebook, authGoogle } = require("../../dispatchers/auth")
 
 router.post("/auth/user", (req, res) => {
 	passport.authenticate(
