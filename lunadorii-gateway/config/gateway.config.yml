@@ -34,16 +34,7 @@ apiEndpoints:
   products:
     host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
     paths:
-      - '/api/v1/products'
-      - '/api/v1/products/*'
-      - '/api/v1/product/*'
-      - '/api/v1/product-brands'
-      - '/api/v1/product-categories'
-      - '/api/v1/product-subcategories'
-      - '/api/v1/wishlist'
-      - '/api/v1/wishlist/*'
-      - '/api/v1/cart'
-      - '/api/v1/cart/*'
+      - '/api/v1/*'
   banners:
     host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
     paths:
