@@ -57,6 +57,11 @@ exports.getOrderHistory = id => {
 			"products.product_id",
 			"product_thumbnails.product_id"
 		)
+		.innerJoin(
+			"product_subcategories",
+			"products.product_subcategory_id",
+			"product_subcategories.product_subcategory_id"
+		)
 		.select(
 			"*",
 			"orders.created_at as created_at",
@@ -78,6 +83,11 @@ exports.getOrderRecent = id => {
 			"product_thumbnails",
 			"products.product_id",
 			"product_thumbnails.product_id"
+		)
+		.innerJoin(
+			"product_subcategories",
+			"products.product_subcategory_id",
+			"product_subcategories.product_subcategory_id"
 		)
 		.select(
 			"*",

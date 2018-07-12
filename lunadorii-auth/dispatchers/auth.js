@@ -100,7 +100,7 @@ exports.authFacebook = data => {
 }
 
 exports.authGoogle = data => {
-	return knex(users)
+	return knex("users")
 		.where("email", data.email)
 		.limit(1)
 		.then(response => {
@@ -131,11 +131,11 @@ exports.authGoogle = data => {
 			} else {
 				return knex("users")
 					.insert({
-						first_name: res.first_name,
-						last_name: res.last_name,
-						email: res.email,
-						avatar_url: res.picture.data.url,
-						provider: "facebook"
+						first_name: data.first_name,
+						last_name: data.last_name,
+						email: data.email,
+						avatar_url: data.avatar_url,
+						provider: "google"
 					})
 					.returning("id")
 					.then(id => {
@@ -151,11 +151,12 @@ exports.authGoogle = data => {
 						)
 						return successResponse(
 							{ id: parseInt(id.toString()), accessToken, refreshToken },
-							"Success Authenticate with Facebook",
+							"Success Authenticate with Google",
 							201
 						)
 					})
 					.catch(err => errorResponse(err, 500))
 			}
 		})
+		.catch(err => errorResponse(err, 500))
 }

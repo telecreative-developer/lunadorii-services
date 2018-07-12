@@ -19,6 +19,15 @@ const historyDefinition = [
 				payment_time: { column: "payment_time" },
 				delivery_time: { column: "delivery_time" },
 				receipt_time: { column: "receipt_time" },
+				subcategories: [
+					{
+						product_subcategory_id: {
+							column: "product_subcategory_id",
+							id: true
+						},
+						subcategory: { column: "subcategory" }
+					}
+				],
 				thumbnails: [
 					{
 						product_thumbnail_id: { column: "product_thumbnail_id", id: true },
