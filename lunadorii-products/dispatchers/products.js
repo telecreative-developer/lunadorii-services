@@ -365,6 +365,9 @@ exports.getBestSellerProducts = () => {
 		)
 		.then(response => removeDuplicates(response, "product_id"))
 		.then(response =>
+			response.sort((a, b) => a.product_sold - b.product_sold).reverse()
+		)
+		.then(response =>
 			successResponse(response, "Success Get Products Best Seller", 200)
 		)
 		.catch(err => console.log(err))
