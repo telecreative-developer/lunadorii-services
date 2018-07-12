@@ -7,43 +7,69 @@ apiEndpoints:
   auth:
     host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
     paths:
-      - '/api/v1/*'
+      - '/api/v1/auth/user'
   authAdmin:
     host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
     paths:
-      - '/api/v1/*'
+      - '/api/v1/auth/admin'
   users:
     host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
     paths:
-      - '/api/v1/*'
+      - '/api/v1/users'
+      - '/api/v1/user/*'
+      - '/api/v1/user-addresses/*'
+      - '/api/v1/user-address'
+      - '/api/v1/user-address/*'
+      - '/api/v1/user-banks/*'
+      - '/api/v1/user-bank'
+      - '/api/v1/user-bank/*'
+      - '/api/v1/user-creditcard'
+      - '/api/v1/user-creditcard/*'
+      - '/api/v1/user-reviews/*'
+      - '/api/v1/user-review/*'
   admin:
     host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
     paths:
-      - '/api/v1/*'
+      - '/api/v1/admin/*'
   products:
     host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
     paths:
-      - '/api/v1/*'
+      - '/api/v1/products'
+      - '/api/v1/products/*'
+      - '/api/v1/product/*'
+      - '/api/v1/product-brands'
+      - '/api/v1/product-brands/*'
+      - '/api/v1/product-categories'
+      - '/api/v1/product-subcategories'
+      - '/api/v1/wishlist'
+      - '/api/v1/wishlist/*'
+      - '/api/v1/cart'
+      - '/api/v1/cart/*'
   banners:
     host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
     paths:
-      - '/api/v1/*'
+      - '/api/v1/banners'
+      - '/api/v1/product-banners'
+      - '/api/v1/product-banners/*'
   general:
     host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
     paths:
-      - '/api/v1/*'
+      - '/api/v1/general/*'
   report:
     host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
     paths:
-      - '/api/v1/*'
+      - '/api/v1/report'
+      - '/api/v1/report/*'
+      - '/api/v1/reports'
   search:
     host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
     paths:
-      - '/api/v1/*'
+      - '/api/v1/search'
   orders:
     host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
     paths:
-      - '/api/v1/*'
+      - '/api/v1/order'
+      - '/api/v1/order/*'
 serviceEndpoints:
   authService:
     url: 'http://localhost:9001'
