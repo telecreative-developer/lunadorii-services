@@ -64,6 +64,7 @@ exports.getOrderHistory = id => {
 		)
 		.select(
 			"*",
+			"product_thumbnails.thumbnail_url as product_thumbnail_url",
 			"orders.created_at as created_at",
 			"orders.updated_at as updated_at"
 		)
@@ -91,6 +92,7 @@ exports.getOrderRecent = id => {
 		)
 		.select(
 			"*",
+			"product_thumbnails.thumbnail_url as product_thumbnail_url",
 			"orders.created_at as created_at",
 			"orders.updated_at as updated_at"
 		)
