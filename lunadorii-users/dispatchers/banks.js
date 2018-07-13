@@ -104,6 +104,6 @@ exports.deleteUserBank = user_bank_id => {
 	return knex("user_banks")
 		.where("user_bank_id", user_bank_id)
 		.del()
-		.then(() => successResponse(response, "Success Delete User Bank", 201))
+		.then(() => successResponse(null, "Success Delete User Bank", 201))
 		.catch(err => errorResponse(err, 500))
 }
