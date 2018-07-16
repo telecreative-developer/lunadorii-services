@@ -10,12 +10,15 @@ const historyDefinition = [
 		list: [
 			{
 				order_product_id: { column: "order_product_id", id: true },
+				product_id: { column: "product_id", id: true },
 				purchase_number: { column: "purchase_number" },
 				product: { column: "product" },
 				wight_gram: { column: "weight_gram" },
 				order_product_status: { column: "order_product_status" },
 				delivery_service: { column: "delivery_service" },
 				note: { column: "note" },
+				qty: { column: "qty" },
+				subtotal: { column: "subtotal" },
 				payment_time: { column: "payment_time" },
 				delivery_time: { column: "delivery_time" },
 				receipt_time: { column: "receipt_time" },
