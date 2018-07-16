@@ -158,7 +158,7 @@ exports.searchLogged = attributes => {
 		.then(response => NestHydrationJS.nest(response, searchDefinition))
 		.then(response =>
 			knex("wishlist")
-				.where("id", id)
+				.where("id", attributes.id)
 				.then(res =>
 					response.map(rproduct => ({
 						...rproduct,
