@@ -19,7 +19,7 @@ const fetchOngkir = (data, courier) => {
 		}),
 		headers: {
 			"Content-Type": "application/json",
-			key: "991952772172cbf1a1b0b03ef4aee103"
+			key: "e168fd9ec55b2a58490c52dbab509e16"
 		}
 	})
 		.then(response => response.json())
