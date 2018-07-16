@@ -32,7 +32,9 @@ const {
 	getRelatedProducts,
 	getRelatedProductsLogged,
 	getBestSellerProducts,
-	getBestSellerProductsLogged
+	getBestSellerProductsLogged,
+	getBestSellerSubcategories,
+	getBestSellerSubcategoriesWithProducts
 } = require("../../dispatchers/products")
 const {
 	addWishlist,
@@ -200,6 +202,13 @@ router.get("/product-subcategories", (req, res) => {
 				? getProductSubcategoriesWithProducts()
 				: getProductSubcategories()
 	)
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log("Error on GET_ALL_PRODUCT_SUBCATEGORIES", err))
+})
+
+// Get Best Seller Subcategories
+router.get("/product-subcategories/best-seller", (req, res) => {
+	Promise.try(() => getBestSellerSubcategories())
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on GET_ALL_PRODUCT_SUBCATEGORIES", err))
 })

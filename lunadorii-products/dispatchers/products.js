@@ -1237,6 +1237,37 @@ exports.getProductCategoriesWithSubcategories = () => {
 		.catch(err => errorResponse(err, 500))
 }
 
+exports.getBestSellerSubcategories = () => {
+	return knex("order_products")
+		.innerJoin("products", "order_products.product_id", "products.product_id")
+		.innerJoin(
+			"product_subcategories",
+			"products.product_subcategory_id",
+			"product_subcategories.product_subcategory_id"
+		)
+		.select(
+			"*",
+			"order_products.order_product_id as order_product_id",
+			"product_subcategories.product_subcategory_id as product_subcategory_id"
+		)
+		.orderBy("order_products.created_at", "desc")
+		.then(response =>
+			NestHydrationJS.nest(response, [
+				{
+					product_subcategory_id: {
+						column: "product_subcategory_id",
+						id: true
+					},
+					product_subcategory: { column: "product_subcategory" }
+				}
+			])
+		)
+		.then(response =>
+			successResponse(response, "Success Get Subcategories Best Seller", 200)
+		)
+		.catch(err => console.log(err))
+}
+
 exports.getProductSubcategories = () => {
 	return knex("product_subcategories")
 		.then(response =>

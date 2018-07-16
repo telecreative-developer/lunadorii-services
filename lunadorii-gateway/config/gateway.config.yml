@@ -42,6 +42,7 @@ apiEndpoints:
       - '/api/v1/product-brands/*'
       - '/api/v1/product-categories'
       - '/api/v1/product-subcategories'
+      - '/api/v1/product-subcategories/*'
       - '/api/v1/wishlist'
       - '/api/v1/wishlist/*'
       - '/api/v1/cart'
