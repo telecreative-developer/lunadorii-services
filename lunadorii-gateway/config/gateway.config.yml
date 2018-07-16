@@ -26,6 +26,7 @@ apiEndpoints:
       - '/api/v1/user-creditcard'
       - '/api/v1/user-creditcard/*'
       - '/api/v1/user-reviews/*'
+      - '/api/v1/user-review'
       - '/api/v1/user-review/*'
   admin:
     host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
