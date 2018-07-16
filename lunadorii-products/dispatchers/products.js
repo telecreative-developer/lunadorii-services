@@ -1248,7 +1248,8 @@ exports.getBestSellerSubcategories = () => {
 		.select(
 			"*",
 			"order_products.order_product_id as order_product_id",
-			"product_subcategories.product_subcategory_id as product_subcategory_id"
+			"product_subcategories.product_subcategory_id as product_subcategory_id",
+			"product_subcategories.subcategory as subcategory"
 		)
 		.orderBy("order_products.created_at", "desc")
 		.then(response =>
