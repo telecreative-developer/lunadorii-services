@@ -1258,7 +1258,7 @@ exports.getBestSellerSubcategories = () => {
 						column: "product_subcategory_id",
 						id: true
 					},
-					product_subcategory: { column: "product_subcategory" }
+					subcategory: { column: "subcategory" }
 				}
 			])
 		)
