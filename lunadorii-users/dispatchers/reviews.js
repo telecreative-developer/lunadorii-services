@@ -9,6 +9,13 @@ const moment = require("moment-timezone")
 const { successResponse, errorResponse } = require("../responsers")
 const reviewsDefinition = require("../definitions/reviews")
 
+exports.addUserReview = data => {
+	return knex("product_reviews")
+		.insert(data)
+		.then(response => successResponse(response, "Success Add User Review", 200))
+		.catch(err => errorResponse(err, 500))
+}
+
 exports.getUserReviews = id => {
 	return knex("product_reviews")
 		.where("product_reviews.id", id)

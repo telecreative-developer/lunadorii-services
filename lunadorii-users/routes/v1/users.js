@@ -39,6 +39,7 @@ const {
 	deleteUserCreditCard
 } = require("../../dispatchers/creditcard")
 const {
+	addUserReview,
 	getUserReviews,
 	updateUserReview,
 	deleteUserReview
@@ -251,6 +252,13 @@ router.delete(
 			.catch(err => console.log("Error on DELETE_USER_CREDITCARD", err))
 	}
 )
+
+// Get add review
+router.post("/user-review", authentication, (req, res) => {
+	Promise.try(() => addUserReview(req.body))
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log("Error on ADD_USER_REVIEWS", err))
+})
 
 // Get user reviews
 router.get("/user-reviews/:id", authentication, (req, res) => {
