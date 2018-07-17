@@ -33,43 +33,143 @@ function removeDuplicates(arr, key) {
 	}
 }
 
+const knexProductsAsync = () => {
+	return new Promise((resolve, reject) => {
+		return knex("products")
+			.innerJoin(
+				"product_subcategories",
+				"products.product_subcategory_id",
+				"product_subcategories.product_subcategory_id"
+			)
+			.innerJoin(
+				"product_brands",
+				"products.product_brand_id",
+				"product_brands.product_brand_id"
+			)
+			.innerJoin(
+				"product_thumbnails",
+				"products.product_id",
+				"product_thumbnails.product_id"
+			)
+			.leftJoin(
+				"product_reviews",
+				"products.product_id",
+				"product_reviews.product_id"
+			)
+			.leftJoin("users", "product_reviews.id", "users.id")
+			.select(
+				"*",
+				"products.product_id as product_id",
+				"users.id as product_reviews_user_id",
+				"users.avatar_url as product_reviews_avatar_url",
+				"users.first_name as product_reviews_first_name",
+				"users.last_name as product_reviews_last_name",
+				"product_subcategories.product_subcategory_id as product_subcategory_id",
+				"product_brands.product_brand_id as product_brand_id",
+				"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
+				"product_reviews.product_review_id as product_review_id",
+				"product_reviews.created_at as product_reviews_created_at",
+				"product_reviews.updated_at as product_reviews_updated_at"
+			)
+			.orderBy("products.created_at", "desc")
+			.then(res => resolve(res))
+			.catch(err => reject(errorResponse("Internal Server Error", 500)))
+	})
+}
+
+const knexSingleProductAsync = (id, where_clause) => {
+	return new Promise((resolve, reject) => {
+		return knex("products")
+			.where(where_clause, id)
+			.innerJoin(
+				"product_subcategories",
+				"products.product_subcategory_id",
+				"product_subcategories.product_subcategory_id"
+			)
+			.innerJoin(
+				"product_brands",
+				"products.product_brand_id",
+				"product_brands.product_brand_id"
+			)
+			.innerJoin(
+				"product_thumbnails",
+				"products.product_id",
+				"product_thumbnails.product_id"
+			)
+			.leftJoin(
+				"product_reviews",
+				"products.product_id",
+				"product_reviews.product_id"
+			)
+			.leftJoin("users", "product_reviews.id", "users.id")
+			.select(
+				"*",
+				"products.product_id as product_id",
+				"users.id as product_reviews_user_id",
+				"users.avatar_url as product_reviews_avatar_url",
+				"users.first_name as product_reviews_first_name",
+				"users.last_name as product_reviews_last_name",
+				"product_subcategories.product_subcategory_id as product_subcategory_id",
+				"product_brands.product_brand_id as product_brand_id",
+				"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
+				"product_reviews.product_review_id as product_review_id",
+				"product_reviews.created_at as product_reviews_created_at",
+				"product_reviews.updated_at as product_reviews_updated_at"
+			)
+			.orderBy("products.created_at", "desc")
+			.then(res => resolve(res))
+			.catch(err => reject(errorResponse("Internal Server Error", 500)))
+	})
+}
+
+const knexProductsBestSellerAsync = () => {
+	return new Promise((resolve, reject) => {
+		return knex("order_products")
+			.innerJoin("products", "order_products.product_id", "products.product_id")
+			.innerJoin(
+				"product_subcategories",
+				"products.product_subcategory_id",
+				"product_subcategories.product_subcategory_id"
+			)
+			.innerJoin(
+				"product_brands",
+				"products.product_brand_id",
+				"product_brands.product_brand_id"
+			)
+			.innerJoin(
+				"product_thumbnails",
+				"products.product_id",
+				"product_thumbnails.product_id"
+			)
+			.leftJoin(
+				"product_reviews",
+				"products.product_id",
+				"product_reviews.product_id"
+			)
+			.leftJoin("users", "product_reviews.id", "users.id")
+			.select(
+				"*",
+				"order_products.order_product_id as order_product_id",
+				"products.product_id as product_id",
+				"users.id as product_reviews_user_id",
+				"users.avatar_url as product_reviews_avatar_url",
+				"users.first_name as product_reviews_first_name",
+				"users.last_name as product_reviews_last_name",
+				"product_subcategories.product_subcategory_id as product_subcategory_id",
+				"product_brands.product_brand_id as product_brand_id",
+				"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
+				"product_reviews.product_review_id as product_review_id",
+				"product_reviews.created_at as product_reviews_created_at",
+				"product_reviews.updated_at as product_reviews_updated_at"
+			)
+			.orderBy("order_products.created_at", "desc")
+			.then(res => resolve(res))
+			.catch(err => reject(errorResponse("Internal Server Error", 500)))
+	})
+}
+
 exports.getAllProducts = () => {
-	return knex("products")
-		.innerJoin(
-			"product_subcategories",
-			"products.product_subcategory_id",
-			"product_subcategories.product_subcategory_id"
-		)
-		.innerJoin(
-			"product_brands",
-			"products.product_brand_id",
-			"product_brands.product_brand_id"
-		)
-		.innerJoin(
-			"product_thumbnails",
-			"products.product_id",
-			"product_thumbnails.product_id"
-		)
-		.leftJoin(
-			"product_reviews",
-			"products.product_id",
-			"product_reviews.product_id"
-		)
-		.leftJoin("users", "product_reviews.id", "users.id")
-		.select(
-			"*",
-			"products.product_id as product_id",
-			"users.id as product_reviews_user_id",
-			"users.avatar_url as product_reviews_avatar_url",
-			"users.first_name as product_reviews_first_name",
-			"users.last_name as product_reviews_last_name",
-			"product_subcategories.product_subcategory_id as product_subcategory_id",
-			"product_brands.product_brand_id as product_brand_id",
-			"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
-			"product_reviews.product_review_id as product_review_id",
-			"product_reviews.created_at as product_reviews_created_at",
-			"product_reviews.updated_at as product_reviews_updated_at"
-		)
+	return knexProductsAsync()
 		.then(response =>
 			response.map(res => ({
 				...res,
@@ -82,53 +182,26 @@ exports.getAllProducts = () => {
 		.then(response =>
 			response.map(res => ({
 				...res,
+				thumbnails: res.thumbnails.sort(
+					(a, b) => a.product_thumbnail_id - b.product_thumbnail_id
+				)
+			}))
+		)
+		.then(response =>
+			response.map(res => ({
+				...res,
 				product_rate: res.reviews.length
 					? res.reviews.map(r => r.review_rate).reduce((a, b) => a + b) /
 					  res.reviews.length
 					: 0
 			}))
 		)
-		.then(response => successResponse(response, "Success Get Products", 200))
-		.catch(err => errorResponse(err, 500))
+		.then(res => successResponse(res, "Success Get Products", 200))
+		.catch(err => err)
 }
 
 exports.getAllProductsLogged = id => {
-	return knex("products")
-		.innerJoin(
-			"product_subcategories",
-			"products.product_subcategory_id",
-			"product_subcategories.product_subcategory_id"
-		)
-		.innerJoin(
-			"product_brands",
-			"products.product_brand_id",
-			"product_brands.product_brand_id"
-		)
-		.innerJoin(
-			"product_thumbnails",
-			"products.product_id",
-			"product_thumbnails.product_id"
-		)
-		.leftJoin(
-			"product_reviews",
-			"products.product_id",
-			"product_reviews.product_id"
-		)
-		.leftJoin("users", "product_reviews.id", "users.id")
-		.select(
-			"*",
-			"products.product_id as product_id",
-			"users.id as product_reviews_user_id",
-			"users.avatar_url as product_reviews_avatar_url",
-			"users.first_name as product_reviews_first_name",
-			"users.last_name as product_reviews_last_name",
-			"product_subcategories.product_subcategory_id as product_subcategory_id",
-			"product_brands.product_brand_id as product_brand_id",
-			"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
-			"product_reviews.product_review_id as product_review_id",
-			"product_reviews.created_at as product_reviews_created_at",
-			"product_reviews.updated_at as product_reviews_updated_at"
-		)
+	return knexProductsAsync()
 		.then(response =>
 			response.map(res => ({
 				...res,
@@ -138,6 +211,14 @@ exports.getAllProductsLogged = id => {
 			}))
 		)
 		.then(response => NestHydrationJS.nest(response, productsDefinition))
+		.then(response =>
+			response.map(res => ({
+				...res,
+				thumbnails: res.thumbnails.sort(
+					(a, b) => a.product_thumbnail_id - b.product_thumbnail_id
+				)
+			}))
+		)
 		.then(response =>
 			knex("wishlist")
 				.where("id", id)
@@ -159,50 +240,12 @@ exports.getAllProductsLogged = id => {
 					: 0
 			}))
 		)
-		.then(response =>
-			successResponse(response, "Success Get Products Logged", 200)
-		)
-		.catch(err => console.log(err))
+		.then(res => successResponse(res, "Success Get Products Logged", 200))
+		.catch(err => err)
 }
 
 exports.getAllNewArrivalsProducts = () => {
-	return knex("products")
-		.innerJoin(
-			"product_subcategories",
-			"products.product_subcategory_id",
-			"product_subcategories.product_subcategory_id"
-		)
-		.innerJoin(
-			"product_brands",
-			"products.product_brand_id",
-			"product_brands.product_brand_id"
-		)
-		.innerJoin(
-			"product_thumbnails",
-			"products.product_id",
-			"product_thumbnails.product_id"
-		)
-		.leftJoin(
-			"product_reviews",
-			"products.product_id",
-			"product_reviews.product_id"
-		)
-		.leftJoin("users", "product_reviews.id", "users.id")
-		.select(
-			"*",
-			"products.product_id as product_id",
-			"users.id as product_reviews_user_id",
-			"users.avatar_url as product_reviews_avatar_url",
-			"users.first_name as product_reviews_first_name",
-			"users.last_name as product_reviews_last_name",
-			"product_subcategories.product_subcategory_id as product_subcategory_id",
-			"product_brands.product_brand_id as product_brand_id",
-			"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
-			"product_reviews.product_review_id as product_review_id",
-			"product_reviews.created_at as product_reviews_created_at",
-			"product_reviews.updated_at as product_reviews_updated_at"
-		)
-		.orderBy("products.created_at", "desc")
+	return knexProductsAsync()
 		.then(response =>
 			response.map(res => ({
 				...res,
@@ -215,56 +258,26 @@ exports.getAllNewArrivalsProducts = () => {
 		.then(response =>
 			response.map(res => ({
 				...res,
+				thumbnails: res.thumbnails.sort(
+					(a, b) => a.product_thumbnail_id - b.product_thumbnail_id
+				)
+			}))
+		)
+		.then(response =>
+			response.map(res => ({
+				...res,
 				product_rate: res.reviews.length
 					? res.reviews.map(r => r.review_rate).reduce((a, b) => a + b) /
 					  res.reviews.length
 					: 0
 			}))
 		)
-		.then(response =>
-			successResponse(response, "Success Get Products New Arrivals", 200)
-		)
-		.catch(err => errorResponse(err, 500))
+		.then(res => successResponse(res, "Success Get Products New Arrivals", 200))
+		.catch(err => err)
 }
 
 exports.getAllNewArrivalsProductsLogged = id => {
-	return knex("products")
-		.innerJoin(
-			"product_subcategories",
-			"products.product_subcategory_id",
-			"product_subcategories.product_subcategory_id"
-		)
-		.innerJoin(
-			"product_brands",
-			"products.product_brand_id",
-			"product_brands.product_brand_id"
-		)
-		.innerJoin(
-			"product_thumbnails",
-			"products.product_id",
-			"product_thumbnails.product_id"
-		)
-		.leftJoin(
-			"product_reviews",
-			"products.product_id",
-			"product_reviews.product_id"
-		)
-		.leftJoin("users", "product_reviews.id", "users.id")
-		.select(
-			"*",
-			"products.product_id as product_id",
-			"users.id as product_reviews_user_id",
-			"users.avatar_url as product_reviews_avatar_url",
-			"users.first_name as product_reviews_first_name",
-			"users.last_name as product_reviews_last_name",
-			"product_subcategories.product_subcategory_id as product_subcategory_id",
-			"product_brands.product_brand_id as product_brand_id",
-			"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
-			"product_reviews.product_review_id as product_review_id",
-			"product_reviews.created_at as product_reviews_created_at",
-			"product_reviews.updated_at as product_reviews_updated_at"
-		)
-		.orderBy("products.created_at", "desc")
+	return knexProductsAsync()
 		.then(response =>
 			response.map(res => ({
 				...res,
@@ -274,6 +287,14 @@ exports.getAllNewArrivalsProductsLogged = id => {
 			}))
 		)
 		.then(response => NestHydrationJS.nest(response, productsDefinition))
+		.then(response =>
+			response.map(res => ({
+				...res,
+				thumbnails: res.thumbnails.sort(
+					(a, b) => a.product_thumbnail_id - b.product_thumbnail_id
+				)
+			}))
+		)
 		.then(response =>
 			knex("wishlist")
 				.where("id", id)
@@ -295,52 +316,14 @@ exports.getAllNewArrivalsProductsLogged = id => {
 					: 0
 			}))
 		)
-		.then(response =>
-			successResponse(response, "Success Get Products New Arrivals Logged", 200)
+		.then(res =>
+			successResponse(res, "Success Get Products New Arrivals Logged", 200)
 		)
-		.catch(err => console.log(err))
+		.catch(err => err)
 }
 
 exports.getBestSellerProducts = () => {
-	return knex("order_products")
-		.innerJoin("products", "order_products.product_id", "products.product_id")
-		.innerJoin(
-			"product_subcategories",
-			"products.product_subcategory_id",
-			"product_subcategories.product_subcategory_id"
-		)
-		.innerJoin(
-			"product_brands",
-			"products.product_brand_id",
-			"product_brands.product_brand_id"
-		)
-		.innerJoin(
-			"product_thumbnails",
-			"products.product_id",
-			"product_thumbnails.product_id"
-		)
-		.leftJoin(
-			"product_reviews",
-			"products.product_id",
-			"product_reviews.product_id"
-		)
-		.leftJoin("users", "product_reviews.id", "users.id")
-		.select(
-			"*",
-			"order_products.order_product_id as order_product_id",
-			"products.product_id as product_id",
-			"users.id as product_reviews_user_id",
-			"users.avatar_url as product_reviews_avatar_url",
-			"users.first_name as product_reviews_first_name",
-			"users.last_name as product_reviews_last_name",
-			"product_subcategories.product_subcategory_id as product_subcategory_id",
-			"product_brands.product_brand_id as product_brand_id",
-			"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
-			"product_reviews.product_review_id as product_review_id",
-			"product_reviews.created_at as product_reviews_created_at",
-			"product_reviews.updated_at as product_reviews_updated_at"
-		)
-		.orderBy("order_products.created_at", "desc")
+	return knexProductsBestSellerAsync()
 		.then(response =>
 			response.map(res => ({
 				...res,
@@ -349,8 +332,14 @@ exports.getBestSellerProducts = () => {
 					: process.env.AWS_IMAGE_DEFAULT_URL
 			}))
 		)
+		.then(res => NestHydrationJS.nest(res, productsBestSellerDefinition))
 		.then(response =>
-			NestHydrationJS.nest(response, productsBestSellerDefinition)
+			response.map(res => ({
+				...res,
+				thumbnails: res.thumbnails.sort(
+					(a, b) => a.product_thumbnail_id - b.product_thumbnail_id
+				)
+			}))
 		)
 		.then(response =>
 			response.map(res => ({
@@ -370,49 +359,11 @@ exports.getBestSellerProducts = () => {
 		.then(response =>
 			successResponse(response, "Success Get Products Best Seller", 200)
 		)
-		.catch(err => console.log(err))
+		.catch(err => err)
 }
 
 exports.getBestSellerProductsLogged = id => {
-	return knex("order_products")
-		.innerJoin("products", "order_products.product_id", "products.product_id")
-		.innerJoin(
-			"product_subcategories",
-			"products.product_subcategory_id",
-			"product_subcategories.product_subcategory_id"
-		)
-		.innerJoin(
-			"product_brands",
-			"products.product_brand_id",
-			"product_brands.product_brand_id"
-		)
-		.innerJoin(
-			"product_thumbnails",
-			"products.product_id",
-			"product_thumbnails.product_id"
-		)
-		.leftJoin(
-			"product_reviews",
-			"products.product_id",
-			"product_reviews.product_id"
-		)
-		.leftJoin("users", "product_reviews.id", "users.id")
-		.select(
-			"*",
-			"order_products.order_product_id as order_product_id",
-			"products.product_id as product_id",
-			"users.id as product_reviews_user_id",
-			"users.avatar_url as product_reviews_avatar_url",
-			"users.first_name as product_reviews_first_name",
-			"users.last_name as product_reviews_last_name",
-			"product_subcategories.product_subcategory_id as product_subcategory_id",
-			"product_brands.product_brand_id as product_brand_id",
-			"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
-			"product_reviews.product_review_id as product_review_id",
-			"product_reviews.created_at as product_reviews_created_at",
-			"product_reviews.updated_at as product_reviews_updated_at"
-		)
-		.orderBy("order_products.created_at", "desc")
+	return knexProductsBestSellerAsync()
 		.then(response =>
 			response.map(res => ({
 				...res,
@@ -421,8 +372,14 @@ exports.getBestSellerProductsLogged = id => {
 					: process.env.AWS_IMAGE_DEFAULT_URL
 			}))
 		)
+		.then(res => NestHydrationJS.nest(res, productsBestSellerDefinition))
 		.then(response =>
-			NestHydrationJS.nest(response, productsBestSellerDefinition)
+			response.map(res => ({
+				...res,
+				thumbnails: res.thumbnails.sort(
+					(a, b) => a.product_thumbnail_id - b.product_thumbnail_id
+				)
+			}))
 		)
 		.then(response =>
 			knex("wishlist")
@@ -448,53 +405,13 @@ exports.getBestSellerProductsLogged = id => {
 			}))
 		)
 		.then(response => removeDuplicates(response, "product_id"))
-		.then(response =>
-			response.sort((a, b) => a.product_sold - b.product_sold).reverse()
-		)
-		.then(response =>
-			successResponse(response, "Success Get Products Best Seller", 200)
-		)
-		.catch(err => console.log(err))
+		.then(res => res.sort((a, b) => a.product_sold - b.product_sold).reverse())
+		.then(res => successResponse(res, "Success Get Products Best Seller", 200))
+		.catch(err => err)
 }
 
 exports.getSingleProduct = product_id => {
-	return knex("products")
-		.where("products.product_id", product_id)
-		.innerJoin(
-			"product_subcategories",
-			"products.product_subcategory_id",
-			"product_subcategories.product_subcategory_id"
-		)
-		.innerJoin(
-			"product_brands",
-			"products.product_brand_id",
-			"product_brands.product_brand_id"
-		)
-		.innerJoin(
-			"product_thumbnails",
-			"products.product_id",
-			"product_thumbnails.product_id"
-		)
-		.leftJoin(
-			"product_reviews",
-			"products.product_id",
-			"product_reviews.product_id"
-		)
-		.leftJoin("users", "product_reviews.id", "users.id")
-		.select(
-			"*",
-			"products.product_id as product_id",
-			"users.id as product_reviews_user_id",
-			"users.avatar_url as product_reviews_avatar_url",
-			"users.first_name as product_reviews_first_name",
-			"users.last_name as product_reviews_last_name",
-			"product_subcategories.product_subcategory_id as product_subcategory_id",
-			"product_brands.product_brand_id as product_brand_id",
-			"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
-			"product_reviews.product_review_id as product_review_id",
-			"product_reviews.created_at as product_reviews_created_at",
-			"product_reviews.updated_at as product_reviews_updated_at"
-		)
+	return knexSingleProductAsync(product_id, "products.product_id")
 		.then(response =>
 			response.map(res => ({
 				...res,
@@ -504,6 +421,15 @@ exports.getSingleProduct = product_id => {
 			}))
 		)
 		.then(response => NestHydrationJS.nest(response, productsDefinition))
+		.then(response =>
+			response.map(res => ({
+				...res,
+				thumbnails: res.thumbnails.sort(
+					(a, b) =>
+						parseInt(a.product_thumbnail_id) - parseInt(b.product_thumbnail_id)
+				)
+			}))
+		)
 		.then(response =>
 			response.map(res => ({
 				...res,
@@ -516,47 +442,11 @@ exports.getSingleProduct = product_id => {
 		.then(response =>
 			successResponse(response, "Success Get Single Product", 200)
 		)
-		.catch(err => console.log(err))
+		.catch(err => err)
 }
 
 exports.getSingleProductLogged = (product_id, id) => {
-	return knex("products")
-		.where("products.product_id", product_id)
-		.innerJoin(
-			"product_subcategories",
-			"products.product_subcategory_id",
-			"product_subcategories.product_subcategory_id"
-		)
-		.innerJoin(
-			"product_brands",
-			"products.product_brand_id",
-			"product_brands.product_brand_id"
-		)
-		.innerJoin(
-			"product_thumbnails",
-			"products.product_id",
-			"product_thumbnails.product_id"
-		)
-		.leftJoin(
-			"product_reviews",
-			"products.product_id",
-			"product_reviews.product_id"
-		)
-		.leftJoin("users", "product_reviews.id", "users.id")
-		.select(
-			"*",
-			"products.product_id as product_id",
-			"users.id as product_reviews_user_id",
-			"users.avatar_url as product_reviews_avatar_url",
-			"users.first_name as product_reviews_first_name",
-			"users.last_name as product_reviews_last_name",
-			"product_subcategories.product_subcategory_id as product_subcategory_id",
-			"product_brands.product_brand_id as product_brand_id",
-			"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
-			"product_reviews.product_review_id as product_review_id",
-			"product_reviews.created_at as product_reviews_created_at",
-			"product_reviews.updated_at as product_reviews_updated_at"
-		)
+	return knexSingleProductAsync(product_id, "products.product_id")
 		.then(response =>
 			response.map(res => ({
 				...res,
@@ -566,6 +456,14 @@ exports.getSingleProductLogged = (product_id, id) => {
 			}))
 		)
 		.then(response => NestHydrationJS.nest(response, productsDefinition))
+		.then(response =>
+			response.map(res => ({
+				...res,
+				thumbnails: res.thumbnails.sort(
+					(a, b) => a.product_thumbnail_id - b.product_thumbnail_id
+				)
+			}))
+		)
 		.then(response =>
 			knex("wishlist")
 				.where("id", id)
@@ -590,197 +488,103 @@ exports.getSingleProductLogged = (product_id, id) => {
 		.then(response =>
 			successResponse(response, "Success Get Single Product Logged", 200)
 		)
-		.catch(err => errorResponse(err, 500))
+		.catch(err => err)
 }
 
 exports.getRelatedProducts = product_id => {
 	return knex("products")
 		.where("products.product_id", product_id)
+		.then(res => {
+			return knexSingleProductAsync(
+				res[0].product_subcategory_id,
+				"products.product_subcategory_id"
+			)
+		})
 		.then(response =>
-			knex("products")
-				.where(
-					"products.product_subcategory_id",
-					response[0].product_subcategory_id
+			response.splice(0, 10).map(res => ({
+				...res,
+				product_reviews_avatar_url: res.product_reviews_avatar_url
+					? process.env.AWS_IMAGE_URL + res.product_reviews_avatar_url
+					: process.env.AWS_IMAGE_DEFAULT_URL
+			}))
+		)
+		.then(response => NestHydrationJS.nest(response, productsDefinition))
+		.then(response =>
+			response.map(res => ({
+				...res,
+				thumbnails: res.thumbnails.sort(
+					(a, b) => a.product_thumbnail_id - b.product_thumbnail_id
 				)
-				.innerJoin(
-					"product_subcategories",
-					"products.product_subcategory_id",
-					"product_subcategories.product_subcategory_id"
-				)
-				.innerJoin(
-					"product_brands",
-					"products.product_brand_id",
-					"product_brands.product_brand_id"
-				)
-				.innerJoin(
-					"product_thumbnails",
-					"products.product_id",
-					"product_thumbnails.product_id"
-				)
-				.leftJoin(
-					"product_reviews",
-					"products.product_id",
-					"product_reviews.product_id"
-				)
-				.leftJoin("users", "product_reviews.id", "users.id")
-				.select(
-					"*",
-					"products.product_id as product_id",
-					"users.id as product_reviews_user_id",
-					"users.avatar_url as product_reviews_avatar_url",
-					"users.first_name as product_reviews_first_name",
-					"users.last_name as product_reviews_last_name",
-					"product_subcategories.product_subcategory_id as product_subcategory_id",
-					"product_brands.product_brand_id as product_brand_id",
-					"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
-					"product_reviews.product_review_id as product_review_id",
-					"product_reviews.created_at as product_reviews_created_at",
-					"product_reviews.updated_at as product_reviews_updated_at"
-				)
-				.then(response =>
-					response.splice(0, 10).map(res => ({
-						...res,
-						product_reviews_avatar_url: res.product_reviews_avatar_url
-							? process.env.AWS_IMAGE_URL + res.product_reviews_avatar_url
-							: process.env.AWS_IMAGE_DEFAULT_URL
-					}))
-				)
-				.then(response => NestHydrationJS.nest(response, productsDefinition))
-				.then(response =>
-					response.map(res => ({
-						...res,
-						product_rate: res.reviews.length
-							? res.reviews.map(r => r.review_rate).reduce((a, b) => a + b) /
-							  res.reviews.length
-							: 0
-					}))
-				)
+			}))
 		)
 		.then(response =>
-			successResponse(response, "Success Get Related Products", 200)
+			response.map(res => ({
+				...res,
+				product_rate: res.reviews.length
+					? res.reviews.map(r => r.review_rate).reduce((a, b) => a + b) /
+					  res.reviews.length
+					: 0
+			}))
 		)
-		.catch(err => console.log(err))
+		.then(res => successResponse(res, "Success Get Related Products", 200))
+		.catch(err => err)
 }
 
 exports.getRelatedProductsLogged = (product_id, id) => {
 	return knex("products")
 		.where("products.product_id", product_id)
+		.then(res => {
+			return knexSingleProductAsync(
+				res[0].product_subcategory_id,
+				"products.product_subcategory_id"
+			)
+		})
 		.then(response =>
-			knex("products")
-				.where(
-					"products.product_subcategory_id",
-					response[0].product_subcategory_id
+			response.splice(0, 10).map(res => ({
+				...res,
+				product_reviews_avatar_url: res.product_reviews_avatar_url
+					? process.env.AWS_IMAGE_URL + res.product_reviews_avatar_url
+					: process.env.AWS_IMAGE_DEFAULT_URL
+			}))
+		)
+		.then(response => NestHydrationJS.nest(response, productsDefinition))
+		.then(response =>
+			response.map(res => ({
+				...res,
+				thumbnails: res.thumbnails.sort(
+					(a, b) => a.product_thumbnail_id - b.product_thumbnail_id
 				)
-				.innerJoin(
-					"product_subcategories",
-					"products.product_subcategory_id",
-					"product_subcategories.product_subcategory_id"
-				)
-				.innerJoin(
-					"product_brands",
-					"products.product_brand_id",
-					"product_brands.product_brand_id"
-				)
-				.innerJoin(
-					"product_thumbnails",
-					"products.product_id",
-					"product_thumbnails.product_id"
-				)
-				.leftJoin(
-					"product_reviews",
-					"products.product_id",
-					"product_reviews.product_id"
-				)
-				.leftJoin("users", "product_reviews.id", "users.id")
-				.select(
-					"*",
-					"products.product_id as product_id",
-					"users.id as product_reviews_user_id",
-					"users.avatar_url as product_reviews_avatar_url",
-					"users.first_name as product_reviews_first_name",
-					"users.last_name as product_reviews_last_name",
-					"product_subcategories.product_subcategory_id as product_subcategory_id",
-					"product_brands.product_brand_id as product_brand_id",
-					"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
-					"product_reviews.product_review_id as product_review_id",
-					"product_reviews.created_at as product_reviews_created_at",
-					"product_reviews.updated_at as product_reviews_updated_at"
-				)
-				.then(response =>
-					response.splice(0, 10).map(res => ({
-						...res,
-						product_reviews_avatar_url: res.product_reviews_avatar_url
-							? process.env.AWS_IMAGE_URL + res.product_reviews_avatar_url
-							: process.env.AWS_IMAGE_DEFAULT_URL
-					}))
-				)
-				.then(response => NestHydrationJS.nest(response, productsDefinition))
-				.then(response =>
-					knex("wishlist")
-						.where("id", id)
-						.then(res =>
-							response.map(rproduct => ({
-								...rproduct,
-								wishlisted: !!res.filter(
-									rwishlist => rwishlist.product_id === rproduct.product_id
-								).length
-							}))
-						)
-				)
-				.then(response =>
-					response.map(res => ({
-						...res,
-						product_rate: res.reviews.length
-							? res.reviews.map(r => r.review_rate).reduce((a, b) => a + b) /
-							  res.reviews.length
-							: 0
+			}))
+		)
+		.then(response =>
+			knex("wishlist")
+				.where("id", id)
+				.then(res =>
+					response.map(rproduct => ({
+						...rproduct,
+						wishlisted: !!res.filter(
+							rwishlist => rwishlist.product_id === rproduct.product_id
+						).length
 					}))
 				)
 		)
 		.then(response =>
-			successResponse(response, "Success Get Related Products Logged", 200)
+			response.map(res => ({
+				...res,
+				product_rate: res.reviews.length
+					? res.reviews.map(r => r.review_rate).reduce((a, b) => a + b) /
+					  res.reviews.length
+					: 0
+			}))
 		)
-		.catch(err => console.log(err))
+		.then(res =>
+			successResponse(res, "Success Get Related Products Logged", 200)
+		)
+		.catch(err => err)
 }
 
 exports.getSingleProductWithSlug = product_slug => {
-	return knex("products")
-		.where("products.product_slug", product_slug)
-		.innerJoin(
-			"product_subcategories",
-			"products.product_subcategory_id",
-			"product_subcategories.product_subcategory_id"
-		)
-		.innerJoin(
-			"product_brands",
-			"products.product_brand_id",
-			"product_brands.product_brand_id"
-		)
-		.innerJoin(
-			"product_thumbnails",
-			"products.product_id",
-			"product_thumbnails.product_id"
-		)
-		.leftJoin(
-			"product_reviews",
-			"products.product_id",
-			"product_reviews.product_id"
-		)
-		.leftJoin("users", "product_reviews.id", "users.id")
-		.select(
-			"*",
-			"products.product_id as product_id",
-			"users.id as product_reviews_user_id",
-			"users.avatar_url as product_reviews_avatar_url",
-			"users.first_name as product_reviews_first_name",
-			"users.last_name as product_reviews_last_name",
-			"product_subcategories.product_subcategory_id as product_subcategory_id",
-			"product_brands.product_brand_id as product_brand_id",
-			"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
-			"product_reviews.product_review_id as product_review_id",
-			"product_reviews.created_at as product_reviews_created_at",
-			"product_reviews.updated_at as product_reviews_updated_at"
-		)
+	return knexSingleProductAsync(product_slug, "products.product_slug")
 		.then(response =>
 			response.map(res => ({
 				...res,
@@ -790,6 +594,14 @@ exports.getSingleProductWithSlug = product_slug => {
 			}))
 		)
 		.then(response => NestHydrationJS.nest(response, productsDefinition))
+		.then(response =>
+			response.map(res => ({
+				...res,
+				thumbnails: res.thumbnails.sort(
+					(a, b) => a.product_thumbnail_id - b.product_thumbnail_id
+				)
+			}))
+		)
 		.then(response =>
 			response.map(res => ({
 				...res,
@@ -802,47 +614,11 @@ exports.getSingleProductWithSlug = product_slug => {
 		.then(response =>
 			successResponse(response, "Success Get Single Product", 200)
 		)
-		.catch(err => errorResponse(err, 500))
+		.catch(err => err)
 }
 
 exports.getSingleProductWithSlugLogged = (product_slug, id) => {
-	return knex("products")
-		.where("products.product_slug", product_slug)
-		.innerJoin(
-			"product_subcategories",
-			"products.product_subcategory_id",
-			"product_subcategories.product_subcategory_id"
-		)
-		.innerJoin(
-			"product_brands",
-			"products.product_brand_id",
-			"product_brands.product_brand_id"
-		)
-		.innerJoin(
-			"product_thumbnails",
-			"products.product_id",
-			"product_thumbnails.product_id"
-		)
-		.leftJoin(
-			"product_reviews",
-			"products.product_id",
-			"product_reviews.product_id"
-		)
-		.leftJoin("users", "product_reviews.id", "users.id")
-		.select(
-			"*",
-			"products.product_id as product_id",
-			"users.id as product_reviews_user_id",
-			"users.avatar_url as product_reviews_avatar_url",
-			"users.first_name as product_reviews_first_name",
-			"users.last_name as product_reviews_last_name",
-			"product_subcategories.product_subcategory_id as product_subcategory_id",
-			"product_brands.product_brand_id as product_brand_id",
-			"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
-			"product_reviews.product_review_id as product_review_id",
-			"product_reviews.created_at as product_reviews_created_at",
-			"product_reviews.updated_at as product_reviews_updated_at"
-		)
+	return knexSingleProductAsync(product_slug, "products.product_slug")
 		.then(response =>
 			response.map(res => ({
 				...res,
@@ -852,6 +628,14 @@ exports.getSingleProductWithSlugLogged = (product_slug, id) => {
 			}))
 		)
 		.then(response => NestHydrationJS.nest(response, productsDefinition))
+		.then(response =>
+			response.map(res => ({
+				...res,
+				thumbnails: res.thumbnails.sort(
+					(a, b) => a.product_thumbnail_id - b.product_thumbnail_id
+				)
+			}))
+		)
 		.then(response =>
 			knex("wishlist")
 				.where("id", id)
@@ -874,49 +658,16 @@ exports.getSingleProductWithSlugLogged = (product_slug, id) => {
 			}))
 		)
 		.then(response =>
-			successResponse(response, "Success Get Single Product", 200)
+			successResponse(response, "Success Get Single Logged Product", 200)
 		)
-		.catch(err => errorResponse(err, 500))
+		.catch(err => err)
 }
 
 exports.getProductsWithSubcategory = product_subcategory_id => {
-	return knex("products")
-		.where("products.product_subcategory_id", product_subcategory_id)
-		.innerJoin(
-			"product_subcategories",
-			"products.product_subcategory_id",
-			"product_subcategories.product_subcategory_id"
-		)
-		.innerJoin(
-			"product_brands",
-			"products.product_brand_id",
-			"product_brands.product_brand_id"
-		)
-		.innerJoin(
-			"product_thumbnails",
-			"products.product_id",
-			"product_thumbnails.product_id"
-		)
-		.leftJoin(
-			"product_reviews",
-			"products.product_id",
-			"product_reviews.product_id"
-		)
-		.leftJoin("users", "product_reviews.id", "users.id")
-		.select(
-			"*",
-			"products.product_id as product_id",
-			"users.id as product_reviews_user_id",
-			"users.avatar_url as product_reviews_avatar_url",
-			"users.first_name as product_reviews_first_name",
-			"users.last_name as product_reviews_last_name",
-			"product_subcategories.product_subcategory_id as product_subcategory_id",
-			"product_brands.product_brand_id as product_brand_id",
-			"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
-			"product_reviews.product_review_id as product_review_id",
-			"product_reviews.created_at as product_reviews_created_at",
-			"product_reviews.updated_at as product_reviews_updated_at"
-		)
+	return knexSingleProductAsync(
+		product_subcategory_id,
+		"products.product_subcategory_id"
+	)
 		.then(response =>
 			response.map(res => ({
 				...res,
@@ -926,6 +677,14 @@ exports.getProductsWithSubcategory = product_subcategory_id => {
 			}))
 		)
 		.then(response => NestHydrationJS.nest(response, productsDefinition))
+		.then(response =>
+			response.map(res => ({
+				...res,
+				thumbnails: res.thumbnails.sort(
+					(a, b) => a.product_thumbnail_id - b.product_thumbnail_id
+				)
+			}))
+		)
 		.then(response =>
 			response.map(res => ({
 				...res,
@@ -942,43 +701,10 @@ exports.getProductsWithSubcategory = product_subcategory_id => {
 }
 
 exports.getProductsWithSubcategoryLogged = (product_subcategory_id, id) => {
-	return knex("products")
-		.where("products.product_subcategory_id", product_subcategory_id)
-		.innerJoin(
-			"product_subcategories",
-			"products.product_subcategory_id",
-			"product_subcategories.product_subcategory_id"
-		)
-		.innerJoin(
-			"product_brands",
-			"products.product_brand_id",
-			"product_brands.product_brand_id"
-		)
-		.innerJoin(
-			"product_thumbnails",
-			"products.product_id",
-			"product_thumbnails.product_id"
-		)
-		.leftJoin(
-			"product_reviews",
-			"products.product_id",
-			"product_reviews.product_id"
-		)
-		.leftJoin("users", "product_reviews.id", "users.id")
-		.select(
-			"*",
-			"products.product_id as product_id",
-			"users.id as product_reviews_user_id",
-			"users.avatar_url as product_reviews_avatar_url",
-			"users.first_name as product_reviews_first_name",
-			"users.last_name as product_reviews_last_name",
-			"product_subcategories.product_subcategory_id as product_subcategory_id",
-			"product_brands.product_brand_id as product_brand_id",
-			"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
-			"product_reviews.product_review_id as product_review_id",
-			"product_reviews.created_at as product_reviews_created_at",
-			"product_reviews.updated_at as product_reviews_updated_at"
-		)
+	return knexSingleProductAsync(
+		product_subcategory_id,
+		"products.product_subcategory_id"
+	)
 		.then(response =>
 			response.map(res => ({
 				...res,
@@ -988,6 +714,14 @@ exports.getProductsWithSubcategoryLogged = (product_subcategory_id, id) => {
 			}))
 		)
 		.then(response => NestHydrationJS.nest(response, productsDefinition))
+		.then(response =>
+			response.map(res => ({
+				...res,
+				thumbnails: res.thumbnails.sort(
+					(a, b) => a.product_thumbnail_id - b.product_thumbnail_id
+				)
+			}))
+		)
 		.then(response =>
 			knex("wishlist")
 				.where("id", id)
@@ -1009,50 +743,14 @@ exports.getProductsWithSubcategoryLogged = (product_subcategory_id, id) => {
 					: 0
 			}))
 		)
-		.then(response =>
-			successResponse(response, "Success Get Product With Subcategory", 200)
+		.then(res =>
+			successResponse(res, "Success Get Product With Subcategory", 200)
 		)
 		.catch(err => errorResponse(err, 500))
 }
 
 exports.getProductsWithBrand = product_brand_id => {
-	return knex("products")
-		.where("products.product_brand_id", product_brand_id)
-		.innerJoin(
-			"product_subcategories",
-			"products.product_subcategory_id",
-			"product_subcategories.product_subcategory_id"
-		)
-		.innerJoin(
-			"product_brands",
-			"products.product_brand_id",
-			"product_brands.product_brand_id"
-		)
-		.innerJoin(
-			"product_thumbnails",
-			"products.product_id",
-			"product_thumbnails.product_id"
-		)
-		.leftJoin(
-			"product_reviews",
-			"products.product_id",
-			"product_reviews.product_id"
-		)
-		.leftJoin("users", "product_reviews.id", "users.id")
-		.select(
-			"*",
-			"products.product_id as product_id",
-			"users.id as product_reviews_user_id",
-			"users.avatar_url as product_reviews_avatar_url",
-			"users.first_name as product_reviews_first_name",
-			"users.last_name as product_reviews_last_name",
-			"product_subcategories.product_subcategory_id as product_subcategory_id",
-			"product_brands.product_brand_id as product_brand_id",
-			"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
-			"product_reviews.product_review_id as product_review_id",
-			"product_reviews.created_at as product_reviews_created_at",
-			"product_reviews.updated_at as product_reviews_updated_at"
-		)
+	return knexSingleProductAsync(product_brand_id, "products.product_id")
 		.then(response =>
 			response.map(res => ({
 				...res,
@@ -1062,6 +760,14 @@ exports.getProductsWithBrand = product_brand_id => {
 			}))
 		)
 		.then(response => NestHydrationJS.nest(response, productsDefinition))
+		.then(response =>
+			response.map(res => ({
+				...res,
+				thumbnails: res.thumbnails.sort(
+					(a, b) => a.product_thumbnail_id - b.product_thumbnail_id
+				)
+			}))
+		)
 		.then(response =>
 			response.map(res => ({
 				...res,
@@ -1074,47 +780,11 @@ exports.getProductsWithBrand = product_brand_id => {
 		.then(response =>
 			successResponse(response, "Success Get Product With Brand", 200)
 		)
-		.catch(err => errorResponse(err, 500))
+		.catch(err => err)
 }
 
 exports.getProductsWithBrandLogged = (product_brand_id, id) => {
-	return knex("products")
-		.where("products.product_brand_id", product_brand_id)
-		.innerJoin(
-			"product_subcategories",
-			"products.product_subcategory_id",
-			"product_subcategories.product_subcategory_id"
-		)
-		.innerJoin(
-			"product_brands",
-			"products.product_brand_id",
-			"product_brands.product_brand_id"
-		)
-		.innerJoin(
-			"product_thumbnails",
-			"products.product_id",
-			"product_thumbnails.product_id"
-		)
-		.leftJoin(
-			"product_reviews",
-			"products.product_id",
-			"product_reviews.product_id"
-		)
-		.leftJoin("users", "product_reviews.id", "users.id")
-		.select(
-			"*",
-			"products.product_id as product_id",
-			"users.id as product_reviews_user_id",
-			"users.avatar_url as product_reviews_avatar_url",
-			"users.first_name as product_reviews_first_name",
-			"users.last_name as product_reviews_last_name",
-			"product_subcategories.product_subcategory_id as product_subcategory_id",
-			"product_brands.product_brand_id as product_brand_id",
-			"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
-			"product_reviews.product_review_id as product_review_id",
-			"product_reviews.created_at as product_reviews_created_at",
-			"product_reviews.updated_at as product_reviews_updated_at"
-		)
+	return knexSingleProductAsync(product_brand_id, "products.product_id")
 		.then(response =>
 			response.map(res => ({
 				...res,
@@ -1124,6 +794,14 @@ exports.getProductsWithBrandLogged = (product_brand_id, id) => {
 			}))
 		)
 		.then(response => NestHydrationJS.nest(response, productsDefinition))
+		.then(response =>
+			response.map(res => ({
+				...res,
+				thumbnails: res.thumbnails.sort(
+					(a, b) => a.product_thumbnail_id - b.product_thumbnail_id
+				)
+			}))
+		)
 		.then(response =>
 			knex("wishlist")
 				.where("id", id)
@@ -1145,17 +823,13 @@ exports.getProductsWithBrandLogged = (product_brand_id, id) => {
 					: 0
 			}))
 		)
-		.then(response =>
-			successResponse(response, "Success Get Product With Brand", 200)
-		)
-		.catch(err => errorResponse(err, 500))
+		.then(res => successResponse(res, "Success Get Product With Brand", 200))
+		.catch(err => err)
 }
 
 exports.getProductBrands = () => {
 	return knex("product_brands")
-		.then(response =>
-			successResponse(response, "Success Get Product Brands", 200)
-		)
+		.then(res => successResponse(res, "Success Get Product Brands", 200))
 		.catch(err => errorResponse(err, 500))
 }
 
