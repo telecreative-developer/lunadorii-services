@@ -15,7 +15,7 @@ const {
 	updateUser,
 	updateEmail,
 	updatePassword,
-	uploadAvatar
+	updateAvatar
 } = require("../../dispatchers/users")
 const {
 	addUserAddress,
@@ -87,9 +87,8 @@ router.put("/user/:id", authentication, (req, res) => {
 })
 
 // Upload avatar user
-router.post("/user/upload-avatar/:id", upload.single("avatar"), (req, res) => {
-	const { key } = req.file
-	Promise.try(() => uploadAvatar(req.params.id, key))
+router.post("/user/update-avatar/:id", (req, res) => {
+	Promise.try(() => updateAvatar(req.params.id, req.body.avatar_url))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on UPLOAD_AVATAR_USER", err))
 })

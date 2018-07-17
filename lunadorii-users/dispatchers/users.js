@@ -65,7 +65,7 @@ exports.updateUser = (id, data) => {
 		.catch(err => errorResponse(err, 500))
 }
 
-exports.uploadAvatar = (id, image) => {
+exports.updateAvatar = (id, image) => {
 	return knex("users")
 		.where("id", id)
 		.update({
