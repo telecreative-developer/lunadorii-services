@@ -162,7 +162,6 @@ const knexProductsBestSellerAsync = () => {
 				"product_reviews.created_at as product_reviews_created_at",
 				"product_reviews.updated_at as product_reviews_updated_at"
 			)
-			.orderBy("order_products.created_at", "desc")
 			.then(res => resolve(res))
 			.catch(err => reject(errorResponse("Internal Server Error", 500)))
 	})
