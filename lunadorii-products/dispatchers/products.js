@@ -840,7 +840,6 @@ exports.getTopProductBrands = () => {
 			"products.product_brand_id",
 			"product_brands.product_brand_id"
 		)
-		.orderBy("order_products.created_at", "desc")
 		.limit(5)
 		.then(response => NestHydrationJS.nest(response, topBrandsDefinition))
 		.then(response =>
