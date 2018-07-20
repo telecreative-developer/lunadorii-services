@@ -9,7 +9,15 @@ const productsDefinition = require("../definitions/products")
 
 exports.getBanners = () => {
 	return knex("banners")
+		.where('banners.category', 'general')
 		.then(response => successResponse(response, "Success Get Banners", 200))
+		.catch(err => errorResponse(err, 500))
+}
+
+exports.getBannersBestSeller = () => {
+	return knex("banners")
+		.where('banners.category', 'best-seller')
+		.then(response => successResponse(response, "Success Get Banners Best Seller", 200))
 		.catch(err => errorResponse(err, 500))
 }
 
