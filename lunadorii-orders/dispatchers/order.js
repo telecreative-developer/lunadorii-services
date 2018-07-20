@@ -14,14 +14,7 @@ exports.checkoutOrder = data => {
 				.toString(36)
 				.substr(2, 15)
 				.toUpperCase()}`,
-			total:
-				data.data.reduce(
-					(a, b) =>
-						a.price -
-						((a.price * a.discount_percentage) / 100) * a.qty +
-						b.price -
-						((b.price * b.discount_percentage) / 100) * b.qty
-				) + data.delivery_price,
+			total: 1000,
 			delivery_service: data.delivery_service,
 			delivery_price: data.delivery_price,
 			paid_method: data.paid_method,
@@ -33,23 +26,10 @@ exports.checkoutOrder = data => {
 		})
 		.returning("order_id")
 		.then(order_id => {
-			return new Promise((resolve, reject) => {
-				data.data.forEach(d => {
-					return knex("order_products")
-						.insert({
-							note: d.note,
-							qty: d.qty,
-							price: d.price,
-							discount_percentage: d.discount_percentage,
-							product_id: d.product_id,
-							order_id: parseInt(order_id)
-						})
-						.then(res => res)
-				})
-				setTimeout(() => {
-					resolve(order_id)
-				}, 1000)
-			})
+			return knex("order_products")
+				.insert(data.data.map(d => ({ ...d, order_id: parseInt(order_id) })))
+				.then(res => parseInt(order_id))
+				.catch(err => err)
 		})
 		.then(order_id => {
 			return knex("orders")
@@ -60,16 +40,17 @@ exports.checkoutOrder = data => {
 					"order_products.order_id"
 				)
 				.then(res => res)
+				.catch(err => err)
 		})
-		.then(res =>
-			NestHydrationJS.nest(res, [
+		.then(res => {
+			return NestHydrationJS.nest(res, [
 				{
 					billing_code: { column: "billing_code", id: true },
 					paid_method: { column: "paid_method" },
 					bank: { column: "bank" },
 					products: [
 						{
-							product_id: { column: "product_id" },
+							product_id: { column: "product_id", id: true },
 							product: { column: "product" },
 							qty: { column: "qty" },
 							price: { column: "price" },
@@ -78,9 +59,9 @@ exports.checkoutOrder = data => {
 					]
 				}
 			])
-		)
-		.then(res => successResponse(res, "Success Checkout Order", 201))
-		.catch(err => console.log(err))
+		})
+		.then(res => successResponse(res, "Success", 201))
+		.catch(err => err)
 }
 
 exports.getOrderHistory = id => {
