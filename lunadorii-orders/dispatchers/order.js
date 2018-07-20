@@ -6,6 +6,25 @@ const knex = require("knex")(configuration)
 const NestHydrationJS = require("nesthydrationjs")()
 const { successResponse, errorResponse } = require("../responsers")
 const { historyDefinition } = require("../definitions/orders")
+const config = {
+	serverKey: process.env.MIDTRANS_SERVER_KEY,
+	clientKey: process.env.MIDTRANS_CLIENT_KEY,
+	url: process.env.MIDTRANS_URL
+}
+const Veritrans = require("veritrans")
+const vt = new Veritrans(config)
+
+Array.prototype.count = function() {
+	let total = 0
+	for (let i = 0, _len = this.length; i < _len; i++) {
+		total +=
+			this[i]["price"] -
+			((this[i]["price"] * this[i]["discount_percentage"]) / 100) *
+				this[i]["qty"]
+	}
+
+	return total
+}
 
 exports.checkoutOrder = data => {
 	return knex("orders")
@@ -14,7 +33,7 @@ exports.checkoutOrder = data => {
 				.toString(36)
 				.substr(2, 15)
 				.toUpperCase()}`,
-			total: 1000,
+			total: parseInt(data.data.count() + parseInt(data.delivery_price)),
 			delivery_service: data.delivery_service,
 			delivery_price: data.delivery_price,
 			paid_method: data.paid_method,
@@ -61,7 +80,7 @@ exports.checkoutOrder = data => {
 			])
 		})
 		.then(res => successResponse(res, "Success", 201))
-		.catch(err => err)
+		.catch(err => console.log(err))
 }
 
 exports.getOrderHistory = id => {
