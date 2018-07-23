@@ -922,7 +922,7 @@ exports.getBestSellerSubcategories = () => {
 			"order_products.order_product_id as order_product_id",
 			"product_subcategories.product_subcategory_id as product_subcategory_id",
 			"product_subcategories.subcategory as subcategory",
-			"product_subcategories.thumbnails_url as subcategory_thumbnail_url"
+			"product_subcategories.thumbnail_url as subcategory_thumbnail_url"
 		)
 		.then(response =>
 			NestHydrationJS.nest(response, [
