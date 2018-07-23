@@ -921,7 +921,8 @@ exports.getBestSellerSubcategories = () => {
 			"*",
 			"order_products.order_product_id as order_product_id",
 			"product_subcategories.product_subcategory_id as product_subcategory_id",
-			"product_subcategories.subcategory as subcategory"
+			"product_subcategories.subcategory as subcategory",
+			"product_subcategories.thumbnails_url as subcategory_thumbnail_url"
 		)
 		.then(response =>
 			NestHydrationJS.nest(response, [
@@ -931,6 +932,7 @@ exports.getBestSellerSubcategories = () => {
 						id: true
 					},
 					subcategory: { column: "subcategory" },
+					thumbnails_url: { column: "subcategory_thumbnail_url" },
 					products: [
 						{
 							product_id: { column: "product_id", id: true },
@@ -949,7 +951,7 @@ exports.getBestSellerSubcategories = () => {
 		.then(res =>
 			successResponse(res, "Success Get Subcategories Best Seller", 200)
 		)
-		.catch(err => console.log(err))
+		.catch(err => errorResponse("Internal Server Error", 500))
 }
 
 exports.getProductSubcategories = () => {
