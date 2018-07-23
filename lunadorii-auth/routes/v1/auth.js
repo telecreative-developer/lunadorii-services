@@ -5,6 +5,10 @@ const router = express.Router()
 const jwt = require("jsonwebtoken")
 const passport = require("passport")
 const { authFacebook, authGoogle } = require("../../dispatchers/auth")
+const {
+	requestForgotPassword,
+	confirmForgotPassword
+} = require("../../dispatchers/fpassword")
 
 router.post("/auth/user", (req, res) => {
 	passport.authenticate(
