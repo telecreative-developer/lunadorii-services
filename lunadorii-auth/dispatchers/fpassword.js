@@ -75,7 +75,7 @@ exports.requestForgotPassword = email => {
 			return nodemailerMailgun.sendMail(
 				{
 					from: "no-reply@lunadorii.com",
-					to: "alfanhib@gmail.com",
+					to: email,
 					subject: "Forgot password",
 					html: `<a href='http://54.169.224.248:3000/reset-password?token=${token}'><b>KLIK DISINI!</b></a>`
 				},
