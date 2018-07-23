@@ -6,9 +6,18 @@ const configuration = require("../knexfile")[environment]
 const Promise = require("bluebird")
 const knex = require("knex")(configuration)
 const jwt = require("jsonwebtoken")
+const nodemailer = require("nodemailer")
+const mg = require("nodemailer-mailgun-transport")
 const { successResponse, errorResponse } = require("../responsers")
 const { forgotPasswordJwtObject } = require("../objects")
 const envForgetPassword = process.env.JWT_SECRET_USER_FORGOT_PASSWORD
+const authMg = {
+	auth: {
+		api_key: process.env.MAILGUN_API_KEY,
+		domain: process.env.MAILGUN_DOMAIN
+	}
+}
+const nodemailerMailgun = nodemailer.createTransport(mg(authMg))
 
 const verifyScopeTokenAsync = data => {
 	return new Promise((resolve, reject) => {
@@ -61,10 +70,27 @@ exports.requestForgotPassword = email => {
 		})
 	}
 
+	const sendMailForgotPassword = token => {
+		return new Promise((resolve, reject) => {
+			return nodemailerMailgun.sendMail(
+				{
+					from: "no-reply@lunadorii.com",
+					to: "alfanhib@gmail.com",
+					subject: "Forgot password",
+					html: `<b>${token}</b>`
+				},
+				(err, info) => {
+					err ? reject(err) : resolve(info)
+				}
+			)
+		})
+	}
+
 	return checkFieldAsync(email)
 		.then(res => findUserWithEmailAsync())
 		.then(res => validationUsersAsync(res))
 		.then(id => signingTokenAsync(id))
+		.then(token => sendMailForgotPassword(token))
 		.then(res => successResponse(res, "Success Request Forgot Password", 200))
 		.catch(err => err)
 }
@@ -88,16 +114,24 @@ exports.confirmForgotPassword = data => {
 		})
 	}
 
+	const generatePasswordAsync = id => {
+		return bcrypt
+			.hash(password, 10)
+			.then(hash =>
+				knex("users")
+					.where("id", id)
+					.update({ password: passwordHash })
+					.returning("id")
+					.then(id => id)
+					.catch(err => err)
+			)
+			.catch(err => err)
+	}
+
 	return checkFieldAsync(data)
 		.then(res => verifyValidTokenAsync(res))
 		.then(res => verifyScopeTokenAsync(res))
-		.then(async id => {
-			const passwordHash = await bcrypt.hash(data.new_password, 10)
-			const knexResponse = await knex("users")
-				.where("id", id)
-				.update({ password: passwordHash })
-				.returning("id")
-			return successResponse(parseInt(knexResponse), "Success", 200)
-		})
+		.then(id => generatePasswordAsync(id))
+		.then(res => successResponse(res, "Success Update Password", 201))
 		.catch(err => err)
 }
