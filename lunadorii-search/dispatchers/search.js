@@ -98,7 +98,7 @@ exports.search = attributes => {
 
 exports.searchLogged = attributes => {
 	return knex("products")
-		.where("product", "like", `%${attributes.payload}%`)
+		.whereRaw("LOWER(product) LIKE ?", `%${attributes.payload.toLowerCase()}%`)
 		.where(
 			builder =>
 				attributes.subcategories &&
