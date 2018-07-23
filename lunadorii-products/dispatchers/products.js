@@ -34,137 +34,131 @@ function removeDuplicates(arr, key) {
 }
 
 const knexProductsAsync = () => {
-	return new Promise((resolve, reject) => {
-		return knex("products")
-			.innerJoin(
-				"product_subcategories",
-				"products.product_subcategory_id",
-				"product_subcategories.product_subcategory_id"
-			)
-			.innerJoin(
-				"product_brands",
-				"products.product_brand_id",
-				"product_brands.product_brand_id"
-			)
-			.innerJoin(
-				"product_thumbnails",
-				"products.product_id",
-				"product_thumbnails.product_id"
-			)
-			.leftJoin(
-				"product_reviews",
-				"products.product_id",
-				"product_reviews.product_id"
-			)
-			.leftJoin("users", "product_reviews.id", "users.id")
-			.select(
-				"*",
-				"products.product_id as product_id",
-				"users.id as product_reviews_user_id",
-				"users.avatar_url as product_reviews_avatar_url",
-				"users.first_name as product_reviews_first_name",
-				"users.last_name as product_reviews_last_name",
-				"product_subcategories.product_subcategory_id as product_subcategory_id",
-				"product_brands.product_brand_id as product_brand_id",
-				"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
-				"product_reviews.product_review_id as product_review_id",
-				"product_reviews.created_at as product_reviews_created_at",
-				"product_reviews.updated_at as product_reviews_updated_at"
-			)
-			.orderBy("products.created_at", "desc")
-			.then(res => resolve(res))
-			.catch(err => reject(errorResponse("Internal Server Error", 500)))
-	})
+	return knex("products")
+		.innerJoin(
+			"product_subcategories",
+			"products.product_subcategory_id",
+			"product_subcategories.product_subcategory_id"
+		)
+		.innerJoin(
+			"product_brands",
+			"products.product_brand_id",
+			"product_brands.product_brand_id"
+		)
+		.innerJoin(
+			"product_thumbnails",
+			"products.product_id",
+			"product_thumbnails.product_id"
+		)
+		.leftJoin(
+			"product_reviews",
+			"products.product_id",
+			"product_reviews.product_id"
+		)
+		.leftJoin("users", "product_reviews.id", "users.id")
+		.select(
+			"*",
+			"products.product_id as product_id",
+			"users.id as product_reviews_user_id",
+			"users.avatar_url as product_reviews_avatar_url",
+			"users.first_name as product_reviews_first_name",
+			"users.last_name as product_reviews_last_name",
+			"product_subcategories.product_subcategory_id as product_subcategory_id",
+			"product_brands.product_brand_id as product_brand_id",
+			"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
+			"product_reviews.product_review_id as product_review_id",
+			"product_reviews.created_at as product_reviews_created_at",
+			"product_reviews.updated_at as product_reviews_updated_at"
+		)
+		.orderBy("products.created_at", "desc")
+		.then(res => res)
+		.catch(err => errorResponse("Internal Server Error", 500))
 }
 
 const knexSingleProductAsync = (id, where_clause) => {
-	return new Promise((resolve, reject) => {
-		return knex("products")
-			.where(where_clause, id)
-			.innerJoin(
-				"product_subcategories",
-				"products.product_subcategory_id",
-				"product_subcategories.product_subcategory_id"
-			)
-			.innerJoin(
-				"product_brands",
-				"products.product_brand_id",
-				"product_brands.product_brand_id"
-			)
-			.innerJoin(
-				"product_thumbnails",
-				"products.product_id",
-				"product_thumbnails.product_id"
-			)
-			.leftJoin(
-				"product_reviews",
-				"products.product_id",
-				"product_reviews.product_id"
-			)
-			.leftJoin("users", "product_reviews.id", "users.id")
-			.select(
-				"*",
-				"products.product_id as product_id",
-				"users.id as product_reviews_user_id",
-				"users.avatar_url as product_reviews_avatar_url",
-				"users.first_name as product_reviews_first_name",
-				"users.last_name as product_reviews_last_name",
-				"product_subcategories.product_subcategory_id as product_subcategory_id",
-				"product_brands.product_brand_id as product_brand_id",
-				"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
-				"product_reviews.product_review_id as product_review_id",
-				"product_reviews.created_at as product_reviews_created_at",
-				"product_reviews.updated_at as product_reviews_updated_at"
-			)
-			.orderBy("products.created_at", "desc")
-			.then(res => resolve(res))
-			.catch(err => reject(errorResponse("Internal Server Error", 500)))
-	})
+	return knex("products")
+		.where(where_clause, id)
+		.innerJoin(
+			"product_subcategories",
+			"products.product_subcategory_id",
+			"product_subcategories.product_subcategory_id"
+		)
+		.innerJoin(
+			"product_brands",
+			"products.product_brand_id",
+			"product_brands.product_brand_id"
+		)
+		.innerJoin(
+			"product_thumbnails",
+			"products.product_id",
+			"product_thumbnails.product_id"
+		)
+		.leftJoin(
+			"product_reviews",
+			"products.product_id",
+			"product_reviews.product_id"
+		)
+		.leftJoin("users", "product_reviews.id", "users.id")
+		.select(
+			"*",
+			"products.product_id as product_id",
+			"users.id as product_reviews_user_id",
+			"users.avatar_url as product_reviews_avatar_url",
+			"users.first_name as product_reviews_first_name",
+			"users.last_name as product_reviews_last_name",
+			"product_subcategories.product_subcategory_id as product_subcategory_id",
+			"product_brands.product_brand_id as product_brand_id",
+			"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
+			"product_reviews.product_review_id as product_review_id",
+			"product_reviews.created_at as product_reviews_created_at",
+			"product_reviews.updated_at as product_reviews_updated_at"
+		)
+		.orderBy("products.created_at", "desc")
+		.then(res => res)
+		.catch(err => errorResponse("Internal Server Error", 500))
 }
 
 const knexProductsBestSellerAsync = () => {
-	return new Promise((resolve, reject) => {
-		return knex("order_products")
-			.innerJoin("products", "order_products.product_id", "products.product_id")
-			.innerJoin(
-				"product_subcategories",
-				"products.product_subcategory_id",
-				"product_subcategories.product_subcategory_id"
-			)
-			.innerJoin(
-				"product_brands",
-				"products.product_brand_id",
-				"product_brands.product_brand_id"
-			)
-			.innerJoin(
-				"product_thumbnails",
-				"products.product_id",
-				"product_thumbnails.product_id"
-			)
-			.leftJoin(
-				"product_reviews",
-				"products.product_id",
-				"product_reviews.product_id"
-			)
-			.leftJoin("users", "product_reviews.id", "users.id")
-			.select(
-				"*",
-				"order_products.order_product_id as order_product_id",
-				"products.product_id as product_id",
-				"users.id as product_reviews_user_id",
-				"users.avatar_url as product_reviews_avatar_url",
-				"users.first_name as product_reviews_first_name",
-				"users.last_name as product_reviews_last_name",
-				"product_subcategories.product_subcategory_id as product_subcategory_id",
-				"product_brands.product_brand_id as product_brand_id",
-				"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
-				"product_reviews.product_review_id as product_review_id",
-				"product_reviews.created_at as product_reviews_created_at",
-				"product_reviews.updated_at as product_reviews_updated_at"
-			)
-			.then(res => resolve(res))
-			.catch(err => reject(errorResponse("Internal Server Error", 500)))
-	})
+	return knex("order_products")
+		.innerJoin("products", "order_products.product_id", "products.product_id")
+		.innerJoin(
+			"product_subcategories",
+			"products.product_subcategory_id",
+			"product_subcategories.product_subcategory_id"
+		)
+		.innerJoin(
+			"product_brands",
+			"products.product_brand_id",
+			"product_brands.product_brand_id"
+		)
+		.innerJoin(
+			"product_thumbnails",
+			"products.product_id",
+			"product_thumbnails.product_id"
+		)
+		.leftJoin(
+			"product_reviews",
+			"products.product_id",
+			"product_reviews.product_id"
+		)
+		.leftJoin("users", "product_reviews.id", "users.id")
+		.select(
+			"*",
+			"order_products.order_product_id as order_product_id",
+			"products.product_id as product_id",
+			"users.id as product_reviews_user_id",
+			"users.avatar_url as product_reviews_avatar_url",
+			"users.first_name as product_reviews_first_name",
+			"users.last_name as product_reviews_last_name",
+			"product_subcategories.product_subcategory_id as product_subcategory_id",
+			"product_brands.product_brand_id as product_brand_id",
+			"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
+			"product_reviews.product_review_id as product_review_id",
+			"product_reviews.created_at as product_reviews_created_at",
+			"product_reviews.updated_at as product_reviews_updated_at"
+		)
+		.then(res => res)
+		.catch(err => errorResponse("Internal Server Error", 500))
 }
 
 exports.getAllProducts = () => {
@@ -969,12 +963,10 @@ exports.getProductSubcategoriesWithProducts = () => {
 			"product_subcategories.product_subcategory_id",
 			"products.product_subcategory_id"
 		)
-		.then(response =>
-			NestHydrationJS.nest(response, productSubcategoriesDefinition)
-		)
-		.then(response =>
+		.then(res => NestHydrationJS.nest(res, productSubcategoriesDefinition))
+		.then(res =>
 			successResponse(
-				response,
+				res,
 				"Success Get Product Subcategories with Products",
 				200
 			)

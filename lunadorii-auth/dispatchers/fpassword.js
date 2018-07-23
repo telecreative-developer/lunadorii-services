@@ -77,7 +77,7 @@ exports.requestForgotPassword = email => {
 					from: "no-reply@lunadorii.com",
 					to: "alfanhib@gmail.com",
 					subject: "Forgot password",
-					html: `<b>${token}</b>`
+					html: `<a href='http://54.169.224.248:3000/reset-password?token=${token}'><b>KLIK DISINI!</b></a>`
 				},
 				(err, info) => {
 					err ? reject(err) : resolve(info)
@@ -132,6 +132,6 @@ exports.confirmForgotPassword = data => {
 		.then(res => verifyValidTokenAsync(res))
 		.then(res => verifyScopeTokenAsync(res))
 		.then(id => generatePasswordAsync(id))
-		.then(id => successResponse(id, "Success Update Password", 201))
+		.then(id => successResponse(parseInt(id), "Success Update Password", 201))
 		.catch(err => err)
 }

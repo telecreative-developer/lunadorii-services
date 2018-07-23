@@ -27,12 +27,13 @@ Array.prototype.count = function() {
 }
 
 exports.checkoutOrder = data => {
+	const billingCode = `LD${Math.random()
+		.toString(36)
+		.substr(2, 15)
+		.toUpperCase()}`
 	return knex("orders")
 		.insert({
-			billing_code: `LD${Math.random()
-				.toString(36)
-				.substr(2, 15)
-				.toUpperCase()}`,
+			billing_code: billingCode,
 			total: parseInt(data.data.count() + parseInt(data.delivery_price)),
 			delivery_service: data.delivery_service,
 			delivery_price: data.delivery_price,
