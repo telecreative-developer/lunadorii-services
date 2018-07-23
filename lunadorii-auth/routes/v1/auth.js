@@ -81,4 +81,16 @@ router.post("/auth/user/google", (req, res) => {
 		.catch(err => console.log("Error on AUTH_GOOGLE", err))
 })
 
+router.post("/request/user/forgot-password", (req, res) => {
+	Promise.try(() => requestForgotPassword(req.body.email))
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log("Route Error on REQUEST_FORGOT_PASSWORD", err))
+})
+
+router.post("/confirm/user/forgot-password", (req, res) => {
+	Promise.try(() => confirmForgotPassword(req.body))
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log("Route Error on REQUEST_FORGOT_PASSWORD", err))
+})
+
 module.exports = router

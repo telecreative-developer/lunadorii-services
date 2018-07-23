@@ -12,6 +12,8 @@ apiEndpoints:
     host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
     paths:
       - '/api/v1/auth/admin'
+      - '/api/v1/request/user/forgot-password'
+      - '/api/v1/confirm/user/forgot-password'
   users:
     host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
     paths:
