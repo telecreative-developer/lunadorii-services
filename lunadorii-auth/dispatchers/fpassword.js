@@ -120,7 +120,7 @@ exports.confirmForgotPassword = data => {
 			.then(hash =>
 				knex("users")
 					.where("id", id)
-					.update({ password: passwordHash })
+					.update({ password: hash })
 					.returning("id")
 					.then(id => id)
 					.catch(err => err)
@@ -132,6 +132,6 @@ exports.confirmForgotPassword = data => {
 		.then(res => verifyValidTokenAsync(res))
 		.then(res => verifyScopeTokenAsync(res))
 		.then(id => generatePasswordAsync(id))
-		.then(res => successResponse(res, "Success Update Password", 201))
+		.then(id => successResponse(id, "Success Update Password", 201))
 		.catch(err => err)
 }
