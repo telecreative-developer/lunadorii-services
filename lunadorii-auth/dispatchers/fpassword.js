@@ -116,7 +116,7 @@ exports.confirmForgotPassword = data => {
 
 	const generatePasswordAsync = id => {
 		return bcrypt
-			.hash(password, 10)
+			.hash(data.new_password, 10)
 			.then(hash =>
 				knex("users")
 					.where("id", id)
