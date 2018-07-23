@@ -10,6 +10,7 @@ const nodemailer = require("nodemailer")
 const mg = require("nodemailer-mailgun-transport")
 const { successResponse, errorResponse } = require("../responsers")
 const { forgotPasswordJwtObject } = require("../objects")
+const Handlebars = require("handlebars")
 const envForgetPassword = process.env.JWT_SECRET_USER_FORGOT_PASSWORD
 const authMg = {
 	auth: {
@@ -18,6 +19,9 @@ const authMg = {
 	}
 }
 const nodemailerMailgun = nodemailer.createTransport(mg(authMg))
+const template = Handlebars.compile(
+	require("../../lunadorii-email-templates/forgot-password.hbs")
+)
 
 const verifyScopeTokenAsync = data => {
 	return new Promise((resolve, reject) => {
@@ -77,7 +81,7 @@ exports.requestForgotPassword = email => {
 					from: "no-reply@lunadorii.com",
 					to: email,
 					subject: "Forgot password",
-					html: `<a href='http://54.169.224.248:3000/reset-password?token=${token}'><b>KLIK DISINI!</b></a>`
+					html: template(token)
 				},
 				(err, info) => {
 					err ? reject(err) : resolve(info)
@@ -92,7 +96,7 @@ exports.requestForgotPassword = email => {
 		.then(id => signingTokenAsync(id))
 		.then(token => sendMailForgotPassword(token))
 		.then(res => successResponse(res, "Success Request Forgot Password", 200))
-		.catch(err => err)
+		.catch(err => console.log(err))
 }
 
 exports.confirmForgotPassword = data => {
