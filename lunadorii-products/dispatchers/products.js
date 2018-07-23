@@ -923,7 +923,6 @@ exports.getBestSellerSubcategories = () => {
 			"product_subcategories.product_subcategory_id as product_subcategory_id",
 			"product_subcategories.subcategory as subcategory"
 		)
-		.orderBy("order_products.created_at", "desc")
 		.then(response =>
 			NestHydrationJS.nest(response, [
 				{
@@ -931,12 +930,24 @@ exports.getBestSellerSubcategories = () => {
 						column: "product_subcategory_id",
 						id: true
 					},
-					subcategory: { column: "subcategory" }
+					subcategory: { column: "subcategory" },
+					products: [
+						{
+							product_id: { column: "product_id", id: true },
+							product: { column: "product" },
+							description: { column: "description" },
+							detail: { column: "detail" },
+							to_use: { column: "to_use" },
+							price: { column: "price" },
+							discount: { column: "discount" },
+							discount_percentage: { column: "discount_percentage" }
+						}
+					]
 				}
 			])
 		)
-		.then(response =>
-			successResponse(response, "Success Get Subcategories Best Seller", 200)
+		.then(res =>
+			successResponse(res, "Success Get Subcategories Best Seller", 200)
 		)
 		.catch(err => console.log(err))
 }
