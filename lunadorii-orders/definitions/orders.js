@@ -13,6 +13,7 @@ const historyDefinition = [
 				product_id: { column: "product_id", id: true },
 				purchase_number: { column: "purchase_number" },
 				product: { column: "product" },
+				price: { column: "price" },
 				wight_gram: { column: "weight_gram" },
 				order_product_status: { column: "order_product_status" },
 				delivery_service: { column: "delivery_service" },
