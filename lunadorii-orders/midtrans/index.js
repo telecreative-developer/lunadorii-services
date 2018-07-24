@@ -20,43 +20,84 @@ class MidtransJS {
 		this.url = urlMidtrans
 	}
 
-	chargeBankTransfer(bank_transfer, transaction_details, customer_details) {
+	chargeBankTransfer(bankTransfer, transactionDetails, customerDetails) {
 		return axios(
 			axiosOptions("POST", `${this.url}/charge`, this.serverKey, {
 				payment_type: "bank_transfer",
 				bank_transfer: {
-					bank: bank_transfer
+					bank: bankTransfer.bank
 				},
 				transaction_details: {
-					order_id: transaction_details.order_id,
-					gross_amount: transaction_details.gross_amount
+					order_id: transactionDetails.order_id,
+					gross_amount: transactionDetails.gross_amount
 				},
 				customer_details: {
-					first_name: customer_details.first_name,
-					last_name: customer_details.last_name,
-					email: customer_details.email
+					first_name: customerDetails.first_name,
+					last_name: customerDetails.last_name,
+					email: customerDetails.email
+				},
+				custom_expiry: {
+					expiry_duration: 12,
+					unit: "hour"
 				}
 			})
 		)
-			.then(res => res)
+			.then(res => res.data)
 			.catch(err => err)
 	}
 
-	chargeCreditCard(transaction_details, customer_details) {
-		axios(
-			axiosOptions("POST", `${this.url}/charge`, this.serverKey, {
-				payment_type: "credit_card",
-				transaction_details: {
-					order_id: transaction_details.order_id,
-					gross_amount: transaction_details.gross_amount
-				},
-				customer_details: {
-					first_name: customer_details.first_name,
-					last_name: customer_details.last_name,
-					email: customer_details.email
-				}
-			})
-		)
+	getToken(cardInfo) {
+		const cardNumber = "card_number=" + cardInfo.card_number
+		const cardCvv = "card_cvv=" + cardInfo.card_cvv
+		const cardExpMonth = "card_exp_month=" + cardInfo.card_exp_month
+		const cardExpYear = "card_exp_year=" + cardInfo.card_exp_year
+		const clientKey = "client_key=" + this.clientKey
+		return new Promise((resolve, reject) => {
+			axios
+				.get(
+					`${
+						this.url
+					}/token?${cardNumber}&${cardCvv}&${cardExpMonth}&${cardExpYear}&${clientKey}`
+				)
+				.then(res => {
+					return parseInt(res.data.status_code) === 200
+						? resolve(res.data)
+						: reject(res.data)
+				})
+				.catch(err => reject(err))
+		})
+	}
+
+	chargeCreditCard(cardInfo, transactionDetails, customerDetails) {
+		return new Promise((resolve, reject) => {
+			return this.getToken(cardInfo)
+				.then(res => {
+					return axios(
+						axiosOptions("POST", `${this.url}/charge`, this.serverKey, {
+							payment_type: "credit_card",
+							transaction_details: {
+								order_id: transactionDetails.order_id,
+								gross_amount: transactionDetails.gross_amount
+							},
+							credit_card: {
+								token_id: res.token_id
+							},
+							customer_details: {
+								first_name: customerDetails.first_name,
+								last_name: customerDetails.last_name,
+								email: customerDetails.email
+							}
+						})
+					)
+						.then(res => {
+							parseInt(res.data.status_code) === 200
+								? resolve(res.data)
+								: reject(res.data)
+						})
+						.catch(err => reject(err))
+				})
+				.catch(err => reject(err))
+		})
 	}
 
 	status(order_id) {

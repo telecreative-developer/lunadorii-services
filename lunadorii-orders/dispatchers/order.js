@@ -5,7 +5,10 @@ const configuration = require("../knexfile")[environment]
 const knex = require("knex")(configuration)
 const NestHydrationJS = require("nesthydrationjs")()
 const { successResponse, errorResponse } = require("../responsers")
-const { historyDefinition } = require("../definitions/orders")
+const {
+	historyDefinition,
+	checkoutDefinition
+} = require("../definitions/orders")
 const mdServerKey = process.env.MIDTRANS_SERVER_KEY
 const mdClientKey = process.env.MIDTRANS_CLIENT_KEY
 const mdUrl = process.env.MIDTRANS_URL
@@ -24,31 +27,42 @@ Array.prototype.count = function() {
 	return total
 }
 
-exports.checkoutOrder = data => {
-	const billingCode = `LD${Math.random()
-		.toString(36)
-		.substr(2, 15)
-		.toUpperCase()}`
-	const total = parseInt(data.data.count() + parseInt(data.delivery_price))
+const midtrans = (data, { billingCode, total }) => {
+	return new Promise((resolve, reject) => {
+		if (data.paid_method === "bank_transfer") {
+			const { bank } = data.payment_detail
+			const { first_name, last_name, email } = data.user
+			return md
+				.chargeBankTransfer(
+					{ bank },
+					{ order_id: billingCode, gross_amount: total },
+					{ first_name, last_name, email }
+				)
+				.then(res => resolve(res))
+				.catch(err => reject(errorResponse(err, err.status_code)))
+		} else if (data.paid_method === "credit_card") {
+			const {
+				card_number,
+				card_cvv,
+				card_exp_month,
+				card_exp_year
+			} = data.payment_detail
+			const { first_name, last_name, email } = data.user
+			return md
+				.chargeCreditCard(
+					{ card_number, card_cvv, card_exp_month, card_exp_year },
+					{ order_id: billingCode, gross_amount: total },
+					{ first_name, last_name, email }
+				)
+				.then(res => resolve(res))
+				.catch(err => reject(errorResponse(err, err.status_code)))
+		} else {
+			return reject(errorResponse("Paid method does not valid", 500))
+		}
+	})
+}
 
-	const midtrans = item => {
-		return md
-			.chargeBankTransfer(
-				data.bank,
-				{
-					order_id: billingCode,
-					gross_amount: total
-				},
-				{
-					first_name: data.user.first_name,
-					last_name: data.user.last_name,
-					email: data.user.email
-				}
-			)
-			.then(res => item.map(d => ({ ...d, va_numbers: res.data.va_numbers })))
-			.catch(err => err)
-	}
-
+const knexResponseInsertOrder = (data, { billingCode, total }) => {
 	return knex("orders")
 		.insert({
 			billing_code: billingCode,
@@ -57,56 +71,56 @@ exports.checkoutOrder = data => {
 			delivery_service: data.delivery_service,
 			delivery_price: data.delivery_price,
 			paid_method: data.paid_method,
-			bank: data.bank,
 			address: data.address,
 			city_id: data.city_id,
 			province_id: data.province_id,
 			id: data.id
 		})
 		.returning("order_id")
-		.then(order_id => {
-			return knex("order_products")
-				.insert(
-					data.data.map(d => ({
-						...d,
-						order_id: parseInt(order_id)
-					}))
-				)
-				.then(res => order_id)
-				.catch(err => err)
-		})
-		.then(order_id => {
-			return knex("orders")
-				.where("orders.order_id", parseInt(order_id))
-				.innerJoin(
-					"order_products",
-					"orders.order_id",
-					"order_products.order_id"
-				)
-				.then(res => res)
-				.catch(err => err)
-		})
-		.then(res => {
-			return NestHydrationJS.nest(res, [
-				{
-					billing_code: { column: "billing_code", id: true },
-					paid_method: { column: "paid_method" },
-					bank: { column: "bank" },
-					products: [
-						{
-							product_id: { column: "product_id", id: true },
-							product: { column: "product" },
-							qty: { column: "qty" },
-							price: { column: "price" },
-							discount_percentage: { column: "discount_percentage" }
-						}
-					]
-				}
-			])
-		})
-		.then(response => midtrans(response))
-		.then(res => successResponse(res, "Success", 201))
-		.catch(err => console.log(err))
+		.then(order_id => order_id)
+		.catch(err => errorResponse("Internal Server Error", 500))
+}
+
+const knexResponseInsertOrderProduct = (data, order_id) => {
+	return knex("order_products")
+		.insert(
+			data.data.map(d => ({
+				...d,
+				order_id: parseInt(order_id)
+			}))
+		)
+		.then(res => order_id)
+		.catch(err => errorResponse("Internal Server Error", 500))
+}
+
+const knexResponseSelectOrders = order_id => {
+	return knex("orders")
+		.where("orders.order_id", parseInt(order_id))
+		.innerJoin("order_products", "orders.order_id", "order_products.order_id")
+		.then(res => res)
+		.catch(err => errorResponse("Internal Server Error", 500))
+}
+
+exports.checkoutOrder = data => {
+	const billingCode = `LD${Math.random()
+		.toString(36)
+		.substr(2, 15)
+		.toUpperCase()}`
+	const total = parseInt(data.data.count() + parseInt(data.delivery_price))
+
+	const knexResponse = mdResponse => {
+		return knexResponseInsertOrder(data, { billingCode, total })
+			.then(order_id => knexResponseInsertOrderProduct(data, order_id))
+			.then(order_id => knexResponseSelectOrders(order_id))
+			.then(res => NestHydrationJS.nest(res, checkoutDefinition))
+			.then(res => res.map(d => ({ ...d, midtrans_response: mdResponse })))
+			.catch(err => errorResponse("Internal Server Error", 500))
+	}
+
+	return midtrans(data, { billingCode, total })
+		.then(mdResponse => knexResponse(mdResponse))
+		.then(res => successResponse(res, "Checkout Success", 201))
+		.catch(err => err)
 }
 
 exports.getOrderHistory = id => {
@@ -144,9 +158,9 @@ exports.getOrderHistorySingle = order_id => {
 			.then(res => {
 				return item.map(d => ({
 					...d,
-					transaction_time: res.data.transaction_time,
-					transaction_status: res.data.transaction_status,
-					payment_type: res.data.payment_type
+					transaction_time: res.transaction_time,
+					transaction_status: res.transaction_status,
+					payment_type: res.payment_type
 				}))
 			})
 			.catch(err => err)

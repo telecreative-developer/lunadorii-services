@@ -46,4 +46,21 @@ const historyDefinition = [
 	}
 ]
 
-module.exports = { historyDefinition }
+const checkoutDefinition = [
+	{
+		billing_code: { column: "billing_code", id: true },
+		paid_method: { column: "paid_method" },
+		bank: { column: "bank" },
+		products: [
+			{
+				product_id: { column: "product_id", id: true },
+				product: { column: "product" },
+				qty: { column: "qty" },
+				price: { column: "price" },
+				discount_percentage: { column: "discount_percentage" }
+			}
+		]
+	}
+]
+
+module.exports = { historyDefinition, checkoutDefinition }
