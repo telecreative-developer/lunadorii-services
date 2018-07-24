@@ -4,6 +4,12 @@ const historyDefinition = [
 		billing_code: { column: "billing_code" },
 		order_status: { column: "order_status" },
 		total: { column: "total" },
+		paid_method: { column: "paid_method" },
+		receipt_number: { column: "receipt_number" },
+		receipt_time: { column: "receipt_time" },
+		delivery_service: { column: "delivery_service" },
+		delivery_price: { column: "delivery_price" },
+		delivery_time: { column: "delivery_time" },
 		address: { column: "address" },
 		created_at: { column: "created_at" },
 		updated_at: { column: "updated_at" },
@@ -20,9 +26,6 @@ const historyDefinition = [
 				note: { column: "note" },
 				qty: { column: "qty" },
 				subtotal: { column: "subtotal" },
-				payment_time: { column: "payment_time" },
-				delivery_time: { column: "delivery_time" },
-				receipt_time: { column: "receipt_time" },
 				subcategories: [
 					{
 						product_subcategory_id: {

@@ -42,6 +42,23 @@ class MidtransJS {
 			.catch(err => err)
 	}
 
+	chargeCreditCard(transaction_details, customer_details) {
+		axios(
+			axiosOptions("POST", `${this.url}/charge`, this.serverKey, {
+				payment_type: "credit_card",
+				transaction_details: {
+					order_id: transaction_details.order_id,
+					gross_amount: transaction_details.gross_amount
+				},
+				customer_details: {
+					first_name: customer_details.first_name,
+					last_name: customer_details.last_name,
+					email: customer_details.email
+				}
+			})
+		)
+	}
+
 	status(order_id) {
 		return axios(
 			axiosOptions("GET", `${this.url}/${order_id}/status`, this.serverKey)
