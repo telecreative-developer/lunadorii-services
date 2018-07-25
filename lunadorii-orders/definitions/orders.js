@@ -1,6 +1,7 @@
 const historyDefinition = [
 	{
 		order_id: { column: "order_id", id: true },
+		id: { column: "id", id: true },
 		billing_code: { column: "billing_code" },
 		order_status: { column: "order_status" },
 		total: { column: "total" },
@@ -16,13 +17,12 @@ const historyDefinition = [
 		list: [
 			{
 				order_product_id: { column: "order_product_id", id: true },
-				product_id: { column: "product_id", id: true },
+				product_id: { column: "product_product_id", id: true },
 				purchase_number: { column: "purchase_number" },
 				product: { column: "product" },
 				price: { column: "price" },
 				wight_gram: { column: "weight_gram" },
 				order_product_status: { column: "order_product_status" },
-				delivery_service: { column: "delivery_service" },
 				note: { column: "note" },
 				qty: { column: "qty" },
 				subtotal: { column: "subtotal" },
@@ -39,6 +39,16 @@ const historyDefinition = [
 					{
 						product_thumbnail_id: { column: "product_thumbnail_id", id: true },
 						thumbnail_url: { column: "product_thumbnail_url" }
+					}
+				],
+				reviews: [
+					{
+						product_review_id: { column: "product_review_id", id: true },
+						review_rate: { column: "rate" },
+						comment: { column: "comment" },
+						id: { column: "product_reviews_user_id", id: true },
+						created_at: { column: "product_reviews_created_at" },
+						updated_at: { column: "product_reviews_updated_at" }
 					}
 				]
 			}

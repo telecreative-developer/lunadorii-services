@@ -7,7 +7,9 @@ const {
 	checkoutOrder,
 	getOrderHistory,
 	getOrderHistorySingle,
-	getOrderRecent
+	getOrderRecent,
+	getOrderRecentSingle,
+	getOrderRecentSingleLogged
 } = require("../../dispatchers/order")
 
 // Checkout order
@@ -34,6 +36,18 @@ router.get("/order/history/single/:order_id", authentication, (req, res) => {
 // Order recent
 router.get("/order/recent/:id", authentication, (req, res) => {
 	Promise.try(() => getOrderRecent(req.params.id))
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log("Error on GET_ORDER_RECENT", err))
+})
+
+// Order recent single
+router.get("/order/recent/single/:order_id", authentication, (req, res) => {
+	Promise.try(
+		() =>
+			req.query.id
+				? getOrderRecentSingleLogged(req.params.order_id, req.query.id)
+				: getOrderRecentSingle(req.params.order_id)
+	)
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on GET_ORDER_RECENT", err))
 })
