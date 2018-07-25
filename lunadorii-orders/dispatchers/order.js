@@ -228,13 +228,14 @@ exports.getOrderRecent = id => {
 		.orderBy("orders.created_at", "desc")
 		.then(res => NestHydrationJS.nest(res, historyDefinition))
 		.then(res =>
-			res.map(d =>
-				d.list.map(dlm => ({
+			res.map(d => ({
+				...d,
+				list: d.list.map(dlm => ({
 					...dlm,
 					reviewed: !!dlm.reviews.filter(dlmr => dlmr.id === parseInt(id))
 						.length
 				}))
-			)
+			}))
 		)
 		.then(res => successResponse(res, "Success Get Order Recent", 200))
 }
@@ -309,13 +310,14 @@ exports.getOrderRecentSingleLogged = (order_id, id) => {
 		.orderBy("orders.created_at", "desc")
 		.then(res => NestHydrationJS.nest(res, historyDefinition))
 		.then(res =>
-			res.map(d =>
-				d.list.map(dlm => ({
+			res.map(d => ({
+				...d,
+				list: d.list.map(dlm => ({
 					...dlm,
 					reviewed: !!dlm.reviews.filter(dlmr => dlmr.id === parseInt(id))
 						.length
 				}))
-			)
+			}))
 		)
 		.then(res => successResponse(res, "Success Get Order Recent", 200))
 }
