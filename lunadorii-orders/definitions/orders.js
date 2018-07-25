@@ -16,7 +16,7 @@ const historyDefinition = [
 		list: [
 			{
 				order_product_id: { column: "order_product_id", id: true },
-				product_id: { column: "product_product_id", id: true },
+				product_id: { column: "product_id", id: true },
 				purchase_number: { column: "purchase_number" },
 				product: { column: "product" },
 				price: { column: "price" },
