@@ -13,7 +13,8 @@ const productsDefinition = [
 		subcategories: [
 			{
 				product_subcategory_id: { column: "product_subcategory_id", id: true },
-				subcategory: { column: "subcategory" }
+				subcategory: { column: "subcategory" },
+				thumbnail_url: { column: "product_subcategory_thumbnail_url" }
 			}
 		],
 		brands: [
