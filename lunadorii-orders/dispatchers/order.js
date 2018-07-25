@@ -89,8 +89,18 @@ const knexResponseInsertOrderProduct = (data, order_id) => {
 				order_id: parseInt(order_id)
 			}))
 		)
+		.then(() => data.data.forEarch(d => removeCart(data.id, d.product_id)))
 		.then(res => order_id)
 		.catch(err => errorResponse("Internal Server Error", 500))
+}
+
+const removeCart = (id, product_id) => {
+	return knex("cart")
+		.where("id", id)
+		.andWhere("product_id", product_id)
+		.del()
+		.then(res => res)
+		.catch(err => err)
 }
 
 const knexResponseSelectOrders = order_id => {
