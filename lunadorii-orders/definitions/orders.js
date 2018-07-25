@@ -1,7 +1,6 @@
 const historyDefinition = [
 	{
 		order_id: { column: "order_id", id: true },
-		id: { column: "id", id: true },
 		billing_code: { column: "billing_code" },
 		order_status: { column: "order_status" },
 		total: { column: "total" },
