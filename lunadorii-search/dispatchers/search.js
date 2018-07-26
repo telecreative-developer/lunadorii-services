@@ -93,7 +93,7 @@ exports.search = attributes => {
 				200
 			)
 		)
-		.catch(err => console.log(err))
+		.catch(err => err)
 }
 
 exports.searchLogged = attributes => {
@@ -194,5 +194,5 @@ exports.searchLogged = attributes => {
 				200
 			)
 		)
-		.catch(err => console.log(err))
+		.catch(err => err)
 }

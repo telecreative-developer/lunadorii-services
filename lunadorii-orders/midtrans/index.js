@@ -104,7 +104,7 @@ class MidtransJS {
 		return axios(
 			axiosOptions("GET", `${this.url}/${order_id}/status`, this.serverKey)
 		)
-			.then(res => res)
+			.then(res => res.data)
 			.catch(err => err)
 	}
 }

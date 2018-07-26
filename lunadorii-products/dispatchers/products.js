@@ -110,6 +110,7 @@ const knexSingleProductAsync = (id, where_clause) => {
 			"product_subcategories.thumbnail_url as product_subcategory_thumbnail_url",
 			"product_brands.product_brand_id as product_brand_id",
 			"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
+			"product_thumbnails.thumbnail_id as product_thumbnail_url",
 			"product_reviews.product_review_id as product_review_id",
 			"product_reviews.created_at as product_reviews_created_at",
 			"product_reviews.updated_at as product_reviews_updated_at"
@@ -866,8 +867,8 @@ exports.getProductBrandsWithProducts = () => {
 	return knex("product_brands")
 		.innerJoin(
 			"products",
-			"products.product_brand_id",
-			"product_brands.product_brand_id"
+			"product_brands.product_brand_id",
+			"products.product_brand_id"
 		)
 		.then(response => NestHydrationJS.nest(response, productBrandsDefinition))
 		.then(response =>
