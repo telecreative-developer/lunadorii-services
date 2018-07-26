@@ -35,10 +35,8 @@ exports.getUserReviews = id => {
 			"product_reviews.created_at as product_review_created_at",
 			"product_reviews.updated_at as product_review_updated_at"
 		)
-		.then(response => NestHydrationJS.nest(response, reviewsDefinition))
-		.then(response =>
-			successResponse(response, "Success Get User Reviews", 200)
-		)
+		.then(res => NestHydrationJS.nest(res, reviewsDefinition))
+		.then(res => successResponse(res, "Success Get User Reviews", 200))
 		.catch(err => errorResponse(err, 500))
 }
 
