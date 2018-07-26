@@ -19,9 +19,9 @@ Array.prototype.count = function() {
 	let total = 0
 	for (let i = 0, _len = this.length; i < _len; i++) {
 		total +=
-			this[i]["price"] -
-			((this[i]["price"] * this[i]["discount_percentage"]) / 100) *
-				this[i]["qty"]
+			(this[i]["price"] -
+				(this[i]["price"] * this[i]["discount_percentage"]) / 100) *
+			this[i]["qty"]
 	}
 
 	return total
@@ -89,7 +89,6 @@ const knexResponseInsertOrderProduct = (data, order_id) => {
 				order_id: parseInt(order_id)
 			}))
 		)
-		.then(() => data.data.forEarch(d => removeCart(data.id, d.product_id)))
 		.then(res => order_id)
 		.catch(err => errorResponse("Internal Server Error", 500))
 }
