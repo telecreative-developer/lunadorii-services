@@ -70,6 +70,7 @@ exports.search = attributes => {
 		.then(response =>
 			response.map(res => ({
 				...res,
+				price_discount: res.price - (res.price / res.discount_percentage) * 100,
 				product_rate: res.reviews.length
 					? res.reviews.map(r => r.review_rate).reduce((a, b) => a + b) /
 					  res.reviews.length
@@ -80,7 +81,8 @@ exports.search = attributes => {
 			if (attributes.maxPrice && attributes.minPrice) {
 				return response.filter(
 					res =>
-						res.price <= attributes.maxPrice && res.price >= attributes.minPrice
+						res.price_discount <= attributes.maxPrice &&
+						res.price_discount >= attributes.minPrice
 				)
 			}
 
