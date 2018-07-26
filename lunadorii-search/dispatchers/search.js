@@ -117,7 +117,7 @@ exports.search = attributes => {
 		.then(res => validationAvatar(res))
 		.then(res => NestHydrationJS.nest(res, searchDefinition))
 		.then(res => productRateAndDiscount(res))
-		.then(res => filterPrice(res))
+		.then(res => filterPrice(attributes, res))
 		.then(res => successResponse(res, `Keyword: ${attributes.payload}`, 200))
 		.catch(err => err)
 }
@@ -128,7 +128,7 @@ exports.searchLogged = attributes => {
 		.then(res => NestHydrationJS.nest(res, searchDefinition))
 		.then(res => wishlist(attributes, res))
 		.then(res => productRateAndDiscount(res))
-		.then(res => filterPrice(res))
+		.then(res => filterPrice(attributes, res))
 		.then(res => successResponse(res, `Keyword: ${attributes.payload}`, 200))
 		.catch(err => err)
 }
