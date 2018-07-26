@@ -778,7 +778,7 @@ exports.getProductsWithBrand = product_brand_id => {
 }
 
 exports.getProductsWithBrandLogged = (product_brand_id, id) => {
-	return knexSingleProductAsync(product_brand_id, "products.product_id")
+	return knexSingleProductAsync(product_brand_id, "products.product_brand_id")
 		.then(response =>
 			response.map(res => ({
 				...res,
