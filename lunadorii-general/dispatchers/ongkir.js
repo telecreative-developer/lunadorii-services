@@ -4,26 +4,34 @@ const environment = process.env.NODE_ENV || "development"
 const configuration = require("../knexfile")[environment]
 const knex = require("knex")(configuration)
 const NestHydrationJS = require("nesthydrationjs")()
-const fetch = require("node-fetch")
+const axios = require("axios")
 const Promise = require("bluebird")
 const { successResponse, errorResponse } = require("../responsers")
+const envRajaOngkirApiKey = process.env.RAJA_ONGKIR_API_KEY
+
+const axiosOptions = data => {
+	return {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			key: envRajaOngkirApiKey
+		},
+		data: data,
+		url: "https://api.rajaongkir.com/starter/cost"
+	}
+}
 
 const fetchOngkir = (data, courier) => {
-	return fetch("https://api.rajaongkir.com/starter/cost", {
-		method: "POST",
-		body: JSON.stringify({
+	return axios(
+		axiosOptions({
 			origin: 154,
 			destination: data.province_id,
 			weight: data.weight_gram,
 			courier: courier
-		}),
-		headers: {
-			"Content-Type": "application/json",
-			key: "3c75df1bb220caf582038808d088831c"
-		}
-	})
-		.then(response => response.json())
-		.then(response => response.rajaongkir.results[0])
+		})
+	)
+		.then(res => res.data.rajaongkir.results[0])
+		.catch(err => errorResponse("Internal Server Error", 500))
 }
 
 exports.getOngkir = data => {
@@ -31,5 +39,7 @@ exports.getOngkir = data => {
 		fetchOngkir(data, "tiki"),
 		fetchOngkir(data, "jne"),
 		fetchOngkir(data, "pos")
-	]).then(response => successResponse(response, "Success", 200))
+	])
+		.then(response => successResponse(response, "Success", 200))
+		.catch(err => err)
 }
