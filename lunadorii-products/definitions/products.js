@@ -27,7 +27,7 @@ const productsDefinition = [
 		thumbnails: [
 			{
 				product_thumbnail_id: { column: "product_thumbnail_id", id: true },
-				thumbnail_url: { column: "thumbnail_url" }
+				thumbnail_url: { column: "product_thumbnail_url" }
 			}
 		],
 		reviews: [

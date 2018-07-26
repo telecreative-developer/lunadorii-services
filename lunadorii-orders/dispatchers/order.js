@@ -162,15 +162,13 @@ exports.getOrderHistory = id => {
 }
 
 exports.getOrderHistorySingle = order_id => {
-	const midtrans = item => {
+	const midtransStatus = item => {
 		return md
-			.status(order_id)
+			.status(item[0].billing_code)
 			.then(res => {
 				return item.map(d => ({
 					...d,
-					transaction_time: res.transaction_time,
-					transaction_status: res.transaction_status,
-					payment_type: res.payment_type
+					midtrans_response: res
 				}))
 			})
 			.catch(err => err)
@@ -198,7 +196,7 @@ exports.getOrderHistorySingle = order_id => {
 		)
 		.orderBy("orders.created_at", "desc")
 		.then(response => NestHydrationJS.nest(response, historyDefinition))
-		.then(response => midtrans(response))
+		.then(response => midtransStatus(response))
 		.then(response =>
 			successResponse(response, "Success Get Order History", 200)
 		)
