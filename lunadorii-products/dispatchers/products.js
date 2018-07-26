@@ -66,6 +66,7 @@ const knexProductsAsync = () => {
 			"product_subcategories.product_subcategory_id as product_subcategory_id",
 			"product_brands.product_brand_id as product_brand_id",
 			"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
+			"product_thumbnails.thumbnail_url as product_thumbnail_url",
 			"product_reviews.product_review_id as product_review_id",
 			"product_reviews.created_at as product_reviews_created_at",
 			"product_reviews.updated_at as product_reviews_updated_at"
@@ -155,6 +156,7 @@ const knexProductsBestSellerAsync = () => {
 			"product_subcategories.product_subcategory_id as product_subcategory_id",
 			"product_brands.product_brand_id as product_brand_id",
 			"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
+			"product_thumbnails.thumbnail_url as product_thumbnail_url",
 			"product_reviews.product_review_id as product_review_id",
 			"product_reviews.created_at as product_reviews_created_at",
 			"product_reviews.updated_at as product_reviews_updated_at"
