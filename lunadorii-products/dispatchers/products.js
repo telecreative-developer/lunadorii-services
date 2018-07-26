@@ -744,7 +744,7 @@ exports.getProductsWithSubcategoryLogged = (product_subcategory_id, id) => {
 }
 
 exports.getProductsWithBrand = product_brand_id => {
-	return knexSingleProductAsync(product_brand_id, "products.product_id")
+	return knexSingleProductAsync(product_brand_id, "products.product_brand_id")
 		.then(response =>
 			response.map(res => ({
 				...res,
