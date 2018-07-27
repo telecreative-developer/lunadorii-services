@@ -64,7 +64,7 @@ const knexRecentOrders = (whereClause, id) => {
 		.catch(err => errorResponse("Internal Server Error", 500))
 }
 
-const knexSingleOrderHistory = (id, whereClause) => {
+const knexOrderHistory = (id, whereClause) => {
 	return knex("orders")
 		.where(whereClause, id)
 		.innerJoin("order_products", "orders.order_id", "order_products.order_id")
@@ -212,7 +212,7 @@ exports.checkoutOrder = data => {
 }
 
 exports.getOrderHistory = id => {
-	return knexSingleOrderHistory("orders.id", id)
+	return knexOrderHistory("orders.id", id)
 		.then(res => NestHydrationJS.nest(res, historyDefinition))
 		.then(res => successResponse(res, "Success Get Order History", 200))
 		.catch(err => err)
@@ -231,7 +231,7 @@ exports.getOrderHistorySingle = order_id => {
 			.catch(err => errorResponse("Internal Server Error", 500))
 	}
 
-	return knexSingleOrderHistory("orders.order_id", order_id)
+	return knexOrderHistory("orders.order_id", order_id)
 		.then(res => NestHydrationJS.nest(res, historyDefinition))
 		.then(res => midtransStatus(res))
 		.then(res => successResponse(res, "Success Get Order History", 200))
@@ -240,7 +240,6 @@ exports.getOrderHistorySingle = order_id => {
 
 exports.getOrderRecent = id => {
 	return knexRecentOrders("orders.id", id)
-		.orderBy("orders.created_at", "desc")
 		.then(res => NestHydrationJS.nest(res, historyDefinition))
 		.then(res => checkReviewed(id, res))
 		.then(res => successResponse(res, "Success Get Order Recent", 200))
