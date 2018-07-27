@@ -165,7 +165,10 @@ const knexResponseInsertOrder = (data, { billingCode, total }) => {
 			total: total,
 			order_status:
 				data.paid_method === "credit_card" ? "accepted_payment" : "checkout",
-			bank: data.paid_method === "credit_card" ? "credit_card" : data.bank,
+			bank:
+				data.paid_method === "credit_card"
+					? "credit_card"
+					: data.payment_detail.bank,
 			delivery_service: data.delivery_service,
 			delivery_price: data.delivery_price,
 			paid_method: data.paid_method,
