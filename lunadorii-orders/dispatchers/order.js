@@ -27,6 +27,79 @@ Array.prototype.count = function() {
 	return total
 }
 
+const knexRecentOrders = (whereClause, id) => {
+	return knex("orders")
+		.where(whereClause, id)
+		.innerJoin("order_products", "orders.order_id", "order_products.order_id")
+		.innerJoin("products", "order_products.product_id", "products.product_id")
+		.innerJoin(
+			"product_thumbnails",
+			"products.product_id",
+			"product_thumbnails.product_id"
+		)
+		.innerJoin(
+			"product_subcategories",
+			"products.product_subcategory_id",
+			"product_subcategories.product_subcategory_id"
+		)
+		.leftJoin(
+			"product_reviews",
+			"order_products.order_product_id",
+			"product_reviews.order_product_id"
+		)
+		.select(
+			"*",
+			"orders.order_id as order_id",
+			"order_products.order_product_id as order_product_id",
+			"order_products.product_id as product_id",
+			"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
+			"product_thumbnails.thumbnail_url as product_thumbnail_url",
+			"product_subcategories.product_subcategory_id",
+			"product_reviews.id as product_reviews_user_id",
+			"orders.created_at as created_at",
+			"orders.updated_at as updated_at"
+		)
+		.orderBy("orders.created_at", "desc")
+		.then(res => res)
+		.catch(err => errorResponse("Internal Server Error", 500))
+}
+
+const knexSingleOrderHistory = (id, whereClause) => {
+	return knex("orders")
+		.where(whereClause, id)
+		.innerJoin("order_products", "orders.order_id", "order_products.order_id")
+		.innerJoin("products", "order_products.product_id", "products.product_id")
+		.innerJoin(
+			"product_thumbnails",
+			"products.product_id",
+			"product_thumbnails.product_id"
+		)
+		.innerJoin(
+			"product_subcategories",
+			"products.product_subcategory_id",
+			"product_subcategories.product_subcategory_id"
+		)
+		.select(
+			"*",
+			"product_thumbnails.thumbnail_url as product_thumbnail_url",
+			"orders.created_at as created_at",
+			"orders.updated_at as updated_at"
+		)
+		.orderBy("orders.created_at", "desc")
+		.then(res => res)
+		.catch(err => errorResponse("Internal Server Error", 500))
+}
+
+const checkReviewed = (id, data) => {
+	return data.map(d => ({
+		...d,
+		list: d.list.map(dlm => ({
+			...dlm,
+			reviewed: !!dlm.reviews.filter(dlmr => dlmr.id === parseInt(id)).length
+		}))
+	}))
+}
+
 const midtrans = (data, { billingCode, total }) => {
 	return new Promise((resolve, reject) => {
 		if (data.paid_method === "bank_transfer") {
@@ -67,7 +140,9 @@ const knexResponseInsertOrder = (data, { billingCode, total }) => {
 		.insert({
 			billing_code: billingCode,
 			total: total,
-			order_status: "checkout",
+			order_status:
+				data.paid_method === "credit_card" ? "accepted_payment" : "checkout",
+			bank: data.paid_method === "credit_card" ? "credit_card" : data.bank,
 			delivery_service: data.delivery_service,
 			delivery_price: data.delivery_price,
 			paid_method: data.paid_method,
@@ -99,7 +174,7 @@ const removeCart = (id, product_id) => {
 		.andWhere("product_id", product_id)
 		.del()
 		.then(res => res)
-		.catch(err => err)
+		.catch(err => errorResponse("Internal Server Error", 500))
 }
 
 const knexResponseSelectOrders = order_id => {
@@ -123,6 +198,10 @@ exports.checkoutOrder = data => {
 			.then(order_id => knexResponseSelectOrders(order_id))
 			.then(res => NestHydrationJS.nest(res, checkoutDefinition))
 			.then(res => res.map(d => ({ ...d, midtrans_response: mdResponse })))
+			.then(async res => {
+				await res[0].products.forEach(d => removeCart(data.id, d.product_id))
+				return res
+			})
 			.catch(err => errorResponse("Internal Server Error", 500))
 	}
 
@@ -133,31 +212,10 @@ exports.checkoutOrder = data => {
 }
 
 exports.getOrderHistory = id => {
-	return knex("orders")
-		.where("orders.id", id)
-		.innerJoin("order_products", "orders.order_id", "order_products.order_id")
-		.innerJoin("products", "order_products.product_id", "products.product_id")
-		.innerJoin(
-			"product_thumbnails",
-			"products.product_id",
-			"product_thumbnails.product_id"
-		)
-		.innerJoin(
-			"product_subcategories",
-			"products.product_subcategory_id",
-			"product_subcategories.product_subcategory_id"
-		)
-		.select(
-			"*",
-			"product_thumbnails.thumbnail_url as product_thumbnail_url",
-			"orders.created_at as created_at",
-			"orders.updated_at as updated_at"
-		)
-		.orderBy("orders.created_at", "desc")
-		.then(response => NestHydrationJS.nest(response, historyDefinition))
-		.then(response =>
-			successResponse(response, "Success Get Order History", 200)
-		)
+	return knexSingleOrderHistory("orders.id", id)
+		.then(res => NestHydrationJS.nest(res, historyDefinition))
+		.then(res => successResponse(res, "Success Get Order History", 200))
+		.catch(err => err)
 }
 
 exports.getOrderHistorySingle = order_id => {
@@ -170,164 +228,33 @@ exports.getOrderHistorySingle = order_id => {
 					midtrans_response: res
 				}))
 			})
-			.catch(err => err)
+			.catch(err => errorResponse("Internal Server Error", 500))
 	}
 
-	return knex("orders")
-		.where("orders.order_id", order_id)
-		.innerJoin("order_products", "orders.order_id", "order_products.order_id")
-		.innerJoin("products", "order_products.product_id", "products.product_id")
-		.innerJoin(
-			"product_thumbnails",
-			"products.product_id",
-			"product_thumbnails.product_id"
-		)
-		.innerJoin(
-			"product_subcategories",
-			"products.product_subcategory_id",
-			"product_subcategories.product_subcategory_id"
-		)
-		.select(
-			"*",
-			"product_thumbnails.thumbnail_url as product_thumbnail_url",
-			"orders.created_at as created_at",
-			"orders.updated_at as updated_at"
-		)
-		.orderBy("orders.created_at", "desc")
-		.then(response => NestHydrationJS.nest(response, historyDefinition))
-		.then(response => midtransStatus(response))
-		.then(response =>
-			successResponse(response, "Success Get Order History", 200)
-		)
+	return knexSingleOrderHistory("orders.order_id", order_id)
+		.then(res => NestHydrationJS.nest(res, historyDefinition))
+		.then(res => midtransStatus(res))
+		.then(res => successResponse(res, "Success Get Order History", 200))
+		.catch(err => err)
 }
 
 exports.getOrderRecent = id => {
-	return knex("orders")
-		.where("orders.id", id)
-		.innerJoin("order_products", "orders.order_id", "order_products.order_id")
-		.innerJoin("products", "order_products.product_id", "products.product_id")
-		.innerJoin(
-			"product_thumbnails",
-			"products.product_id",
-			"product_thumbnails.product_id"
-		)
-		.innerJoin(
-			"product_subcategories",
-			"products.product_subcategory_id",
-			"product_subcategories.product_subcategory_id"
-		)
-		.leftJoin(
-			"product_reviews",
-			"order_products.order_product_id",
-			"product_reviews.order_product_id"
-		)
-		.select(
-			"*",
-			"orders.order_id as order_id",
-			"order_products.order_product_id as order_product_id",
-			"order_products.product_id as product_id",
-			"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
-			"product_thumbnails.thumbnail_url as product_thumbnail_url",
-			"product_subcategories.product_subcategory_id",
-			"product_reviews.id as product_reviews_user_id",
-			"orders.created_at as created_at",
-			"orders.updated_at as updated_at"
-		)
+	return knexRecentOrders("orders.id", id)
 		.orderBy("orders.created_at", "desc")
 		.then(res => NestHydrationJS.nest(res, historyDefinition))
-		.then(res =>
-			res.map(d => ({
-				...d,
-				list: d.list.map(dlm => ({
-					...dlm,
-					reviewed: !!dlm.reviews.filter(dlmr => dlmr.id === parseInt(id))
-						.length
-				}))
-			}))
-		)
+		.then(res => checkReviewed(id, res))
 		.then(res => successResponse(res, "Success Get Order Recent", 200))
 }
 
 exports.getOrderRecentSingle = order_id => {
-	return knex("orders")
-		.where("orders.order_id", order_id)
-		.innerJoin("order_products", "orders.order_id", "order_products.order_id")
-		.innerJoin("products", "order_products.product_id", "products.product_id")
-		.innerJoin(
-			"product_thumbnails",
-			"products.product_id",
-			"product_thumbnails.product_id"
-		)
-		.innerJoin(
-			"product_subcategories",
-			"products.product_subcategory_id",
-			"product_subcategories.product_subcategory_id"
-		)
-		.leftJoin(
-			"product_reviews",
-			"order_products.order_product_id",
-			"product_reviews.order_product_id"
-		)
-		.select(
-			"*",
-			"orders.order_id as order_id",
-			"order_products.order_product_id as order_product_id",
-			"order_products.product_id as product_id",
-			"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
-			"product_thumbnails.thumbnail_url as product_thumbnail_url",
-			"product_subcategories.product_subcategory_id",
-			"product_reviews.id as product_reviews_user_id",
-			"orders.created_at as created_at",
-			"orders.updated_at as updated_at"
-		)
-		.orderBy("orders.created_at", "desc")
+	return knexRecentOrders("orders.order_id", order_id)
 		.then(res => NestHydrationJS.nest(res, historyDefinition))
 		.then(res => successResponse(res, "Success Get Order Recent", 200))
 }
 
 exports.getOrderRecentSingleLogged = (order_id, id) => {
-	return knex("orders")
-		.where("orders.order_id", order_id)
-		.innerJoin("order_products", "orders.order_id", "order_products.order_id")
-		.innerJoin("products", "order_products.product_id", "products.product_id")
-		.innerJoin(
-			"product_thumbnails",
-			"products.product_id",
-			"product_thumbnails.product_id"
-		)
-		.innerJoin(
-			"product_subcategories",
-			"products.product_subcategory_id",
-			"product_subcategories.product_subcategory_id"
-		)
-		.leftJoin(
-			"product_reviews",
-			"order_products.order_product_id",
-			"product_reviews.order_product_id"
-		)
-		.select(
-			"*",
-			"orders.order_id as order_id",
-			"order_products.order_product_id as order_product_id",
-			"order_products.product_id as product_id",
-			"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
-			"product_thumbnails.thumbnail_url as product_thumbnail_url",
-			"product_subcategories.product_subcategory_id",
-			"product_reviews.id as product_reviews_user_id",
-			"orders.created_at as created_at",
-			"orders.updated_at as updated_at"
-		)
-		.orderBy("orders.created_at", "desc")
+	return knexRecentOrders("orders.order_id", order_id)
 		.then(res => NestHydrationJS.nest(res, historyDefinition))
-		.then(res =>
-			res.map(d => ({
-				...d,
-				list: d.list.map(dlm => ({
-					...dlm,
-					reviewed: !!dlm.reviews.filter(dlmr => dlmr.id === parseInt(id))
-						.length
-				}))
-			}))
-		)
+		.then(res => checkReviewed(id, res))
 		.then(res => successResponse(res, "Success Get Order Recent", 200))
 }

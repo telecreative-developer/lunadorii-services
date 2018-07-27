@@ -4,6 +4,7 @@ const historyDefinition = [
 		billing_code: { column: "billing_code" },
 		order_status: { column: "order_status" },
 		total: { column: "total" },
+		bank: { column: "bank" },
 		paid_method: { column: "paid_method" },
 		receipt_number: { column: "receipt_number" },
 		receipt_time: { column: "receipt_time" },
@@ -63,7 +64,6 @@ const checkoutDefinition = [
 		products: [
 			{
 				product_id: { column: "product_id", id: true },
-				product: { column: "product" },
 				qty: { column: "qty" },
 				price: { column: "price" },
 				discount_percentage: { column: "discount_percentage" }
