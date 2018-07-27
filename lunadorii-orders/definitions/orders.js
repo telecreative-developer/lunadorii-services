@@ -21,6 +21,7 @@ const historyDefinition = [
 				purchase_number: { column: "purchase_number" },
 				product: { column: "product" },
 				price: { column: "price" },
+				discount_percentage: { column: "discount_percentage" },
 				wight_gram: { column: "weight_gram" },
 				order_product_status: { column: "order_product_status" },
 				note: { column: "note" },
