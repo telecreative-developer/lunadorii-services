@@ -64,7 +64,7 @@ const knexRecentOrders = (whereClause, id) => {
 		.catch(err => errorResponse("Internal Server Error", 500))
 }
 
-const knexOrderHistory = (id, whereClause) => {
+const knexOrderHistory = (whereClause, id) => {
 	return knex("orders")
 		.where(whereClause, id)
 		.innerJoin("order_products", "orders.order_id", "order_products.order_id")
@@ -79,9 +79,20 @@ const knexOrderHistory = (id, whereClause) => {
 			"products.product_subcategory_id",
 			"product_subcategories.product_subcategory_id"
 		)
+		.leftJoin(
+			"product_reviews",
+			"order_products.order_product_id",
+			"product_reviews.order_product_id"
+		)
 		.select(
 			"*",
+			"orders.order_id as order_id",
+			"order_products.order_product_id as order_product_id",
+			"order_products.product_id as product_id",
+			"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
 			"product_thumbnails.thumbnail_url as product_thumbnail_url",
+			"product_subcategories.product_subcategory_id",
+			"product_reviews.id as product_reviews_user_id",
 			"orders.created_at as created_at",
 			"orders.updated_at as updated_at"
 		)
@@ -133,6 +144,18 @@ const midtrans = (data, { billingCode, total }) => {
 			return reject(errorResponse("Paid method does not valid", 500))
 		}
 	})
+}
+
+const midtransStatus = item => {
+	return md
+		.status(item[0].billing_code)
+		.then(res => {
+			return item.map(d => ({
+				...d,
+				midtrans_response: res
+			}))
+		})
+		.catch(err => errorResponse("Internal Server Error", 500))
 }
 
 const knexResponseInsertOrder = (data, { billingCode, total }) => {
@@ -214,23 +237,12 @@ exports.checkoutOrder = data => {
 exports.getOrderHistory = id => {
 	return knexOrderHistory("orders.id", id)
 		.then(res => NestHydrationJS.nest(res, historyDefinition))
+		.then(res => checkReviewed(id, res))
 		.then(res => successResponse(res, "Success Get Order History", 200))
 		.catch(err => err)
 }
 
 exports.getOrderHistorySingle = order_id => {
-	const midtransStatus = item => {
-		return md
-			.status(item[0].billing_code)
-			.then(res => {
-				return item.map(d => ({
-					...d,
-					midtrans_response: res
-				}))
-			})
-			.catch(err => errorResponse("Internal Server Error", 500))
-	}
-
 	return knexOrderHistory("orders.order_id", order_id)
 		.then(res => NestHydrationJS.nest(res, historyDefinition))
 		.then(res => midtransStatus(res))
@@ -248,12 +260,14 @@ exports.getOrderRecent = id => {
 exports.getOrderRecentSingle = order_id => {
 	return knexRecentOrders("orders.order_id", order_id)
 		.then(res => NestHydrationJS.nest(res, historyDefinition))
+		.then(res => midtransStatus(res))
 		.then(res => successResponse(res, "Success Get Order Recent", 200))
 }
 
 exports.getOrderRecentSingleLogged = (order_id, id) => {
 	return knexRecentOrders("orders.order_id", order_id)
 		.then(res => NestHydrationJS.nest(res, historyDefinition))
+		.then(res => midtransStatus(res))
 		.then(res => checkReviewed(id, res))
 		.then(res => successResponse(res, "Success Get Order Recent", 200))
 }
