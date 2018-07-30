@@ -41,3 +41,7 @@ cd ..
 cd lunadorii-users
 npm install
 cd ..
+
+cd lunadorii-promo
+npm install
+cd ..
