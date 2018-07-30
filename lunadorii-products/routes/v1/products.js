@@ -1,7 +1,10 @@
 const express = require("express")
 const Promise = require("bluebird")
 const router = express.Router()
-const authentication = require("../../middleware/authentication")
+const {
+	authenticationUser,
+	authenticationAdmin
+} = require("../../middleware/authentication")
 const {
 	getAllProducts,
 	getAllProductsLogged,
@@ -145,14 +148,14 @@ router.get("/products/brand/:product_brand_id", (req, res) => {
 })
 
 // Update Product
-router.put("/product/:product_id", authentication, (req, res) => {
+router.put("/product/:product_id", authenticationUser, (req, res) => {
 	Promise.try(() => updateProduct(req.params.product_id, req.body))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on UPDATE_PRODUCT", err))
 })
 
 // Delete Product
-router.delete("/product/:product_id", authentication, (req, res) => {
+router.delete("/product/:product_id", authenticationUser, (req, res) => {
 	Promise.try(() => deleteProduct(req.params.product_id))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on DELETE_PRODUCT", err))
@@ -214,49 +217,49 @@ router.get("/product-subcategories/best-seller", (req, res) => {
 })
 
 // Add Wishlist
-router.post("/wishlist", authentication, (req, res) => {
+router.post("/wishlist", authenticationUser, (req, res) => {
 	Promise.try(() => addWishlist(req.body))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on ADD_WISHLIST", err))
 })
 
 // Get Wishlist
-router.get("/wishlist/:id", authentication, (req, res) => {
+router.get("/wishlist/:id", authenticationUser, (req, res) => {
 	Promise.try(() => getWishlist(req.params.id))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on GET_WISHLIST", err))
 })
 
 // Delete Wishlist
-router.delete("/wishlist", authentication, (req, res) => {
+router.delete("/wishlist", authenticationUser, (req, res) => {
 	Promise.try(() => removeWishlist(req.body))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on DELETE_WISHLIST", err))
 })
 
 // Add Cart
-router.post("/cart", authentication, (req, res) => {
+router.post("/cart", authenticationUser, (req, res) => {
 	Promise.try(() => addCart(req.body))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on ADD_CART", err))
 })
 
 // Get Cart
-router.get("/cart/:id", authentication, (req, res) => {
+router.get("/cart/:id", authenticationUser, (req, res) => {
 	Promise.try(() => getCart(req.params.id))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on GET_CART", err))
 })
 
 // Update Cart Qty
-router.put("/cart/:cart_id", authentication, (req, res) => {
+router.put("/cart/:cart_id", authenticationUser, (req, res) => {
 	Promise.try(() => updateCartQty(req.body))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on UPDATE_CART_QTY", err))
 })
 
 // Delete Cart
-router.delete("/cart", authentication, (req, res) => {
+router.delete("/cart", authenticationUser, (req, res) => {
 	Promise.try(() => removeCart(req.body))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on DELETE_CART", err))

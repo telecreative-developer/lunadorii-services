@@ -20,12 +20,7 @@ class MidtransJS {
 		this.url = urlMidtrans
 	}
 
-	chargeBankTransfer(
-		bankTransfer,
-		transactionDetails,
-		customerDetails,
-		itemDetails
-	) {
+	chargeBankTransfer(bankTransfer, transactionDetails, customerDetails) {
 		return axios(
 			axiosOptions("POST", `${this.url}/charge`, this.serverKey, {
 				payment_type: "bank_transfer",
@@ -41,7 +36,6 @@ class MidtransJS {
 					last_name: customerDetails.last_name,
 					email: customerDetails.email
 				},
-				item_details: itemDetails,
 				custom_expiry: {
 					expiry_duration: 12,
 					unit: "hour"
@@ -74,7 +68,7 @@ class MidtransJS {
 		})
 	}
 
-	chargeCreditCard(cardInfo, transactionDetails, customerDetails, itemDetails) {
+	chargeCreditCard(cardInfo, transactionDetails, customerDetails) {
 		return new Promise((resolve, reject) => {
 			return this.getToken(cardInfo)
 				.then(res => {
@@ -92,8 +86,7 @@ class MidtransJS {
 								first_name: customerDetails.first_name,
 								last_name: customerDetails.last_name,
 								email: customerDetails.email
-							},
-							item_details: itemDetails
+							}
 						})
 					)
 						.then(res => {

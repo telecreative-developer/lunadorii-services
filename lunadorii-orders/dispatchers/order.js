@@ -120,13 +120,7 @@ const midtrans = (data, { billingCode, total }) => {
 				.chargeBankTransfer(
 					{ bank },
 					{ order_id: billingCode, gross_amount: total },
-					{ first_name, last_name, email },
-					data.data.map(d => ({
-						id: d.product_id,
-						price: d.price - (d.price * d.discount_percentage) / 100,
-						quantity: d.qty,
-						name: d.product_name
-					}))
+					{ first_name, last_name, email }
 				)
 				.then(res => resolve(res))
 				.catch(err => reject(errorResponse(err, err.status_code)))
@@ -142,13 +136,7 @@ const midtrans = (data, { billingCode, total }) => {
 				.chargeCreditCard(
 					{ card_number, card_cvv, card_exp_month, card_exp_year },
 					{ order_id: billingCode, gross_amount: total },
-					{ first_name, last_name, email },
-					data.data.map(d => ({
-						id: d.product_id,
-						price: d.price - (d.price * d.discount_percentage) / 100,
-						quantity: d.qty,
-						name: d.product_name
-					}))
+					{ first_name, last_name, email }
 				)
 				.then(res => resolve(res))
 				.catch(err => reject(errorResponse(err, err.status_code)))

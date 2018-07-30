@@ -3,7 +3,10 @@ const express = require("express")
 const Promise = require("bluebird")
 const router = express.Router()
 const NestHydrationJS = require("nesthydrationjs")()
-const authentication = require("../../middleware/authentication")
+const {
+	authenticationUser,
+	authenticationAdmin
+} = require("../../middleware/authentication")
 const {
 	getUsers,
 	getUserById,
@@ -43,28 +46,28 @@ const {
 } = require("../../dispatchers/reviews")
 
 // Get All Users
-router.get("/users", authentication, (req, res) => {
+router.get("/users", authenticationAdmin, (req, res) => {
 	Promise.try(() => getUsers())
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on GET_ALL_USERS", err))
 })
 
 // Get User with Id
-router.get("/user/:id", authentication, (req, res) => {
+router.get("/user/:id", authenticationUser, (req, res) => {
 	Promise.try(() => getUserById(req.params.id))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on GET_USER_BY_ID", err))
 })
 
 // Update user
-router.put("/user/:id", authentication, (req, res) => {
+router.put("/user/:id", authenticationUser, (req, res) => {
 	Promise.try(() => updateUser(req.params.id, req.body))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on UPDATE_USER", err))
 })
 
 // Update avatar user
-router.put("/user/update-avatar/:id", authentication, (req, res) => {
+router.put("/user/update-avatar/:id", authenticationUser, (req, res) => {
 	Promise.try(() => updateAvatar(req.params.id, req.body.avatar))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on UPDATE_AVATAR_USER", err))
@@ -85,35 +88,35 @@ router.post("/user/check-email", function(req, res) {
 })
 
 // Change email
-router.put("/user/change-email/:id", authentication, function(req, res) {
+router.put("/user/change-email/:id", authenticationUser, function(req, res) {
 	Promise.try(() => updateEmail(req.params.id, req.body.email))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on CHANGE_EMAIL", err))
 })
 
 // Change password
-router.put("/user/change-password/:id", authentication, function(req, res) {
+router.put("/user/change-password/:id", authenticationUser, function(req, res) {
 	Promise.try(() => updatePassword(req.params.id, req.body))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on CHANGE_PASSWORD", err))
 })
 
 // Add user address
-router.post("/user-address", authentication, (req, res) => {
+router.post("/user-address", authenticationUser, (req, res) => {
 	Promise.try(() => addUserAddress(req.body))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on ADD_USER_ADDRESS", err))
 })
 
 // Get user addresses
-router.get("/user-addresses/:id", authentication, (req, res) => {
+router.get("/user-addresses/:id", authenticationUser, (req, res) => {
 	Promise.try(() => getUserAddresses(req.params.id))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on GET_USER_ADDRESSES", err))
 })
 
 // Update user address
-router.put("/user-address/:user_address_id", authentication, (req, res) => {
+router.put("/user-address/:user_address_id", authenticationUser, (req, res) => {
 	Promise.try(() => updateUserAddress(req.params.user_address_id, req.body))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on GET_USER_ADDRESS", err))
@@ -122,7 +125,7 @@ router.put("/user-address/:user_address_id", authentication, (req, res) => {
 // Set default user address
 router.put(
 	"/user-address/set-default/:user_address_id",
-	authentication,
+	authenticationUser,
 	(req, res) => {
 		Promise.try(() =>
 			setDefaultUserAddress(req.params.user_address_id, req.body.id)
@@ -133,28 +136,32 @@ router.put(
 )
 
 // Delete user address
-router.delete("/user-address/:user_address_id", authentication, (req, res) => {
-	Promise.try(() => deleteUserAddress(req.params.user_address_id))
-		.then(response => res.status(response.status).json(response))
-		.catch(err => console.log("Error on GET_USER_ADDRESS", err))
-})
+router.delete(
+	"/user-address/:user_address_id",
+	authenticationUser,
+	(req, res) => {
+		Promise.try(() => deleteUserAddress(req.params.user_address_id))
+			.then(response => res.status(response.status).json(response))
+			.catch(err => console.log("Error on GET_USER_ADDRESS", err))
+	}
+)
 
 // Add user bank
-router.post("/user-bank", authentication, (req, res) => {
+router.post("/user-bank", authenticationUser, (req, res) => {
 	Promise.try(() => addUserBank(req.body))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on ADD_USER_BANK", err))
 })
 
 // Get user banks
-router.get("/user-banks/:id", authentication, (req, res) => {
+router.get("/user-banks/:id", authenticationUser, (req, res) => {
 	Promise.try(() => getUserBanks(req.params.id))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on GET_USER_BANKS", err))
 })
 
 // Update user banks
-router.put("/user-bank/:user_bank_id", authentication, (req, res) => {
+router.put("/user-bank/:user_bank_id", authenticationUser, (req, res) => {
 	Promise.try(() => updateUserBank(req.params.user_bank_id, req.body))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on UPDATE_USER_BANK", err))
@@ -163,7 +170,7 @@ router.put("/user-bank/:user_bank_id", authentication, (req, res) => {
 // Set default user bank
 router.put(
 	"/user-bank/set-default/:user_bank_id",
-	authentication,
+	authenticationUser,
 	(req, res) => {
 		Promise.try(() => setDefaultUserBank(req.params.user_bank_id, req.body.id))
 			.then(response => res.status(response.status).json(response))
@@ -172,21 +179,21 @@ router.put(
 )
 
 // Delete user bank
-router.delete("/user-bank/:user_bank_id", authentication, (req, res) => {
+router.delete("/user-bank/:user_bank_id", authenticationUser, (req, res) => {
 	Promise.try(() => deleteUserBank(req.params.user_bank_id))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on DELETE_USER_BANK", err))
 })
 
 // Add user credit card
-router.post("/user-creditcard", authentication, (req, res) => {
+router.post("/user-creditcard", authenticationUser, (req, res) => {
 	Promise.try(() => addUserCreditCard(req.body))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on ADD_USER_CREDITCARD", err))
 })
 
 // Get user credit card
-router.get("/user-creditcard/:id", authentication, (req, res) => {
+router.get("/user-creditcard/:id", authenticationUser, (req, res) => {
 	Promise.try(() => getUserCreditCard(req.params.id))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on GET_USER__CREDITCARD", err))
@@ -195,7 +202,7 @@ router.get("/user-creditcard/:id", authentication, (req, res) => {
 // Update user credit card
 router.put(
 	"/user-creditcard/:user_creditcard_id",
-	authentication,
+	authenticationUser,
 	(req, res) => {
 		Promise.try(() =>
 			updateUserCreditCard(req.params.user_creditcard_id, req.body)
@@ -208,7 +215,7 @@ router.put(
 // Set default user credit card
 router.put(
 	"/user-creditcard/set-default/:user_creditcard_id",
-	authentication,
+	authenticationUser,
 	(req, res) => {
 		Promise.try(() =>
 			setDefaultUserCreditCard(req.params.user_creditcard_id, req.body.id)
@@ -221,7 +228,7 @@ router.put(
 // Delete user credit card
 router.delete(
 	"/user-creditcard/:user_creditcard_id",
-	authentication,
+	authenticationUser,
 	(req, res) => {
 		Promise.try(() => deleteUserCreditCard(req.params.user_creditcard_id))
 			.then(response => res.status(response.status).json(response))
@@ -230,31 +237,39 @@ router.delete(
 )
 
 // Get add review
-router.post("/user-review", authentication, (req, res) => {
+router.post("/user-review", authenticationUser, (req, res) => {
 	Promise.try(() => addUserReview(req.body))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on ADD_USER_REVIEWS", err))
 })
 
 // Get user reviews
-router.get("/user-reviews/:id", authentication, (req, res) => {
+router.get("/user-reviews/:id", authenticationUser, (req, res) => {
 	Promise.try(() => getUserReviews(req.params.id))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on GET_USER_REVIEWS", err))
 })
 
 // Update user review
-router.put("/user-review/:product_review_id", authentication, (req, res) => {
-	Promise.try(() => updateUserReview(req.params.product_review_id, req.body))
-		.then(response => res.status(response.status).json(response))
-		.catch(err => console.log("Error on UPDATE_USER_REVIEWS", err))
-})
+router.put(
+	"/user-review/:product_review_id",
+	authenticationUser,
+	(req, res) => {
+		Promise.try(() => updateUserReview(req.params.product_review_id, req.body))
+			.then(response => res.status(response.status).json(response))
+			.catch(err => console.log("Error on UPDATE_USER_REVIEWS", err))
+	}
+)
 
 // Delete user reviews
-router.delete("/user-review/:product_review_id", authentication, (req, res) => {
-	Promise.try(() => deleteUserReview(req.params.product_review_id))
-		.then(response => res.status(response.status).json(response))
-		.catch(err => console.log("Error on DELETE_USER_REVIEW", err))
-})
+router.delete(
+	"/user-review/:product_review_id",
+	authenticationUser,
+	(req, res) => {
+		Promise.try(() => deleteUserReview(req.params.product_review_id))
+			.then(response => res.status(response.status).json(response))
+			.catch(err => console.log("Error on DELETE_USER_REVIEW", err))
+	}
+)
 
 module.exports = router

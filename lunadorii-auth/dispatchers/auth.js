@@ -7,156 +7,112 @@ const knex = require("knex")(configuration)
 const fetch = require("node-fetch")
 const jwt = require("jsonwebtoken")
 const { successResponse, errorResponse } = require("../responsers")
+const {
+	accessTokenUserJwtObejct,
+	refreshTokenUserJwtObject
+} = require("../objects")
 
-const accessTokenObject = {
-	subject: "lunadorii",
-	algorithm: "HS256",
-	expiresIn: "7d",
-	issuer: "https://github.com/kevinhermawan",
-	header: {
-		typ: "JWT"
-	}
+const generateAccessToken = id => {
+	return jwt.sign(
+		{ id, scope: "access-token-user" },
+		process.env.JWT_SECRET_USER_ACCESS_TOKEN,
+		accessTokenUserJwtObejct
+	)
 }
 
-const refreshTokenObject = {
-	subject: "lunadorii",
-	algorithm: "HS256",
-	expiresIn: "10d",
-	issuer: "https://github.com/kevinhermawan",
-	header: {
-		typ: "JWT"
-	}
+const generateRefreshToken = id => {
+	return jwt.sign(
+		{ id, scope: "refresh-token-user" },
+		process.env.JWT_SECRET_USER_REFRESH_TOKEN,
+		refreshTokenUserJwtObject
+	)
+}
+
+const checkUserAsync = data => {
+	return new Promise(resolve => {
+		data.length
+			? resolve({ data, status: "login" })
+			: resolve({ data, status: "register" })
+	})
+}
+
+const checkProviderAsync = (data, provider) => {
+	return new Promise((resolve, reject) => {
+		const check = !!data.filter(res => res.provider === provider).length
+		return check ? resolve(data[0].id) : reject("Email is already exists")
+	})
+}
+
+const registerUserWithFacebookAsync = data => {
+	const fbUrl = "https://graph.facebook.com/"
+	const fbFields = "?fields=id,first_name,last_name,email,picture&access_token="
+	return new Promise((resolve, reject) => {
+		return fetch(fbUrl + data.id + fbFields + data.accessToken)
+			.then(res => res.json())
+			.then(async res => {
+				const knexResponse = await knex("users")
+					.insert({
+						first_name: res.first_name,
+						last_name: res.last_name,
+						email: res.email,
+						avatar_url: res.picture.data.url,
+						provider: "facebook"
+					})
+					.returning("id")
+				return resolve(parseInt(id))
+			})
+			.catch(err => reject(err))
+	})
+}
+
+const generateTokenAsync = id => {
+	return new Promise(resolve => {
+		const accessToken = generateAccessToken(id)
+		const refreshToken = generateRefreshToken(id)
+		return resolve({ id, accessToken, refreshToken })
+	})
 }
 
 exports.authFacebook = data => {
-	return knex("users")
-		.where("email", data.email)
-		.limit(1)
-		.then(response => {
-			if (response.length) {
-				const check = !!response.filter(
-					rescheck => rescheck.provider === "facebook"
-				).length
-				if (check) {
-					const accessToken = jwt.sign(
-						{ id: response[0].id, role: "user" },
-						process.env.JWT_SECRET_KEY,
-						accessTokenObject
-					)
-					const refreshToken = jwt.sign(
-						{ id: response[0].id, role: "user" },
-						process.env.JWT_SECRET_KEY,
-						refreshTokenObject
-					)
-					return successResponse(
-						{ id: response[0].id, accessToken, refreshToken },
-						"Success Authenticate with Facebook",
-						201
-					)
-				} else {
-					return errorResponse("Email is already exist", 500)
-				}
-			} else {
-				return fetch(
-					`https://graph.facebook.com/${
-						data.id
-					}?fields=id,first_name,last_name,email,picture&access_token=${
-						data.accessToken
-					}`
-				)
-					.then(res => res.json())
-					.then(res => {
-						return knex("users")
-							.insert({
-								first_name: res.first_name,
-								last_name: res.last_name,
-								email: res.email,
-								avatar_url: res.picture.data.url,
-								provider: "facebook"
-							})
-							.returning("id")
-							.then(id => {
-								const accessToken = jwt.sign(
-									{ id: parseInt(id.toString()), role: "user" },
-									process.env.JWT_SECRET_KEY,
-									accessTokenObject
-								)
-								const refreshToken = jwt.sign(
-									{ id: parseInt(id.toString()), role: "user" },
-									process.env.JWT_SECRET_KEY,
-									refreshTokenObject
-								)
-								return successResponse(
-									{ id: parseInt(id.toString()), accessToken, refreshToken },
-									"Success Authenticate with Facebook",
-									201
-								)
-							})
-							.catch(err => errorResponse(err, 500))
-					})
-			}
+	const checkFieldAsync = data => {
+		return new Promise((resolve, reject) => {
+			return data.id && data.email && data.accessToken
+				? resolve(data)
+				: reject("Missing Credentials")
 		})
-		.catch(err => errorResponse(err, 500))
+	}
+
+	const findUserWithEmailAsync = data => {
+		return knex("users").where("email", data.email)
+	}
+
+	return checkFieldAsync(data)
+		.then(res => findUserWithEmailAsync(res))
+		.then(res => checkUserAsync(res))
+		.then(res => {
+			return res.status === "login"
+				? checkProviderAsync(res.data, "facebook")
+				: registerUserWithFacebookAsync(res.data)
+		})
+		.then(id => generateTokenAsync(id))
+		.then(res => {
+			return successResponse(res, "Success Authenticate with Facebook", 201)
+		})
+		.catch(err => errorResponse(err, 400))
 }
 
 exports.authGoogle = data => {
 	return knex("users")
 		.where("email", data.email)
-		.limit(1)
-		.then(response => {
-			if (response.length) {
-				const check = !!response.filter(
-					rescheck => rescheck.provider === "google"
-				).length
-
-				if (check) {
-					const accessToken = jwt.sign(
-						{ id: response[0].id, role: "user" },
-						process.env.JWT_SECRET_KEY,
-						accessTokenObject
-					)
-					const refreshToken = jwt.sign(
-						{ id: response[0].id, role: "user" },
-						process.env.JWT_SECRET_KEY,
-						refreshTokenObject
-					)
-					return successResponse(
-						{ id: response[0].id, accessToken, refreshToken },
-						"Success Authenticate with Google",
-						201
-					)
-				} else {
-					return errorResponse("Email is already exist", 500)
-				}
-			} else {
-				return knex("users")
-					.insert({
-						first_name: data.first_name,
-						last_name: data.last_name,
-						email: data.email,
-						avatar_url: data.avatar_url,
-						provider: "google"
-					})
-					.returning("id")
-					.then(id => {
-						const accessToken = jwt.sign(
-							{ id: parseInt(id.toString()), role: "user" },
-							process.env.JWT_SECRET_KEY,
-							accessTokenObject
-						)
-						const refreshToken = jwt.sign(
-							{ id: parseInt(id.toString()), role: "user" },
-							process.env.JWT_SECRET_KEY,
-							refreshTokenObject
-						)
-						return successResponse(
-							{ id: parseInt(id.toString()), accessToken, refreshToken },
-							"Success Authenticate with Google",
-							201
-						)
-					})
-					.catch(err => errorResponse(err, 500))
-			}
+		.then(res => checkUserAsync(res))
+		.then(res => {
+			return res.status === "login"
+				? checkProviderAsync(res.data, "google")
+				: registerUserWithFacebookAsync(res.data)
 		})
-		.catch(err => errorResponse(err, 500))
+		.then(id => generateTokenAsync(id))
+		.then(res => {
+			return successResponse(res, "Success Authenticate with Google", 201)
+		})
+		.catch(err => errorResponse(err))
 }

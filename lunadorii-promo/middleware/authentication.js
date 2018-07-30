@@ -26,15 +26,27 @@ function authenticationUser(req, res, next) {
 				token,
 				process.env.JWT_SECRET_USER_ACCESS_TOKEN,
 				(err, decoded) => {
-					decoded.scope === "access-token-user"
-						? resolve(token)
-						: reject(
+					if (decoded) {
+						if (decoded.scope === "access-token-user") {
+							resolve(token)
+						} else {
+							reject(
 								errorResponse(
 									res,
 									"Your token does not have permission to access",
 									403
 								)
-						  )
+							)
+						}
+					} else {
+						reject(
+							errorResponse(
+								res,
+								"Your token does not have permission to access",
+								403
+							)
+						)
+					}
 				}
 			)
 		})
@@ -61,7 +73,7 @@ function authenticationUser(req, res, next) {
 			req.decoded = decoded
 			return next()
 		})
-		.catch(err => err)
+		.catch(err => console.log(err))
 }
 
 function authenticationAdmin(req, res, next) {
@@ -81,15 +93,27 @@ function authenticationAdmin(req, res, next) {
 				token,
 				process.env.JWT_SECRET_ADMIN_ACCESS_TOKEN,
 				(err, decoded) => {
-					decoded.scope === "access-token-admin"
-						? resolve(token)
-						: reject(
+					if (decoded) {
+						if (decoded.scope === "access-token-admin") {
+							resolve(token)
+						} else {
+							reject(
 								errorResponse(
 									res,
 									"Your token does not have permission to access",
 									403
 								)
-						  )
+							)
+						}
+					} else {
+						reject(
+							errorResponse(
+								res,
+								"Your token does not have permission to access",
+								403
+							)
+						)
+					}
 				}
 			)
 		})

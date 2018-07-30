@@ -9,6 +9,10 @@ const {
 	requestForgotPassword,
 	confirmForgotPassword
 } = require("../../dispatchers/fpassword")
+const {
+	accessTokenUserJwtObejct,
+	refreshTokenUserJwtObject
+} = require("../../objects")
 
 router.post("/auth/user", (req, res) => {
 	passport.authenticate(
@@ -33,31 +37,15 @@ router.post("/auth/user", (req, res) => {
 				}
 
 				const accessToken = jwt.sign(
-					{ id: response.id, role: "user" },
-					process.env.JWT_SECRET_KEY,
-					{
-						subject: "lunadorii",
-						algorithm: "HS256",
-						expiresIn: "7d",
-						issuer: "https://github.com/kevinhermawan",
-						header: {
-							typ: "JWT"
-						}
-					}
+					{ id: response.id, scope: "access-token-user" },
+					process.env.JWT_SECRET_USER_ACCESS_TOKEN,
+					accessTokenUserJwtObejct
 				)
 
 				const refreshToken = jwt.sign(
-					{ id: response.id, role: "user" },
-					process.env.JWT_SECRET_KEY,
-					{
-						subject: "lunadorii",
-						algorithm: "HS256",
-						expiresIn: "10d",
-						issuer: "https://github.com/kevinhermawan",
-						header: {
-							typ: "JWT"
-						}
-					}
+					{ id: response.id, scope: "refresh-token-user" },
+					process.env.JWT_SECRET_USER_REFRESH_TOKEN,
+					refreshTokenUserJwtObject
 				)
 
 				return res.status(201).json({
