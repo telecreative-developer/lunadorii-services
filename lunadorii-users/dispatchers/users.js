@@ -10,41 +10,86 @@ const { successResponse, errorResponse } = require("../responsers")
 const reviewsDefinition = require("../definitions/reviews")
 const banksDefinition = require("../definitions/banks")
 const userDefinition = require("../definitions/users")
+const envDefaultAvatar = process.env.AWS_IMAGE_DEFAULT_URL
+
+const validationAvatar = data => {
+	return data.map(res => ({
+		...res,
+		avatar_url: res.avatar_url ? res.avatar_url : envDefaultAvatar
+	}))
+}
+
+const checkEmailAsync = data => {
+	return new Promise((resolve, reject) => {
+		return data.length
+			? reject(errorResponse("Email already exists", 409))
+			: resolve(data)
+	})
+}
+
+const checkUserAsync = data => {
+	return new Promise((resolve, reject) => {
+		return data.length
+			? resolve(data)
+			: reject(errorResponse("User not found", 400))
+	})
+}
+
+const checkEmailAfterUpdateAsync = (id, data) => {
+	return new Promise((resolve, reject) => {
+		if (data.length) {
+			data[0].id === id
+				? resolve(parseInt(id))
+				: reject(errorResponse("Email already exists", 409))
+		} else {
+			return knex("users")
+				.where("id", id)
+				.update({
+					email: data.email
+				})
+				.then(() => resolve(parseInt(id)))
+				.catch(err => reject(errorResponse("Internal Server Error", 500)))
+		}
+	})
+}
+
+const comparePasswordAsync = (data, response) => {
+	return new Promise((resolve, reject) => {
+		return bcrypt.compare(data.old_password, response[0].password).then(res => {
+			return res
+				? resolve(res)
+				: reject(errorResponse("Old password is incorrect", 400))
+		})
+	})
+}
+
+const generatePasswordAsync = data => {
+	return bcrypt
+		.hash(data.password, 10)
+		.then(hash => hash)
+		.catch(err => errorResponse("Internal Server Error", 500))
+}
+
+const checkDataAsync = (res, message) => {
+	return new Promise((resolve, reject) => {
+		res.length ? resolve(res) : reject(errorResponse(message, 400))
+	})
+}
 
 exports.getUsers = () => {
 	return knex("users")
-		.then(response => NestHydrationJS.nest(response, userDefinition))
-		.then(response =>
-			response.map(res => ({
-				...res,
-				avatar_url: res.avatar_url
-					? res.avatar_url.length < 20
-						? process.env.AWS_IMAGE_URL + res.avatar_url
-						: res.avatar_url
-					: process.env.AWS_IMAGE_DEFAULT_URL
-			}))
-		)
-		.then(response => successResponse(response, "Success Get Users", 200))
+		.then(res => NestHydrationJS.nest(res, userDefinition))
+		.then(res => validationAvatar(res))
+		.then(res => successResponse(res, "Success Get Users", 200))
 		.catch(err => errorResponse(err, 500))
 }
 
 exports.getUserById = id => {
 	return knex("users")
 		.where("id", id)
-		.then(response => NestHydrationJS.nest(response, userDefinition))
-		.then(response =>
-			response.map(res => ({
-				...res,
-				avatar_url: res.avatar_url
-					? res.avatar_url.length < 20
-						? process.env.AWS_IMAGE_URL + res.avatar_url
-						: res.avatar_url
-					: process.env.AWS_IMAGE_DEFAULT_URL
-			}))
-		)
-		.then(response =>
-			successResponse(response, `Success Get User (id: ${id})`, 200)
-		)
+		.then(res => NestHydrationJS.nest(res, userDefinition))
+		.then(res => validationAvatar(res))
+		.then(res => successResponse(res, "Success Get User", 200))
 		.catch(err => errorResponse(err, 500))
 }
 
@@ -59,127 +104,123 @@ exports.updateUser = (id, data) => {
 				.tz("Asia/Jakarta")
 				.format()
 		})
-		.then(response =>
-			successResponse(parseInt(id), `Success Update User (id: ${id})`, 201)
-		)
+		.then(() => successResponse(parseInt(id), "Success Update User", 201))
 		.catch(err => errorResponse(err, 500))
 }
 
-exports.updateAvatar = (id, image) => {
+exports.updateAvatar = (id, avatar_url) => {
 	return knex("users")
 		.where("id", id)
-		.update({
-			avatar_url: image
-		})
-		.then(response =>
-			successResponse(response, `Success Upload User Avatar (id: ${id})`, 201)
-		)
+		.update({ avatar_url })
+		.then(res => successResponse(res, "Success Update User Avatar", 201))
 		.catch(err => errorResponse(err, 500))
 }
 
 exports.registerUser = data => {
-	return knex("users")
-		.where("email", data.email)
-		.then(response => {
-			if (response.length) {
-				return errorResponse("Email is already exists", 409)
-			} else {
-				return bcrypt
-					.hash(data.password, 10)
-					.then(hash =>
-						knex("users")
-							.insert({ ...data, password: hash })
-							.returning("id")
-					)
-					.then(id =>
-						successResponse(
-							[{ id: parseInt(id.toString()) }],
-							`Success Register User (id: ${parseInt(id.toString())})`,
-							201
-						)
-					)
-					.catch(err => errorResponse(err, 500))
-			}
+	const registerUserAsync = (item, hashPassword) => {
+		return knex("users")
+			.insert({ ...data, password: hashPassword, verified: false })
+			.returning("id")
+			.then(id => resolve(parseInt(id)))
+			.catch(err => reject(errorResponse("Registration failed", 500)))
+	}
+
+	const checkField = item => {
+		return new Promise((resolve, reject) => {
+			item.first_name && item.last_name && item.email && item.password
+				? resolve(item)
+				: reject(errorResponse("Fields cannot be null", 400))
 		})
-		.catch(err => errorResponse(err, 500))
+	}
+
+	const findUserByEmail = item => {
+		return knex("users")
+			.where("email", item.email)
+			.then(res => res)
+			.catch(err => reject(errorResponse("Internal Server Error", 500)))
+	}
+
+	return checkField(data)
+		.then(res => findUserByEmail(res))
+		.then(res => checkEmailAsync(res))
+		.then(() => generatePasswordAsync(data))
+		.then(hashPassword => registerUserAsync(data, hashPassword))
+		.then(id => successResponse(id, "Register Success", 201))
+		.catch(err => err)
 }
 
 exports.checkEmail = email => {
-	return knex("users")
-		.where("email", email)
-		.then(response => {
-			if (response.length) {
-				return errorResponse("Email is already exists", 409)
-			} else {
-				return successResponse(null, "Email available", 200)
-			}
+	const checkFieldAsync = item => {
+		return new Promise((resolve, reject) => {
+			item ? resolve(item) : reject(errorResponse("Fields cannot be null", 400))
 		})
-		.catch(err => errorResponse(err, 500))
+	}
+
+	const knexResponse = item => {
+		return knex("users")
+			.where("email", item)
+			.then(res => res)
+			.catch(err => errorResponse("Internal Server Error", 500))
+	}
+
+	return checkFieldAsync(email)
+		.then(res => knexResponse(res))
+		.then(res => checkEmailAsync(res))
+		.then(res => successResponse(null, "Email available", 200))
+		.catch(err => err)
 }
 
-exports.updateEmail = (id, data) => {
-	return knex("users")
-		.where("email", data.email)
-		.then(response => {
-			if (response.length) {
-				if (response[0].id === parseInt(id)) {
-					return successResponse(
-						parseInt(id),
-						`Success Update User Email (id: ${id})`,
-						201
-					)
-				} else {
-					return errorResponse("Email is already exists", 409)
-				}
-			} else {
-				return knex("users")
-					.where("id", id)
-					.update({
-						email: data.email
-					})
-					.then(() =>
-						successResponse(
-							parseInt(id),
-							`Success Update User Email (id: ${id})`,
-							201
-						)
-					)
-					.catch(err => errorResponse(err, 500))
-			}
+exports.updateEmail = (id, email) => {
+	const checkFieldAsync = item => {
+		return new Promise((resolve, reject) => {
+			item ? resolve(item) : reject(errorResponse("Fields cannot be null", 400))
 		})
-		.catch(err => errorResponse(err, 500))
+	}
+
+	const knexResponse = item => {
+		return knex("users")
+			.where("email", item)
+			.then(res => res)
+			.catch(err => errorResponse("Internal Server Error", 500))
+	}
+
+	return checkFieldAsync(item)
+		.then(res => knexResponse(res))
+		.then(res => checkEmailAfterUpdateAsync(id, res))
+		.then(id => successResponse(id, "Success Update User Email", 201))
+		.catch(err => err)
 }
 
 exports.updatePassword = (id, data) => {
-	return knex("users")
-		.where("id", id)
-		.then(response => {
-			if (response.length) {
-				return bcrypt
-					.compare(data.old_password, response[0].password)
-					.then(res => {
-						if (res) {
-							return bcrypt.hash(data.new_password, 10).then(hash =>
-								knex("users")
-									.where("id", id)
-									.update({ password: hash })
-									.then(response =>
-										successResponse(
-											parseInt(id),
-											`Success Update User Password (id: ${id})`,
-											201
-										)
-									)
-									.catch(err => errorResponse(err, 500))
-							)
-						} else {
-							return errorResponse("Old password is incorrect", 500)
-						}
-					})
-					.catch(err => errorResponse(err, 500))
-			} else {
-				return errorResponse(null, 500)
-			}
+	const checkFieldAsync = item => {
+		return new Promise((resolve, reject) => {
+			item.new_password && item.old_password
+				? resolve(item)
+				: reject(errorResponse("Fields cannot be null", 400))
 		})
-		.catch(err => errorResponse(err, 500))
+	}
+
+	const updatePasswordAsync = hash => {
+		return knex("users")
+			.where("id", id)
+			.update({ password: hash })
+			.then(() => id)
+			.then(err => errorResponse("Internal Server Error", 500))
+	}
+
+	const knexResponse = item => {
+		return knex("users")
+			.where("id", item)
+			.then(res => res)
+			.catch(err => errorResponse("Internal Server Error", 500))
+	}
+
+	return checkFieldAsync(item)
+		.then(() => knexResponse(id))
+		.then(res => checkUserAsync(res))
+		.then(res => comparePasswordAsync(data, res))
+		.then(res => generatePasswordAsync({ password: data.new_password }))
+		.then(hash => updatePasswordAsync(hash))
+		.then(res => successResponse(null, "Success Update Password", 201))
+		.catch(err => err)
 }

@@ -63,11 +63,11 @@ router.put("/user/:id", authentication, (req, res) => {
 		.catch(err => console.log("Error on UPDATE_USER", err))
 })
 
-// Upload avatar user
-router.post("/user/update-avatar/:id", (req, res) => {
-	Promise.try(() => updateAvatar(req.params.id, req.body.avatar_url))
+// Update avatar user
+router.put("/user/update-avatar/:id", authentication, (req, res) => {
+	Promise.try(() => updateAvatar(req.params.id, req.body.avatar))
 		.then(response => res.status(response.status).json(response))
-		.catch(err => console.log("Error on UPLOAD_AVATAR_USER", err))
+		.catch(err => console.log("Error on UPDATE_AVATAR_USER", err))
 })
 
 // Register user
@@ -86,7 +86,7 @@ router.post("/user/check-email", function(req, res) {
 
 // Change email
 router.put("/user/change-email/:id", authentication, function(req, res) {
-	Promise.try(() => updateEmail(req.params.id, req.body))
+	Promise.try(() => updateEmail(req.params.id, req.body.email))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on CHANGE_EMAIL", err))
 })
