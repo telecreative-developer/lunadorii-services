@@ -75,6 +75,11 @@ apiEndpoints:
     paths:
       - '/api/v1/order'
       - '/api/v1/order/*'
+  promo:
+    host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
+    paths:
+      - '/api/v1/promo'
+      - '/api/v1/promo/*'
 serviceEndpoints:
   authService:
     url: 'http://localhost:9001'
@@ -96,6 +101,8 @@ serviceEndpoints:
     url: 'http://localhost:9009'
   ordersService:
     url: 'http://localhost:9010'
+  promoService:
+    url: 'http://localhost:9011'
 policies:
   - basic-auth
   - cors
@@ -193,4 +200,12 @@ pipelines:
       - proxy:
           - action:
               serviceEndpoint: ordersService
+              changeOrigin: true
+  - name: promo-service
+    apiEndpoints:
+      - promo
+    policies:
+      - proxy:
+          - action:
+              serviceEndpoint: promoService
               changeOrigin: true

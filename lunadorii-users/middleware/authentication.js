@@ -1,9 +1,9 @@
-require('dotenv').config({path: __dirname+'/./../../.env'})
-const jwt = require('jsonwebtoken')
+require("dotenv").config({ path: __dirname + "/./../../.env" })
+const jwt = require("jsonwebtoken")
 
 function errorResponse(res, messageEx, err) {
-  res.status(401).json({
-		name: 'error',
+	res.status(401).json({
+		name: "error",
 		message: messageEx ? messageEx : err.message,
 		status: 401
 	})
@@ -21,7 +21,7 @@ function authentication(req, res, next) {
 			}
 		})
 	} else {
-		errorResponse(res, 'Token not provided')
+		errorResponse(res, "Token not provided")
 	}
 }
 
