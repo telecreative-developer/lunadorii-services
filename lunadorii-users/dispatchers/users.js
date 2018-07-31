@@ -299,7 +299,7 @@ exports.updatePassword = (id, data) => {
 			.catch(err => errorResponse("Internal Server Error", 500))
 	}
 
-	return checkFieldAsync(item)
+	return checkFieldAsync(data)
 		.then(() => knexResponse(id))
 		.then(res => checkUserAsync(res))
 		.then(res => comparePasswordAsync(data, res))
