@@ -28,31 +28,15 @@ router.post("/auth/admin", (req, res) => {
 				}
 
 				const accessToken = jwt.sign(
-					{ admin_id: response.admin_id, role: "admin" },
-					process.env.JWT_SECRET_KEY,
-					{
-						subject: "lunadorii",
-						algorithm: "HS256",
-						expiresIn: "7d",
-						issuer: "https://github.com/kevinhermawan",
-						header: {
-							typ: "JWT"
-						}
-					}
+					{ admin_id: response.admin_id, role: "access-token-admin" },
+					process.env.JWT_SECRET_ADMIN_ACCESS_TOKEN,
+					accessTokenAdminJwtObejct
 				)
 
 				const refreshToken = jwt.sign(
-					{ admin_id: response.admin_id, role: "admin" },
-					process.env.JWT_SECRET_KEY,
-					{
-						subject: "lunadorii",
-						algorithm: "HS256",
-						expiresIn: "10d",
-						issuer: "https://github.com/kevinhermawan",
-						header: {
-							typ: "JWT"
-						}
-					}
+					{ admin_id: response.admin_id, role: "refresh-token-admin" },
+					process.env.JWT_SECRET_ADMIN_REFRESH_TOKEN,
+					refreshTokenAdminJwtObject
 				)
 
 				return res.status(201).json({
