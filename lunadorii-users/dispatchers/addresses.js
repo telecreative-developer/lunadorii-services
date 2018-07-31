@@ -9,17 +9,39 @@ const addressesDefinition = require("../definitions/addresses")
 const { successResponse, errorResponse } = require("../responsers")
 
 exports.addUserAddress = data => {
-	return knex("user_addresses")
-		.where("id", data.id)
-		.then(response => {
-			return knex("user_addresses")
-				.insert({ ...data, address_default: response.length ? false : true })
-				.then(response =>
-					successResponse(response, "Success Add User Address", 200)
-				)
-				.catch(err => errorResponse(err, 500))
+	const checkFieldAsync = () => {
+		return new Promise((resolve, reject) => {
+			data.recepient &&
+			data.phone &&
+			data.label &&
+			data.detail_address &&
+			data.province_id &&
+			data.city_id &&
+			data.id
+				? resolve(data)
+				: reject(errorResponse("Fields cannot be null", 400))
 		})
-		.catch(err => errorResponse(err, 500))
+	}
+
+	const insertUserAddressAsync = res => {
+		return knex("user_addresses")
+			.insert({ ...data, address_default: res.length ? false : true })
+			.then(res => res)
+			.catch(err => errorResponse("Internal Server Error", 500))
+	}
+
+	const knexResponse = () => {
+		return knex("user_addresses")
+			.where("id", data.id)
+			.then(res => res)
+			.catch(err => errorResponse("Internal Server Error", 500))
+	}
+
+	return checkFieldAsync()
+		.then(() => knexResponse())
+		.then(res => insertUserAddressAsync(res))
+		.then(res => successResponse(res, "Success Add User Address", 201))
+		.catch(err => err)
 }
 
 exports.getUserAddresses = id => {
@@ -31,45 +53,54 @@ exports.getUserAddresses = id => {
 			"provinces.province_id"
 		)
 		.innerJoin("cities", "user_addresses.city_id", "cities.city_id")
-		.then(response => NestHydrationJS.nest(response, addressesDefinition))
-		.then(response =>
-			successResponse(response, "Success Get User Addresses", 200)
-		)
-		.catch(err => errorResponse(err, 500))
+		.then(res => NestHydrationJS.nest(res, addressesDefinition))
+		.then(res => successResponse(res, "Success Get User Addresses", 200))
+		.catch(err => errorResponse("Internal Server Error", 500))
 }
 
 exports.updateUserAddress = (user_address_id, data) => {
 	return knex("user_addresses")
 		.where("user_address_id", user_address_id)
-		.update(data)
-		.then(response =>
-			successResponse(response, "Success Update User Address", 200)
-		)
+		.update({
+			recepient: data.recepient,
+			phone: data.phone,
+			label: data.label,
+			detail_address: data.detail_address,
+			province_id: data.province_id,
+			city_id: data.city_id,
+			id: data.id
+		})
+		.then(res => successResponse(res, "Success Update User Address", 201))
 		.catch(err => errorResponse(err, 500))
 }
 
 exports.setDefaultUserAddress = (user_address_id, id) => {
-	return knex("user_addresses")
-		.where("id", id)
-		.update({ address_default: false })
-		.then(() => {
-			return knex("user_addresses")
-				.where("user_address_id", user_address_id)
-				.update({ address_default: true })
-				.then(response =>
-					successResponse(response, "Success Set Default Address", 200)
-				)
-				.catch(err => console.log(err))
-		})
-		.catch(err => console.log(err))
+	const updateUserAddressAsync = () => {
+		return knex("user_addresses")
+			.where("user_address_id", user_address_id)
+			.update({ address_default: true })
+			.then(res => res)
+			.catch(err => errorResponse("Internal Server Error", 500))
+	}
+
+	const changeAddressToFalseAsync = () => {
+		return knex("user_addresses")
+			.where("id", id)
+			.update({ address_default: false })
+			.then(res => res)
+			.catch(err => errorResponse("Internal Server Error", 500))
+	}
+
+	return changeAddressToFalseAsync()
+		.then(() => updateUserAddressAsync())
+		.then(() => successResponse(null, "Success Set Default Address", 201))
+		.catch(err => err)
 }
 
 exports.deleteUserAddress = user_address_id => {
 	return knex("user_addresses")
 		.where("user_address_id", user_address_id)
 		.del()
-		.then(response =>
-			successResponse(response, "Success Delete User Address", 200)
-		)
-		.catch(err => console.log(err))
+		.then(res => successResponse(res, "Success Delete User Address", 200))
+		.catch(err => errorResponse("Internal Server Error", 500))
 }

@@ -7,122 +7,161 @@ const knex = require("knex")(configuration)
 const NestHydrationJS = require("nesthydrationjs")()
 const { successResponse, errorResponse } = require("../responsers")
 
-exports.addUserCreditCard = data => {
-	return knex("users")
-		.where("users.id", data.id)
-		.then(response => {
-			return knex("user_creditcard")
-				.where("user_creditcard.id", data.id)
-				.then(responseUserCreditCard => {
-					return bcrypt
-						.compare(data.password, response[0].password)
-						.then(res => {
-							if (res) {
-								return knex("user_creditcard")
-									.insert({
-										card_number: data.card_number,
-										mm: data.mm,
-										yyyy: data.yyyy,
-										country: data.country,
-										card_name: data.card_name,
-										postal_code: data.postal_code,
-										id: data.id,
-										card_default: responseUserCreditCard.length ? false : true
-									})
-									.returning("user_creditcard_id")
-									.then(user_creditcard_id =>
-										successResponse(
-											parseInt(user_creditcard_id),
-											"Success Add User Credit Card",
-											201
-										)
-									)
-									.catch(err => console.log(err))
-							} else {
-								return errorResponse("Password is incorrect", 500)
-							}
-						})
-				})
+const checkUserLengthAsync = data => {
+	return new Promise((resolve, reject) => {
+		return data.length
+			? resolve(data)
+			: reject(errorResponse("User not found", 500))
+	})
+}
+
+const comparePasswordAsync = (data, response) => {
+	return bcrypt
+		.compare(data.password, response[0].password)
+		.then(res => {
+			return res ? data : errorResponse("Password is incorrect", 400)
 		})
-		.catch(err => errorResponse(err, 500))
+		.catch(err => reject(errorResponse("Internal Server Error", 500)))
+}
+
+exports.addUserCreditCard = data => {
+	const checkFieldAsync = () => {
+		return new Promise((resolve, reject) => {
+			return data.card_number &&
+				data.mm &&
+				data.yyyy &&
+				data.country &&
+				data.card_name &&
+				data.postal_code &&
+				data.id &&
+				data.password
+				? resolve(data)
+				: reject(errorResponse("Fields cannot be null", 400))
+		})
+	}
+
+	const searchUserCreditCardAsync = item => {
+		return knex("user_creditcard")
+			.where("user_creditcard.id", data.id)
+			.then(() => item)
+			.catch(err => errorResponse("Internal Server Error", 500))
+	}
+
+	const knexResponse = () => {
+		return knex("users")
+			.where("users.id", data.id)
+			.then(res => res)
+			.catch(err => errorResponse("Internal Server Error", 500))
+	}
+
+	const addUserCreditCardAsync = res => {
+		return knex("user_creditcard")
+			.insert({
+				card_number: data.card_number,
+				mm: data.mm,
+				yyyy: data.yyyy,
+				country: data.country,
+				card_name: data.card_name,
+				postal_code: data.postal_code,
+				id: data.id,
+				card_default: res.length ? false : true
+			})
+			.then(() => data)
+			.catch(err => errorResponse("Internal Server Error", 500))
+	}
+
+	return checkFieldAsync()
+		.then(res => knexResponse())
+		.then(res => checkUserLengthAsync(res))
+		.then(res => comparePasswordAsync(data, res))
+		.then(res => addUserCreditCardAsync(res))
+		.then(res => successResponse(res, "Success Update User Credit Card", 201))
+		.catch(err => err)
 }
 
 exports.getUserCreditCard = id => {
 	return knex("user_creditcard")
 		.where("id", id)
-		.then(response =>
-			successResponse(response, "Success Get User Credit Card", 200)
-		)
+		.then(res => successResponse(res, "Success Get User Credit Card", 200))
 		.catch(err => errorResponse(err, 500))
 }
 
 exports.updateUserCreditCard = (user_creditcard_id, data) => {
-	return knex("users")
-		.where("users.id", data.id)
-		.then(response => {
-			if (response.length) {
-				return bcrypt.compare(data.password, response[0].password).then(res => {
-					if (res) {
-						return knex("user_creditcard")
-							.where("user_creditcard_id", user_creditcard_id)
-							.update({
-								card_number: data.card_number,
-								mm: data.mm,
-								yyyy: data.yyyy,
-								country: data.country,
-								card_name: data.card_name,
-								postal_code: data.postal_code,
-								id: data.id
-							})
-							.then(response =>
-								successResponse(
-									parseInt(user_creditcard_id),
-									"Success Update User Credit Card",
-									201
-								)
-							)
-							.catch(err => console.log(err))
-					} else {
-						return errorResponse("Password is incorrect", 500)
-					}
-				})
-			} else {
-				return errorResponse("User not found", 500)
-			}
+	const checkFieldAsync = () => {
+		return new Promise((resolve, reject) => {
+			return data.password
+				? resolve(data)
+				: reject(errorResponse("Password cannot be null", 400))
 		})
-		.catch(err => errorResponse(err, 500))
+	}
+
+	const updateUserCreditCardAsync = () => {
+		return knex("user_creditcard")
+			.where("user_creditcard_id", user_creditcard_id)
+			.update({
+				card_number: data.card_number,
+				mm: data.mm,
+				yyyy: data.yyyy,
+				country: data.country,
+				card_name: data.card_name,
+				postal_code: data.postal_code
+			})
+			.then(res => res)
+			.catch(err => errorResponse("Internal Server Error", 500))
+	}
+
+	const knexResponse = () => {
+		return knex("users")
+			.where("users.id", data.id)
+			.then(res => res)
+			.catch(err => errorResponse("Internal Server Error", 500))
+	}
+
+	return checkFieldAsync()
+		.then(res => knexResponse())
+		.then(res => checkUserLengthAsync(res))
+		.then(res => comparePasswordAsync(data, res))
+		.then(res => updateUserCreditCardAsync())
+		.then(res => successResponse(res, "Success Update User Credit Card", 201))
+		.catch(err => err)
 }
 
 exports.setDefaultUserCreditCard = (user_creditcard_id, id) => {
-	return knex("user_creditcard")
-		.where("id", id)
-		.update({ card_default: false })
-		.then(() => {
-			return knex("user_creditcard")
-				.where("user_creditcard_id", user_creditcard_id)
-				.update({ card_default: true })
-				.then(response =>
-					successResponse(
-						parseInt(user_creditcard_id),
-						"Success Set Default User Credit Card",
-						201
-					)
-				)
-				.catch(err => errorResponse(err, 500))
+	const checkFieldAsync = () => {
+		return new Promise((resolve, reject) => {
+			return id ? resolve(id) : reject(errorResponse("Id cannot be null", 400))
 		})
-		.catch(err => errorResponse(err, 500))
+	}
+
+	const setDefaultUserCreditCardAsync = () => {
+		return knex("user_creditcard")
+			.where("user_creditcard_id", user_creditcard_id)
+			.update({ card_default: true })
+			.then(() => parseInt(user_creditcard_id))
+			.catch(err => errorResponse("Internal Server Error", 500))
+	}
+
+	const knexResponse = () => {
+		return knex("user_creditcard")
+			.where("id", id)
+			.update({ card_default: false })
+			.then(res => res)
+			.catch(err => errorResponse("Internal Server Error", 500))
+	}
+
+	return checkFieldAsync()
+		.then(() => knexResponse())
+		.then(() => setDefaultUserCreditCardAsync())
+		.then(res =>
+			successResponse(res, "Success Set Default User Credit Card", 201)
+		)
+		.catch(err => err)
 }
 
 exports.deleteUserCreditCard = user_creditcard_id => {
 	return knex("user_creditcard")
 		.where("user_creditcard_id", user_creditcard_id)
 		.del()
-		.then(() =>
-			successResponse(
-				parseInt(user_creditcard_id),
-				"Success Delete User Credit Card",
-				201
-			)
-		)
+		.then(() => successResponse(null, "Success Delete User Credit Card", 200))
 		.catch(err => errorResponse(err, 500))
 }

@@ -10,10 +10,25 @@ const { successResponse, errorResponse } = require("../responsers")
 const reviewsDefinition = require("../definitions/reviews")
 
 exports.addUserReview = data => {
-	return knex("product_reviews")
-		.insert(data)
-		.then(response => successResponse(response, "Success Add User Review", 200))
-		.catch(err => errorResponse(err, 500))
+	const checkFieldAsync = () => {
+		return new Promise((resolve, reject) => {
+			data.rate && data.comment && data.product_id && data.id
+				? resolve(data)
+				: reject(errorResponse("Fields cannot be null", 400))
+		})
+	}
+
+	const knexResponse = item => {
+		return knex("product_reviews")
+			.insert(item)
+			.then(res => res)
+			.catch(err => errorResponse("Internal Server Error", 500))
+	}
+
+	return checkFieldAsync()
+		.then(() => knexResponse(data))
+		.then(res => successResponse(res, "Success Add User Review", 201))
+		.catch(err => err)
 }
 
 exports.getUserReviews = id => {
@@ -37,30 +52,27 @@ exports.getUserReviews = id => {
 		)
 		.then(res => NestHydrationJS.nest(res, reviewsDefinition))
 		.then(res => successResponse(res, "Success Get User Reviews", 200))
-		.catch(err => errorResponse(err, 500))
+		.catch(err => errorResponse("Internal Server Error", 500))
 }
 
 exports.updateUserReview = (product_review_id, data) => {
 	return knex("product_reviews")
 		.where("product_review_id", product_review_id)
 		.update({
-			...data,
+			rate: data.rate,
+			comment: data.comment,
 			updated_at: moment()
 				.tz("Asia/Jakarta")
 				.format()
 		})
-		.then(response =>
-			successResponse(response, "Success Update User Review", 201)
-		)
-		.catch(err => errorResponse(err, 500))
+		.then(res => successResponse(res, "Success Update User Review", 201))
+		.catch(err => errorResponse("Internal Server Error", 500))
 }
 
 exports.deleteUserReview = product_review_id => {
 	return knex("product_reviews")
 		.where("product_review_id", product_review_id)
-		.delete()
-		.then(response =>
-			successResponse(response, "Success Delete User Review", 200)
-		)
+		.del()
+		.then(res => successResponse(res, "Success Delete User Review", 200))
 		.catch(err => errorResponse(err, 500))
 }
