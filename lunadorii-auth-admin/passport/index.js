@@ -21,15 +21,21 @@ passport.use(
 				.where("username", username)
 				.limit(1)
 				.then(response => {
-					bcrypt.compare(password, response[0].password).then(res => {
-						if (res) {
-							return done(null, response[0])
-						} else {
-							return done(null, false, {
-								message: "Username or password incorrect"
-							})
-						}
-					})
+					if (response.length) {
+						bcrypt.compare(password, response[0].password).then(res => {
+							if (res) {
+								return done(null, response[0])
+							} else {
+								return done(null, false, {
+									message: "Username or password incorrect"
+								})
+							}
+						})
+					} else {
+						return done(null, false, {
+							message: "Username or password incorrect"
+						})
+					}
 				})
 				.catch(e => done(e))
 		}

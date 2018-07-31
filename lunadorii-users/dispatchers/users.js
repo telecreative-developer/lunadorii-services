@@ -1,6 +1,7 @@
 require("dotenv").config({ path: __dirname + "/./../../.env" })
 const express = require("express")
 const bcrypt = require("bcrypt")
+const Promise = require("bluebird")
 const environment = process.env.NODE_ENV || "development"
 const configuration = require("../knexfile")[environment]
 const knex = require("knex")(configuration)
@@ -11,6 +12,78 @@ const reviewsDefinition = require("../definitions/reviews")
 const banksDefinition = require("../definitions/banks")
 const userDefinition = require("../definitions/users")
 const envDefaultAvatar = process.env.AWS_IMAGE_DEFAULT_URL
+const nodemailer = require("nodemailer")
+const mg = require("nodemailer-mailgun-transport")
+const { forgotPasswordJwtObject } = require("../objects")
+const handlebars = require("handlebars")
+const fs = require("fs")
+const jwt = require("jsonwebtoken")
+const fsReadFileAsync = Promise.promisify(fs.readFile)
+const { emailVerificationJwtObject } = require("../objects")
+const envEmailVerification = process.env.JWT_SECRET_USER_EMAIL_VERIFICATION
+const emailTemplateVerification =
+	"/./../../lunadorii-email-templates/email-verification.html"
+const authMg = {
+	auth: {
+		api_key: process.env.MAILGUN_API_KEY,
+		domain: process.env.MAILGUN_DOMAIN
+	}
+}
+const nodemailerMailgun = Promise.promisifyAll(
+	nodemailer.createTransport(mg(authMg))
+)
+
+const readHTMLFile = path => {
+	return fsReadFileAsync(path, { encoding: "utf-8" })
+		.then(html => html)
+		.catch(err => err)
+}
+
+const nodemailerMailgunAsync = (email, template, data) => {
+	return nodemailerMailgun
+		.sendMail(mailOptions(email, template, data))
+		.then(res => successResponse(null, "Success Send Email Verification", 200))
+		.catch(err => errorResponse("Internal Server Error", 500))
+}
+
+const mailOptions = (email, template, data) => {
+	const html = template(data)
+	return {
+		from: "no-reply@lunadorii.com",
+		to: email,
+		subject: "Email Verication",
+		html: html
+	}
+}
+
+const sendEmailVerification = (id, name, email, token) => {
+	return readHTMLFile(__dirname + emailTemplateVerification)
+		.then(html => handlebars.compile(html))
+		.then(hbs =>
+			nodemailerMailgunAsync(email, hbs, {
+				userName: name,
+				userToken:
+					`http://54.169.224.248:3000/email-verification?token=` + token
+			})
+		)
+		.then(res => id)
+		.catch(err => errorResponse("Internal Server Error", 500))
+}
+
+const signingTokenAsync = id => {
+	return new Promise((resolve, reject) => {
+		return jwt.sign(
+			{ id, scope: "email-verification-user" },
+			envEmailVerification,
+			emailVerificationJwtObject,
+			(err, token) => {
+				return err
+					? reject(errorResponse("Internal Server Error", 500))
+					: resolve({ id, token })
+			}
+		)
+	})
+}
 
 const validationAvatar = data => {
 	return data.map(res => ({
@@ -121,8 +194,8 @@ exports.registerUser = data => {
 		return knex("users")
 			.insert({ ...data, password: hashPassword, verified: false })
 			.returning("id")
-			.then(id => resolve(parseInt(id)))
-			.catch(err => reject(errorResponse("Registration failed", 500)))
+			.then(id => parseInt(id))
+			.catch(err => errorResponse("Registration failed", 500))
 	}
 
 	const checkField = item => {
@@ -137,16 +210,27 @@ exports.registerUser = data => {
 		return knex("users")
 			.where("email", item.email)
 			.then(res => res)
-			.catch(err => reject(errorResponse("Internal Server Error", 500)))
+			.catch(err => errorResponse("Internal Server Error", 500))
 	}
 
-	return checkField(data)
-		.then(res => findUserByEmail(res))
-		.then(res => checkEmailAsync(res))
-		.then(() => generatePasswordAsync(data))
-		.then(hashPassword => registerUserAsync(data, hashPassword))
-		.then(id => successResponse(id, "Register Success", 201))
-		.catch(err => err)
+	return (
+		checkField(data)
+			.then(res => findUserByEmail(res))
+			.then(res => checkEmailAsync(res))
+			.then(() => generatePasswordAsync(data))
+			.then(hashPassword => registerUserAsync(data, hashPassword))
+			// .then(id => signingTokenAsync(parseInt(id)))
+			// .then(res => {
+			// 	return sendEmailVerification(
+			// 		res.id,
+			// 		data.first_name,
+			// 		data.email,
+			// 		res.token
+			// 	)
+			// })
+			.then(id => successResponse(id, "Register Success", 201))
+			.catch(err => console.log(err))
+	)
 }
 
 exports.checkEmail = email => {

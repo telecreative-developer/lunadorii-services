@@ -28,13 +28,13 @@ passport.use(
 								return done(null, response[0])
 							} else {
 								return done(null, false, {
-									message: "Incorrect email or password"
+									message: "Email or password incorrect"
 								})
 							}
 						})
 					} else {
 						return done(null, false, {
-							message: "Incorrect email or password"
+							message: "Email or password incorrect"
 						})
 					}
 				})
