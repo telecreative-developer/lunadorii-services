@@ -8,17 +8,29 @@ const NestHydrationJS = require("nesthydrationjs")()
 const { successResponse, errorResponse } = require("../responsers")
 const adminDefinition = require("../definitions/admin")
 
+const checkEmailAfterUpdateAsync = (admin_id, data) => {
+	return new Promise((resolve, reject) => {
+		if (data.length) {
+			data[0].id === id
+				? resolve(parseInt(id))
+				: reject(errorResponse("Email already exists", 409))
+		} else {
+			return knex("admin_id")
+				.where("admin_id", admin_id)
+				.update({
+					email: data.email
+				})
+				.then(() => resolve(parseInt(admin_id)))
+				.catch(err => reject(errorResponse("Internal Server Error", 500)))
+		}
+	})
+}
+
 exports.getAdminById = admin_id => {
 	return knex("admin")
 		.where("admin_id", admin_id)
-		.then(response => NestHydrationJS.nest(response, adminDefinition))
-		.then(response =>
-			successResponse(
-				response,
-				`Success Get Admin (admin_id: ${admin_id})`,
-				200
-			)
-		)
+		.then(res => NestHydrationJS.nest(res, adminDefinition))
+		.then(res => successResponse(res, "Success Get Admin", 200))
 		.catch(err => errorResponse(err, 500))
 }
 
@@ -29,48 +41,9 @@ exports.updateAdmin = (admin_id, data) => {
 			first_name: data.first_name,
 			last_name: data.last_name
 		})
-		.then(response =>
-			successResponse(
-				parseInt(admin_id),
-				`Success Update Admin (admin_id: ${admin_id})`,
-				200
-			)
+		.then(() =>
+			successResponse(parseInt(admin_id), "Success Update Admin", 200)
 		)
-		.catch(err => errorResponse(err, 500))
-}
-
-exports.registerAdmin = data => {
-	return knex("admin")
-		.where("email", data.email)
-		.then(response => {
-			if (response.length) {
-				return errorResponse("Email is already exists", 409)
-			} else {
-				return knex("admin")
-					.where("username", data.username)
-					.then(response => {
-						if (response.length) {
-							return errorResponse("Username is already exists", 409)
-						} else {
-							return bcrypt
-								.hash(data.password, 10)
-								.then(hash =>
-									knex("admin")
-										.insert({ ...data, password: hash })
-										.returning("admin_id")
-								)
-								.then(admin_id =>
-									successResponse(
-										[{ admin_id: parseInt(admin_id.toString()) }],
-										"Success Register Admin",
-										201
-									)
-								)
-								.catch(err => errorResponse(err, 500))
-						}
-					})
-			}
-		})
 		.catch(err => errorResponse(err, 500))
 }
 
@@ -104,34 +77,29 @@ exports.updateUsername = (admin_id, data) => {
 		})
 }
 
-exports.updateEmail = (admin_id, data) => {
-	return knex("admin")
-		.where("email", data.email)
-		.then(response => {
-			if (response.length) {
-				if (response[0].admin_id === parseInt(admin_id)) {
-					return successResponse(
-						parseInt(admin_id),
-						`Success Update Admin Email (admin_id: ${admin_id})`,
-						200
-					)
-				} else {
-					return errorResponse("Email is already exists", 409)
-				}
-			} else {
-				return knex("admin")
-					.where("admin_id", admin_id)
-					.update({ email: data.email })
-					.then(response =>
-						successResponse(
-							parseInt(admin_id),
-							`Success Update Admin Email (admin_id: ${admin_id})`,
-							200
-						)
-					)
-					.catch(err => errorResponse(err, 500))
-			}
+exports.updateEmail = (admin_id, email) => {
+	const checkFieldAsync = email => {
+		return new Promise((resolve, reject) => {
+			email
+				? resolve(email)
+				: reject(errorResponse("Fields cannot be null", 400))
 		})
+	}
+
+	const knexResponse = email => {
+		return knex("users")
+			.where("email", email)
+			.then(res => res)
+			.catch(err => errorResponse("Internal Server Error", 500))
+	}
+
+	return checkFieldAsync(email)
+		.then(res => knexResponse(email))
+		.then(res => checkEmailAfterUpdateAsync(admin_id, res))
+		.then(admin_id =>
+			successResponse(admin_id, "Success Update User Email", 201)
+		)
+		.catch(err => err)
 }
 
 exports.updatePassword = (admin_id, data) => {

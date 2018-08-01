@@ -255,31 +255,33 @@ exports.checkEmail = email => {
 }
 
 exports.updateEmail = (id, email) => {
-	const checkFieldAsync = item => {
+	const checkFieldAsync = email => {
 		return new Promise((resolve, reject) => {
-			item ? resolve(item) : reject(errorResponse("Fields cannot be null", 400))
+			email
+				? resolve(email)
+				: reject(errorResponse("Fields cannot be null", 400))
 		})
 	}
 
-	const knexResponse = item => {
+	const knexResponse = email => {
 		return knex("users")
-			.where("email", item)
+			.where("email", email)
 			.then(res => res)
 			.catch(err => errorResponse("Internal Server Error", 500))
 	}
 
-	return checkFieldAsync(item)
-		.then(res => knexResponse(res))
+	return checkFieldAsync(email)
+		.then(email => knexResponse(email))
 		.then(res => checkEmailAfterUpdateAsync(id, res))
 		.then(id => successResponse(id, "Success Update User Email", 201))
 		.catch(err => err)
 }
 
 exports.updatePassword = (id, data) => {
-	const checkFieldAsync = item => {
+	const checkFieldAsync = data => {
 		return new Promise((resolve, reject) => {
-			item.new_password && item.old_password
-				? resolve(item)
+			data.new_password && data.old_password
+				? resolve(data)
 				: reject(errorResponse("Fields cannot be null", 400))
 		})
 	}
@@ -292,9 +294,9 @@ exports.updatePassword = (id, data) => {
 			.then(err => errorResponse("Internal Server Error", 500))
 	}
 
-	const knexResponse = item => {
+	const knexResponse = id => {
 		return knex("users")
-			.where("id", item)
+			.where("id", id)
 			.then(res => res)
 			.catch(err => errorResponse("Internal Server Error", 500))
 	}
