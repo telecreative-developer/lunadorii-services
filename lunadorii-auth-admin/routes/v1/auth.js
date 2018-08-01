@@ -32,13 +32,13 @@ router.post("/auth/admin", (req, res) => {
 				}
 
 				const accessToken = jwt.sign(
-					{ admin_id: response.admin_id, role: "access-token-admin" },
+					{ admin_id: response.admin_id, scope: "access-token-admin" },
 					process.env.JWT_SECRET_ADMIN_ACCESS_TOKEN,
 					accessTokenAdminJwtObejct
 				)
 
 				const refreshToken = jwt.sign(
-					{ admin_id: response.admin_id, role: "refresh-token-admin" },
+					{ admin_id: response.admin_id, scope: "refresh-token-admin" },
 					process.env.JWT_SECRET_ADMIN_REFRESH_TOKEN,
 					refreshTokenAdminJwtObject
 				)

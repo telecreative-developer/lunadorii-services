@@ -73,7 +73,7 @@ function authenticationUser(req, res, next) {
 			req.decoded = decoded
 			return next()
 		})
-		.catch(err => console.log(err))
+		.catch(err => err)
 }
 
 function authenticationAdmin(req, res, next) {
