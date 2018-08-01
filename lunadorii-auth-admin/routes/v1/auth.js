@@ -4,6 +4,10 @@ const Promise = require("bluebird")
 const router = express.Router()
 const jwt = require("jsonwebtoken")
 const passport = require("passport")
+const {
+	accessTokenAdminJwtObejct,
+	refreshTokenAdminJwtObject
+} = require("../../objects")
 
 router.post("/auth/admin", (req, res) => {
 	passport.authenticate(
