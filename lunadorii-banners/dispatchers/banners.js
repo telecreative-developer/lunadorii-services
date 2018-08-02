@@ -86,8 +86,6 @@ const knexProductBanners = banner_id => {
 
 exports.getBannersAdmin = () => {
 	return knex("banners")
-		.where("banners.category", "general")
-		.andWhere("banners.active", true)
 		.then(res => successResponse(res, "Success Get Banners", 200))
 		.catch(err => errorResponse(err, 500))
 }
