@@ -46,7 +46,10 @@ exports.getDashboardInfo = () => {
 	const getWishlist = products_length => {
 		return knex("wishlist")
 			.then(res => removeDuplicates(res, "product_id"))
-			.then(res => ({ products_length, product_wishlisted_length: res.length }))
+			.then(res => ({
+				products_length,
+				products_wishlisted_length: res.length
+			}))
 			.catch(err => errorResponse("Internal Server Error", 500))
 	}
 
