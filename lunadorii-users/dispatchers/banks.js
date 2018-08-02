@@ -1,4 +1,5 @@
 require("dotenv").config({ path: __dirname + "/./../../.env" })
+const Promise = require("bluebird")
 const express = require("express")
 const bcrypt = require("bcrypt")
 const environment = process.env.NODE_ENV || "development"
@@ -17,12 +18,16 @@ const checkUserLengthAsync = data => {
 }
 
 const comparePasswordAsync = (data, response) => {
-	return bcrypt
-		.compare(data.password, response[0].password)
-		.then(res => {
-			return res ? data : errorResponse("Password is incorrect", 400)
-		})
-		.catch(err => reject(errorResponse("Internal Server Error", 500)))
+	return new Promise((resolve, reject) => {
+		return bcrypt
+			.compare(data.password, response[0].password)
+			.then(res => {
+				return res
+					? resolve(data)
+					: reject(errorResponse("Password is incorrect", 400))
+			})
+			.catch(err => errorResponse("Internal Server Error", 500))
+	})
 }
 
 exports.addUserBank = data => {
