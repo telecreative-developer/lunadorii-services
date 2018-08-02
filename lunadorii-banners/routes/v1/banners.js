@@ -1,12 +1,20 @@
 const express = require("express")
 const Promise = require("bluebird")
+const { authenticationAdmin } = require("../../middleware/authentication")
 const router = express.Router()
 const {
 	getBanners,
 	getBannersBestSeller,
 	getProductBanners,
 	getProductBannersLogged
-} = require("../../dispatchers")
+} = require("../../dispatchers/banners")
+
+// Get all banners
+router.get("/banners/admin", authenticationAdmin, (req, res) => {
+	Promise.try(() => getBannersAdmin())
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log("Error on GET_BANNERS_ADMIN", err))
+})
 
 // Get all banners
 router.get("/banners", (req, res) => {

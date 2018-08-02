@@ -84,9 +84,18 @@ const knexProductBanners = banner_id => {
 		.catch(err => errorResponse("Internal Server Error", 500))
 }
 
+exports.getBannersAdmin = () => {
+	return knex("banners")
+		.where("banners.category", "general")
+		.andWhere("banners.active", true)
+		.then(res => successResponse(res, "Success Get Banners", 200))
+		.catch(err => errorResponse(err, 500))
+}
+
 exports.getBanners = () => {
 	return knex("banners")
 		.where("banners.category", "general")
+		.andWhere("banners.active", true)
 		.then(res => successResponse(res, "Success Get Banners", 200))
 		.catch(err => errorResponse(err, 500))
 }
@@ -94,6 +103,7 @@ exports.getBanners = () => {
 exports.getBannersBestSeller = () => {
 	return knex("banners")
 		.where("banners.category", "best-seller")
+		.andWhere("banners.active", true)
 		.then(res => successResponse(res, "Success Get Banners Best Seller", 200))
 		.catch(err => errorResponse(err, 500))
 }
