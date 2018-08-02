@@ -3,6 +3,7 @@ const Promise = require("bluebird")
 const { authenticationAdmin } = require("../../middleware/authentication")
 const router = express.Router()
 const {
+	getBannersAdmin,
 	getBanners,
 	getBannersBestSeller,
 	getProductBanners,
