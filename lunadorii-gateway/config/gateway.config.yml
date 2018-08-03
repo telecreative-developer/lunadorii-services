@@ -52,6 +52,8 @@ apiEndpoints:
   banners:
     host: ec2-52-77-224-133.ap-southeast-1.compute.amazonaws.com
     paths:
+      - '/api/v1/banner'
+      - '/api/v1/banner/*'
       - '/api/v1/banners'
       - '/api/v1/banners/*'
       - '/api/v1/product-banners'
