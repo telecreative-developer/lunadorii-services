@@ -126,14 +126,6 @@ exports.getBanners = () => {
 		.catch(err => errorResponse("Internal Server Error", 500))
 }
 
-exports.activeBanner = banner_id => {
-	return knex("banners")
-		.where("banner_id", banner_id)
-		.update({ active: true })
-		.then(res => successResponse(res, "Success Active Banner", 201))
-		.catch(err => errorResponse("Internal Server Error", 500))
-}
-
 exports.updateBanner = (banner_id, data) => {
 	return knex("banners")
 		.where("banner_id", banner_id)
@@ -147,6 +139,14 @@ exports.removeBanner = banner_id => {
 		.where("banner_id", banner_id)
 		.del()
 		.then(res => successResponse(res, "Success Delete Banner", 201))
+		.catch(err => errorResponse("Internal Server Error", 500))
+}
+
+exports.activeBanner = banner_id => {
+	return knex("banners")
+		.where("banner_id", banner_id)
+		.update({ active: true })
+		.then(res => successResponse(res, "Success Active Banner", 201))
 		.catch(err => errorResponse("Internal Server Error", 500))
 }
 
