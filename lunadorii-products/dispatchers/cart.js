@@ -11,6 +11,7 @@ const {
 } = require("../responsers")
 const momentTimezone = require("moment-timezone")
 const cartDefinition = require("../definitions/cart")
+const envDefaultAvatar = process.env.AWS_IMAGE_DEFAULT_URL
 
 const updateQtyAsync = (item, res) => {
 	const now = momentTimezone()

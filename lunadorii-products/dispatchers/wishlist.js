@@ -10,6 +10,7 @@ const {
 	errorResponse
 } = require("../responsers")
 const wishlistDefinition = require("../definitions/wishlist")
+const envDefaultAvatar = process.env.AWS_IMAGE_DEFAULT_URL
 
 const validationAvatar = data => {
 	return data.map(res => ({

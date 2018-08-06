@@ -20,6 +20,7 @@ const {
 	topBrandsDefinition,
 	topBrandsWithProductsDefinition
 } = require("../definitions/brands")
+const envDefaultAvatar = process.env.AWS_IMAGE_DEFAULT_URL
 
 function removeDuplicates(arr, key) {
 	if (!(arr instanceof Array) || (key && typeof key !== "string")) {
