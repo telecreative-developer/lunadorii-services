@@ -16,6 +16,8 @@ const {
 	productSubcategoriesDefinition,
 	productsBestSellerDefinition
 } = require("../definitions/products")
+const momentTimezone = require("moment-timezone")
+const createSlug = require("sluger")
 const {
 	topBrandsDefinition,
 	topBrandsWithProductsDefinition
@@ -608,10 +610,22 @@ exports.addProduct = data => {
 		.tz("Asia/Jakarta")
 		.format()
 
+	const insertThumbnails = (item, product_id) => {
+		return knex("product_thumbnails")
+			.insert(
+				item.thumbnails.map(d => ({
+					thumbnail_url: d.thumbnail_url,
+					product_id: product_id
+				}))
+			)
+			.then(res => res)
+			.catch(err => errorResponse("Internal Server Error", 500))
+	}
+
 	return knex("products")
 		.insert({
 			product: data.product,
-			product_slug: data.product_slug,
+			product_slug: createSlug(data.product),
 			description: data.description,
 			detail: data.detail,
 			to_use: data.to_use,
@@ -624,7 +638,9 @@ exports.addProduct = data => {
 			created_at: now,
 			updated_at: now
 		})
-		.then(() => successResponseWithoutData("Success Update Product", 200))
+		.returning("product_id")
+		.then(product_id => insertThumbnails(data, parseInt(product_id)))
+		.then(() => successResponseWithoutData("Success Add Product", 201))
 		.catch(err => errorResponse(err, 500))
 }
 
@@ -636,14 +652,28 @@ exports.updateProduct = (product_id, data) => {
 	return knex("products")
 		.where("product_id", product_id)
 		.update({ ...data, updated_at: now })
-		.then(() => successResponseWithoutData("Success Update Product", 200))
+		.then(() => successResponseWithoutData("Success Update Product", 201))
 		.catch(err => errorResponse(err, 500))
 }
 
 exports.deleteProduct = product_id => {
-	return knex("products")
-		.where("product_id", product_id)
-		.del()
-		.then(() => successResponseWithoutData("Success Delete Product", 200))
-		.catch(err => errorResponse(err, 500))
+	const deleteThumbnailsAsync = product_id => {
+		return knex("product_thumbnails")
+			.where("product_id", product_id)
+			.del()
+			.then(() => successResponseWithoutData("Success Delete Product", 200))
+			.catch(err => errorResponse("Internal Server Error", 500))
+	}
+
+	const deleteProductAsync = product_id => {
+		return knex("products")
+			.where("product_id", product_id)
+			.del()
+			.then(() => successResponseWithoutData("Success Delete Product", 200))
+			.catch(err => errorResponse("Internal Server Error", 500))
+	}
+
+	return deleteThumbnailsAsync(product_id)
+		.then(res => deleteProductAsync(product_id))
+		.catch(err => err)
 }

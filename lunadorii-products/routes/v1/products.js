@@ -24,6 +24,7 @@ const {
 	getProductCategoriesWithSubcategories,
 	getProductSubcategories,
 	getProductSubcategoriesWithProducts,
+	addProduct,
 	updateProduct,
 	deleteProduct,
 	getAllNewArrivalsProductsLogged,
@@ -147,15 +148,22 @@ router.get("/products/brand/:product_brand_id", (req, res) => {
 		.catch(err => console.log("Error on GET_PRODUCTS_WITH_BRAND", err))
 })
 
+// Add product
+router.post("/product", authenticationAdmin, (req, res) => {
+	Promise.try(() => addProduct(req.body))
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log("Error on ADD_PRODUCT", err))
+})
+
 // Update Product
-router.put("/product/:product_id", authenticationUser, (req, res) => {
+router.put("/product/:product_id", authenticationAdmin, (req, res) => {
 	Promise.try(() => updateProduct(req.params.product_id, req.body))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on UPDATE_PRODUCT", err))
 })
 
 // Delete Product
-router.delete("/product/:product_id", authenticationUser, (req, res) => {
+router.delete("/product/:product_id", authenticationAdmin, (req, res) => {
 	Promise.try(() => deleteProduct(req.params.product_id))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on DELETE_PRODUCT", err))
