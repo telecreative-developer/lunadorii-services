@@ -4,27 +4,69 @@ const environment = process.env.NODE_ENV || "development"
 const configuration = require("../knexfile")[environment]
 const knex = require("knex")(configuration)
 const NestHydrationJS = require("nesthydrationjs")()
-const { successResponse, errorResponse } = require("../responsers")
+const {
+	successResponseWithData,
+	successResponseWithoutData,
+	errorResponse
+} = require("../responsers")
+const momentTimezone = require("moment-timezone")
 const cartDefinition = require("../definitions/cart")
+
+const updateQtyAsync = (item, res) => {
+	const now = momentTimezone()
+		.tz("Asia/Jakarta")
+		.format()
+
+	return knex("cart")
+		.where("id", item.id)
+		.andWhere("product_id", item.product_id)
+		.update({ qty: res[0].qty + item.qty, updated_at: now })
+		.then(() => successResponseWithoutData("Success Add Cart", 201))
+		.catch(err => errorResponse("Internal Server Error", 500))
+}
+
+const insertCart = item => {
+	const now = momentTimezone()
+		.tz("Asia/Jakarta")
+		.format()
+
+	return knex("cart")
+		.insert({
+			product_id: item.product_id,
+			id: item.id,
+			qty: item.qty,
+			created_at: now,
+			updated_at: now
+		})
+		.then(() => successResponse("Success Add Cart", 201))
+		.catch(err => errorResponse("Internal Server Error", 500))
+}
+
+const validationAvatar = data => {
+	return data.map(res => ({
+		...res,
+		avatar_url: res.avatar_url ? res.avatar_url : envDefaultAvatar
+	}))
+}
+
+const subtotalAndProductRate = data => {
+	return data.map(res => ({
+		...res,
+		subtotal:
+			res.price * res.qty -
+			res.price * res.qty * (res.discount_percentage / 100),
+		product_rate: res.reviews.length
+			? res.reviews.map(r => r.review_rate).reduce((a, b) => a + b) /
+			  res.reviews.length
+			: 0
+	}))
+}
 
 exports.addCart = data => {
 	return knex("cart")
 		.where("id", data.id)
 		.andWhere("product_id", data.product_id)
-		.limit(1)
-		.then(response => {
-			if (response.length) {
-				return knex("cart")
-					.where("id", data.id)
-					.andWhere("product_id", data.product_id)
-					.update({ qty: response[0].qty + data.qty })
-					.then(response => successResponse(null, "Success Add Cart", 201))
-			} else {
-				return knex("cart")
-					.insert(data)
-					.then(response => successResponse(null, "Success Add Cart", 201))
-			}
-		})
+		.then(res => (res.length ? updateQtyAsync(data, res) : insertCart(data)))
 		.catch(err => errorResponse(err, 500))
 }
 
@@ -69,64 +111,52 @@ exports.getCart = id => {
 			"product_reviews.created_at as product_reviews_created_at",
 			"product_reviews.updated_at as product_reviews_updated_at"
 		)
-		.then(response =>
-			response.map(res => ({
-				...res,
-				product_reviews_avatar_url: res.product_reviews_avatar_url
-					? process.env.AWS_IMAGE_URL + res.product_reviews_avatar_url
-					: process.env.AWS_IMAGE_DEFAULT_URL
-			}))
-		)
-		.then(response => NestHydrationJS.nest(response, cartDefinition))
-		.then(response =>
-			response.map(res => ({
-				...res,
-				subtotal:
-					res.price * res.qty -
-					res.price * res.qty * (res.discount_percentage / 100),
-				product_rate: res.reviews.length
-					? res.reviews.map(r => r.review_rate).reduce((a, b) => a + b) /
-					  res.reviews.length
-					: 0
-			}))
-		)
-		.then(response => successResponse(response, "Success Get Cart", 200))
+		.then(res => validationAvatar(res))
+		.then(res => NestHydrationJS.nest(res, cartDefinition))
+		.then(res => subtotalAndProductRate(res))
+		.then(res => successResponse(res, "Success Get Cart", 200))
 }
 
 exports.updateCartQty = data => {
 	if (data.cart_id) {
 		return knex("cart")
-			.where("cart_id", cart_id)
+			.where("cart_id", data.cart_id)
 			.update({
-				qty: data.qty
+				qty: data.qty,
+				updated_at: now
 			})
-			.then(response => successResponse(null, "Success Update Qty Cart", 200))
+			.then(() => successResponseWithoutData("Success Update Qty Cart", 200))
 			.catch(err => errorResponse(err, 500))
 	} else {
 		return knex("cart")
 			.where("product_id", data.product_id)
 			.andWhere("id", data.id)
 			.update({
-				qty: data.qty
+				qty: data.qty,
+				updated_at: now
 			})
-			.then(response => successResponse(null, "Success Update Qty Cart", 200))
+			.then(() => successResponseWithoutData("Success Update Qty Cart", 200))
 			.catch(err => errorResponse(err, 500))
 	}
 }
 
 exports.removeCart = data => {
+	const now = momentTimezone()
+		.tz("Asia/Jakarta")
+		.format()
+
 	if (data.cart_id) {
 		return knex("cart")
 			.where("cart_id", data.cart_id)
 			.del()
-			.then(response => successResponse(null, "Success Remove Cart", 200))
+			.then(() => successResponseWithoutData("Success Remove Cart", 200))
 			.catch(err => errorResponse(err, 500))
 	} else {
 		return knex("cart")
 			.where("product_id", data.product_id)
 			.andWhere("id", data.id)
 			.del()
-			.then(response => successResponse(null, "Success Remove Cart", 200))
+			.then(() => successResponseWithoutData("Success Remove Cart", 200))
 			.catch(err => errorResponse(err, 500))
 	}
 }
