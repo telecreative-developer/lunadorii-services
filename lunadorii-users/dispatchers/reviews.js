@@ -4,30 +4,51 @@ const bcrypt = require("bcrypt")
 const environment = process.env.NODE_ENV || "development"
 const configuration = require("../knexfile")[environment]
 const knex = require("knex")(configuration)
+const momentTimezone = require("moment-timezone")
 const NestHydrationJS = require("nesthydrationjs")()
 const moment = require("moment-timezone")
-const { successResponse, errorResponse } = require("../responsers")
+const {
+	successResponseWithData,
+	successResponseWithoutData,
+	errorResponse
+} = require("../responsers")
 const reviewsDefinition = require("../definitions/reviews")
 
 exports.addUserReview = data => {
-	const checkFieldAsync = () => {
+	const now = momentTimezone()
+		.tz("Asia/Jakarta")
+		.format()
+
+	const checkFieldAsync = item => {
 		return new Promise((resolve, reject) => {
-			data.rate && data.comment && data.product_id && data.id
-				? resolve(data)
+			item.rate &&
+			item.comment &&
+			item.product_id &&
+			item.order_product_id &&
+			item.id
+				? resolve(item)
 				: reject(errorResponse("Fields cannot be null", 400))
 		})
 	}
 
-	const knexResponse = item => {
+	const insertUser = item => {
 		return knex("product_reviews")
-			.insert(item)
+			.insert({
+				rate: item.rate,
+				comment: item.comment,
+				product_id: item.product_id,
+				order_product_id: item.order_product_id,
+				id: item.id,
+				created_at: now,
+				updated_at: now
+			})
 			.then(res => res)
 			.catch(err => errorResponse("Internal Server Error", 500))
 	}
 
-	return checkFieldAsync()
-		.then(() => knexResponse(data))
-		.then(res => successResponse(res, "Success Add User Review", 201))
+	return checkFieldAsync(data)
+		.then(() => insertUser(data))
+		.then(() => successResponseWithoutData("Success Add User Review", 201))
 		.catch(err => err)
 }
 
@@ -51,21 +72,22 @@ exports.getUserReviews = id => {
 			"product_reviews.updated_at as product_review_updated_at"
 		)
 		.then(res => NestHydrationJS.nest(res, reviewsDefinition))
-		.then(res => successResponse(res, "Success Get User Reviews", 200))
+		.then(res => successResponseWithData(res, "Success Get User Reviews", 200))
 		.catch(err => errorResponse("Internal Server Error", 500))
 }
 
 exports.updateUserReview = (product_review_id, data) => {
+	const now = momentTimezone()
+		.tz("Asia/Jakarta")
+		.format()
 	return knex("product_reviews")
 		.where("product_review_id", product_review_id)
 		.update({
 			rate: data.rate,
 			comment: data.comment,
-			updated_at: moment()
-				.tz("Asia/Jakarta")
-				.format()
+			updated_at: now
 		})
-		.then(res => successResponse(res, "Success Update User Review", 201))
+		.then(() => successResponseWithoutData("Success Update User Review", 201))
 		.catch(err => errorResponse("Internal Server Error", 500))
 }
 
@@ -73,6 +95,6 @@ exports.deleteUserReview = product_review_id => {
 	return knex("product_reviews")
 		.where("product_review_id", product_review_id)
 		.del()
-		.then(res => successResponse(res, "Success Delete User Review", 200))
+		.then(() => successResponseWithoutData("Success Delete User Review", 200))
 		.catch(err => errorResponse(err, 500))
 }

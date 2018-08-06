@@ -4,11 +4,20 @@ const bcrypt = require("bcrypt")
 const environment = process.env.NODE_ENV || "development"
 const configuration = require("../knexfile")[environment]
 const knex = require("knex")(configuration)
+const momentTimezone = require("moment-timezone")
 const NestHydrationJS = require("nesthydrationjs")()
 const addressesDefinition = require("../definitions/addresses")
-const { successResponse, errorResponse } = require("../responsers")
+const {
+	successResponseWithData,
+	successResponseWithoutData,
+	errorResponse
+} = require("../responsers")
 
 exports.addUserAddress = data => {
+	const now = momentTimezone()
+		.tz("Asia/Jakarta")
+		.format()
+
 	const checkFieldAsync = () => {
 		return new Promise((resolve, reject) => {
 			data.recepient &&
@@ -23,13 +32,6 @@ exports.addUserAddress = data => {
 		})
 	}
 
-	const insertUserAddressAsync = res => {
-		return knex("user_addresses")
-			.insert({ ...data, address_default: res.length ? false : true })
-			.then(res => res)
-			.catch(err => errorResponse("Internal Server Error", 500))
-	}
-
 	const knexResponse = () => {
 		return knex("user_addresses")
 			.where("id", data.id)
@@ -37,10 +39,22 @@ exports.addUserAddress = data => {
 			.catch(err => errorResponse("Internal Server Error", 500))
 	}
 
+	const insertUserAddressAsync = res => {
+		return knex("user_addresses")
+			.insert({
+				...data,
+				address_default: res.length ? false : true,
+				created_at: now,
+				updated_at: now
+			})
+			.then(res => res)
+			.catch(err => errorResponse("Internal Server Error", 500))
+	}
+
 	return checkFieldAsync()
 		.then(() => knexResponse())
 		.then(res => insertUserAddressAsync(res))
-		.then(res => successResponse(res, "Success Add User Address", 201))
+		.then(() => successResponseWithoutData("Success Add User Address", 201))
 		.catch(err => err)
 }
 
@@ -54,11 +68,16 @@ exports.getUserAddresses = id => {
 		)
 		.innerJoin("cities", "user_addresses.city_id", "cities.city_id")
 		.then(res => NestHydrationJS.nest(res, addressesDefinition))
-		.then(res => successResponse(res, "Success Get User Addresses", 200))
+		.then(res =>
+			successResponseWithData(res, "Success Get User Addresses", 200)
+		)
 		.catch(err => errorResponse("Internal Server Error", 500))
 }
 
 exports.updateUserAddress = (user_address_id, data) => {
+	const now = momentTimezone()
+		.tz("Asia/Jakarta")
+		.format()
 	return knex("user_addresses")
 		.where("user_address_id", user_address_id)
 		.update({
@@ -68,17 +87,22 @@ exports.updateUserAddress = (user_address_id, data) => {
 			detail_address: data.detail_address,
 			province_id: data.province_id,
 			city_id: data.city_id,
-			id: data.id
+			id: data.id,
+			updated_at: now
 		})
-		.then(res => successResponse(res, "Success Update User Address", 201))
+		.then(() => successResponseWithoutData("Success Update User Address", 201))
 		.catch(err => errorResponse(err, 500))
 }
 
 exports.setDefaultUserAddress = (user_address_id, id) => {
+	const now = momentTimezone()
+		.tz("Asia/Jakarta")
+		.format()
+
 	const updateUserAddressAsync = () => {
 		return knex("user_addresses")
 			.where("user_address_id", user_address_id)
-			.update({ address_default: true })
+			.update({ address_default: true, updated_at: now })
 			.then(res => res)
 			.catch(err => errorResponse("Internal Server Error", 500))
 	}
@@ -86,14 +110,14 @@ exports.setDefaultUserAddress = (user_address_id, id) => {
 	const changeAddressToFalseAsync = () => {
 		return knex("user_addresses")
 			.where("id", id)
-			.update({ address_default: false })
+			.update({ address_default: false, updated_at: now })
 			.then(res => res)
 			.catch(err => errorResponse("Internal Server Error", 500))
 	}
 
 	return changeAddressToFalseAsync()
 		.then(() => updateUserAddressAsync())
-		.then(() => successResponse(null, "Success Set Default Address", 201))
+		.then(() => successResponseWithoutData("Success Set Default Address", 201))
 		.catch(err => err)
 }
 
@@ -101,6 +125,6 @@ exports.deleteUserAddress = user_address_id => {
 	return knex("user_addresses")
 		.where("user_address_id", user_address_id)
 		.del()
-		.then(res => successResponse(res, "Success Delete User Address", 200))
+		.then(() => successResponseWithoutData("Success Delete User Address", 200))
 		.catch(err => errorResponse("Internal Server Error", 500))
 }

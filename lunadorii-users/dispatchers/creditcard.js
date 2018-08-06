@@ -5,8 +5,13 @@ const bcrypt = require("bcrypt")
 const environment = process.env.NODE_ENV || "development"
 const configuration = require("../knexfile")[environment]
 const knex = require("knex")(configuration)
+const momentTimezone = require("moment-timezone")
 const NestHydrationJS = require("nesthydrationjs")()
-const { successResponse, errorResponse } = require("../responsers")
+const {
+	successResponseWithData,
+	successResponseWithoutData,
+	errorResponse
+} = require("../responsers")
 
 const checkUserLengthAsync = data => {
 	return new Promise((resolve, reject) => {
@@ -30,6 +35,10 @@ const comparePasswordAsync = (data, response) => {
 }
 
 exports.addUserCreditCard = data => {
+	const now = momentTimezone()
+		.tz("Asia/Jakarta")
+		.format()
+
 	const checkFieldAsync = () => {
 		return new Promise((resolve, reject) => {
 			return data.card_number &&
@@ -69,7 +78,9 @@ exports.addUserCreditCard = data => {
 				card_name: data.card_name,
 				postal_code: data.postal_code,
 				id: data.id,
-				card_default: res.length ? false : true
+				card_default: res.length ? false : true,
+				created_at: now,
+				updated_at: now
 			})
 			.then(() => data)
 			.catch(err => errorResponse("Internal Server Error", 500))
@@ -80,18 +91,26 @@ exports.addUserCreditCard = data => {
 		.then(res => checkUserLengthAsync(res))
 		.then(res => comparePasswordAsync(data, res))
 		.then(res => addUserCreditCardAsync(res))
-		.then(res => successResponse(res, "Success Update User Credit Card", 201))
+		.then(() =>
+			successResponseWithoutData("Success Update User Credit Card", 201)
+		)
 		.catch(err => err)
 }
 
 exports.getUserCreditCard = id => {
 	return knex("user_creditcard")
 		.where("id", id)
-		.then(res => successResponse(res, "Success Get User Credit Card", 200))
+		.then(res =>
+			successResponseWithData(res, "Success Get User Credit Card", 200)
+		)
 		.catch(err => errorResponse(err, 500))
 }
 
 exports.updateUserCreditCard = (user_creditcard_id, data) => {
+	const now = momentTimezone()
+		.tz("Asia/Jakarta")
+		.format()
+
 	const checkFieldAsync = () => {
 		return new Promise((resolve, reject) => {
 			return data.password
@@ -109,7 +128,8 @@ exports.updateUserCreditCard = (user_creditcard_id, data) => {
 				yyyy: data.yyyy,
 				country: data.country,
 				card_name: data.card_name,
-				postal_code: data.postal_code
+				postal_code: data.postal_code,
+				updated_at: now
 			})
 			.then(res => res)
 			.catch(err => errorResponse("Internal Server Error", 500))
@@ -127,11 +147,17 @@ exports.updateUserCreditCard = (user_creditcard_id, data) => {
 		.then(res => checkUserLengthAsync(res))
 		.then(res => comparePasswordAsync(data, res))
 		.then(res => updateUserCreditCardAsync())
-		.then(res => successResponse(res, "Success Update User Credit Card", 201))
+		.then(() =>
+			successResponseWithoutData("Success Update User Credit Card", 201)
+		)
 		.catch(err => err)
 }
 
 exports.setDefaultUserCreditCard = (user_creditcard_id, id) => {
+	const now = momentTimezone()
+		.tz("Asia/Jakarta")
+		.format()
+
 	const checkFieldAsync = () => {
 		return new Promise((resolve, reject) => {
 			return id ? resolve(id) : reject(errorResponse("Id cannot be null", 400))
@@ -141,7 +167,7 @@ exports.setDefaultUserCreditCard = (user_creditcard_id, id) => {
 	const setDefaultUserCreditCardAsync = () => {
 		return knex("user_creditcard")
 			.where("user_creditcard_id", user_creditcard_id)
-			.update({ card_default: true })
+			.update({ card_default: true, updated_at: now })
 			.then(() => parseInt(user_creditcard_id))
 			.catch(err => errorResponse("Internal Server Error", 500))
 	}
@@ -149,7 +175,7 @@ exports.setDefaultUserCreditCard = (user_creditcard_id, id) => {
 	const knexResponse = () => {
 		return knex("user_creditcard")
 			.where("id", id)
-			.update({ card_default: false })
+			.update({ card_default: false, updated_at: now })
 			.then(res => res)
 			.catch(err => errorResponse("Internal Server Error", 500))
 	}
@@ -157,8 +183,8 @@ exports.setDefaultUserCreditCard = (user_creditcard_id, id) => {
 	return checkFieldAsync()
 		.then(() => knexResponse())
 		.then(() => setDefaultUserCreditCardAsync())
-		.then(res =>
-			successResponse(res, "Success Set Default User Credit Card", 201)
+		.then(() =>
+			successResponseWithoutData("Success Set Default User Credit Card", 201)
 		)
 		.catch(err => err)
 }
@@ -167,6 +193,8 @@ exports.deleteUserCreditCard = user_creditcard_id => {
 	return knex("user_creditcard")
 		.where("user_creditcard_id", user_creditcard_id)
 		.del()
-		.then(() => successResponse(null, "Success Delete User Credit Card", 200))
+		.then(() =>
+			successResponseWithoutData("Success Delete User Credit Card", 200)
+		)
 		.catch(err => errorResponse(err, 500))
 }

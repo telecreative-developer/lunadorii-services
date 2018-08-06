@@ -7,7 +7,11 @@ const configuration = require("../knexfile")[environment]
 const knex = require("knex")(configuration)
 const NestHydrationJS = require("nesthydrationjs")()
 const moment = require("moment-timezone")
-const { successResponse, errorResponse } = require("../responsers")
+const {
+	successResponseWithData,
+	successResponseWithoutData,
+	errorResponse
+} = require("../responsers")
 const reviewsDefinition = require("../definitions/reviews")
 const banksDefinition = require("../definitions/banks")
 const userDefinition = require("../definitions/users")
@@ -16,6 +20,7 @@ const nodemailer = require("nodemailer")
 const mg = require("nodemailer-mailgun-transport")
 const { forgotPasswordJwtObject } = require("../objects")
 const handlebars = require("handlebars")
+const momentTimezone = require("moment-timezone")
 const fs = require("fs")
 const jwt = require("jsonwebtoken")
 const fsReadFileAsync = Promise.promisify(fs.readFile)
@@ -62,8 +67,7 @@ const sendEmailVerification = (id, name, email, token) => {
 		.then(hbs =>
 			nodemailerMailgunAsync(email, hbs, {
 				userName: name,
-				userToken:
-					`http://54.169.224.248:3000/email-verification?token=` + token
+				userToken: `${process.env.WEB_CLIENT}/email-verification?token=` + token
 			})
 		)
 		.then(res => id)
@@ -109,6 +113,10 @@ const checkUserAsync = data => {
 }
 
 const checkEmailAfterUpdateAsync = (id, data) => {
+	const now = momentTimezone()
+		.tz("Asia/Jakarta")
+		.format()
+
 	return new Promise((resolve, reject) => {
 		if (data.length) {
 			data[0].id === id
@@ -118,7 +126,8 @@ const checkEmailAfterUpdateAsync = (id, data) => {
 			return knex("users")
 				.where("id", id)
 				.update({
-					email: data.email
+					email: data.email,
+					updated_at: now
 				})
 				.then(() => resolve(parseInt(id)))
 				.catch(err => reject(errorResponse("Internal Server Error", 500)))
@@ -153,46 +162,62 @@ exports.getUsers = () => {
 	return knex("users")
 		.then(res => NestHydrationJS.nest(res, userDefinition))
 		.then(res => validationAvatar(res))
-		.then(res => successResponse(res, "Success Get Users", 200))
+		.then(res => successResponseWithData(res, "Success Get Users", 200))
 		.catch(err => errorResponse(err, 500))
 }
 
-exports.getUserById = id => {
+exports.getSingleUser = id => {
 	return knex("users")
 		.where("id", id)
 		.then(res => NestHydrationJS.nest(res, userDefinition))
 		.then(res => validationAvatar(res))
-		.then(res => successResponse(res, "Success Get User", 200))
+		.then(res => successResponseWithData(res, "Success Get User", 200))
 		.catch(err => errorResponse(err, 500))
 }
 
 exports.updateUser = (id, data) => {
+	const now = momentTimezone()
+		.tz("Asia/Jakarta")
+		.format()
+
 	return knex("users")
 		.where("id", id)
 		.update({
 			first_name: data.first_name,
 			last_name: data.last_name,
 			bod: data.bod,
-			updated_at: moment()
-				.tz("Asia/Jakarta")
-				.format()
+			updated_at: now
 		})
-		.then(() => successResponse(parseInt(id), "Success Update User", 201))
+		.then(() => successResponseWithoutData("Success Update User", 201))
 		.catch(err => errorResponse(err, 500))
 }
 
 exports.updateAvatar = (id, avatar_url) => {
+	const now = momentTimezone()
+		.tz("Asia/Jakarta")
+		.format()
+
 	return knex("users")
 		.where("id", id)
-		.update({ avatar_url })
-		.then(res => successResponse(res, "Success Update User Avatar", 201))
+		.update({ avatar_url, updated_at: now })
+		.then(() => successResponseWithoutData("Success Update User Avatar", 201))
 		.catch(err => errorResponse(err, 500))
 }
 
 exports.registerUser = data => {
+	const now = momentTimezone()
+		.tz("Asia/Jakarta")
+		.format()
+
 	const registerUserAsync = (item, hashPassword) => {
 		return knex("users")
-			.insert({ ...data, password: hashPassword, verified: false })
+			.insert({
+				...data,
+				password: hashPassword,
+				verified: false,
+				created_at: now,
+				updated_at: now
+			})
 			.returning("id")
 			.then(id => parseInt(id))
 			.catch(err => errorResponse("Registration failed", 500))
@@ -228,7 +253,7 @@ exports.registerUser = data => {
 			// 		res.token
 			// 	)
 			// })
-			.then(id => successResponse(id, "Register Success", 201))
+			.then(id => successResponseWithData(id, "Register Success", 201))
 			.catch(err => console.log(err))
 	)
 }
@@ -250,11 +275,15 @@ exports.checkEmail = email => {
 	return checkFieldAsync(email)
 		.then(res => knexResponse(res))
 		.then(res => checkEmailAsync(res))
-		.then(res => successResponse(null, "Email available", 200))
+		.then(() => successResponseWithoutData("Email available", 200))
 		.catch(err => err)
 }
 
 exports.updateEmail = (id, email) => {
+	const now = momentTimezone()
+		.tz("Asia/Jakarta")
+		.format()
+
 	const checkFieldAsync = email => {
 		return new Promise((resolve, reject) => {
 			email
@@ -273,7 +302,7 @@ exports.updateEmail = (id, email) => {
 	return checkFieldAsync(email)
 		.then(email => knexResponse(email))
 		.then(res => checkEmailAfterUpdateAsync(id, res))
-		.then(id => successResponse(id, "Success Update User Email", 201))
+		.then(() => successResponseWithoutData("Success Update User Email", 201))
 		.catch(err => err)
 }
 
@@ -287,9 +316,13 @@ exports.updatePassword = (id, data) => {
 	}
 
 	const updatePasswordAsync = hash => {
+		const now = momentTimezone()
+			.tz("Asia/Jakarta")
+			.format()
+
 		return knex("users")
 			.where("id", id)
-			.update({ password: hash })
+			.update({ password: hash, updated_at: now })
 			.then(() => id)
 			.then(err => errorResponse("Internal Server Error", 500))
 	}
@@ -307,6 +340,6 @@ exports.updatePassword = (id, data) => {
 		.then(res => comparePasswordAsync(data, res))
 		.then(res => generatePasswordAsync({ password: data.new_password }))
 		.then(hash => updatePasswordAsync(hash))
-		.then(res => successResponse(null, "Success Update Password", 201))
+		.then(() => successResponseWithoutData("Success Update Password", 201))
 		.catch(err => err)
 }

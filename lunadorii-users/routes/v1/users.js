@@ -9,7 +9,7 @@ const {
 } = require("../../middleware/authentication")
 const {
 	getUsers,
-	getUserById,
+	getSingleUser,
 	registerUser,
 	checkEmail,
 	updateUser,
@@ -52,9 +52,9 @@ router.get("/users", authenticationAdmin, (req, res) => {
 		.catch(err => console.log("Error on GET_ALL_USERS", err))
 })
 
-// Get User with Id
+// Get Single User
 router.get("/user/:id", authenticationUser, (req, res) => {
-	Promise.try(() => getUserById(req.params.id))
+	Promise.try(() => getSingleUser(req.params.id))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on GET_USER_BY_ID", err))
 })

@@ -5,8 +5,13 @@ const bcrypt = require("bcrypt")
 const environment = process.env.NODE_ENV || "development"
 const configuration = require("../knexfile")[environment]
 const knex = require("knex")(configuration)
+const momentTimezone = require("moment-timezone")
 const NestHydrationJS = require("nesthydrationjs")()
-const { successResponse, errorResponse } = require("../responsers")
+const {
+	successResponseWithData,
+	successResponseWithoutData,
+	errorResponse
+} = require("../responsers")
 const banksDefinition = require("../definitions/banks")
 
 const checkUserLengthAsync = data => {
@@ -31,6 +36,10 @@ const comparePasswordAsync = (data, response) => {
 }
 
 exports.addUserBank = data => {
+	const now = momentTimezone()
+		.tz("Asia/Jakarta")
+		.format()
+
 	const checkFieldAsync = () => {
 		return new Promise((resolve, reject) => {
 			return data.account_number &&
@@ -58,7 +67,9 @@ exports.addUserBank = data => {
 				account_default: data.account_default,
 				bank_id: data.bank_id,
 				id: data.id,
-				account_default: res.length ? false : true
+				account_default: res.length ? false : true,
+				created_at: now,
+				updated_at: now
 			})
 			.then(() => data)
 			.catch(err => errorResponse("Internal Server Error", 500))
@@ -76,7 +87,7 @@ exports.addUserBank = data => {
 		.then(res => searchUserBankAsync(res))
 		.then(res => comparePasswordAsync(data, res))
 		.then(res => addUserBankAsync(res))
-		.then(res => successResponse(null, "Success Add User Bank", 201))
+		.then(() => successResponseWithoutData("Success Add User Bank", 201))
 		.catch(err => err)
 }
 
@@ -85,11 +96,15 @@ exports.getUserBanks = id => {
 		.where("id", id)
 		.innerJoin("banks", "user_banks.bank_id", "banks.bank_id")
 		.then(res => NestHydrationJS.nest(res, banksDefinition))
-		.then(res => successResponse(res, "Success Get User Banks", 200))
+		.then(res => successResponseWithData(res, "Success Get User Banks", 200))
 		.catch(err => errorResponse(err, 500))
 }
 
 exports.updateUserBank = (user_bank_id, data) => {
+	const now = momentTimezone()
+		.tz("Asia/Jakarta")
+		.format()
+
 	const checkFieldAsync = () => {
 		return new Promise((resolve, reject) => {
 			return data.password
@@ -105,7 +120,8 @@ exports.updateUserBank = (user_bank_id, data) => {
 				account_number: data.account_number,
 				account_name: data.account_name,
 				account_default: data.account_default,
-				bank_id: data.bank_id
+				bank_id: data.bank_id,
+				updated_at: now
 			})
 			.then(res => res)
 			.catch(err => errorResponse("Internal Server Error", 500))
@@ -123,11 +139,15 @@ exports.updateUserBank = (user_bank_id, data) => {
 		.then(res => checkUserLengthAsync(res))
 		.then(res => comparePasswordAsync(data, res))
 		.then(res => updateUserBankAsync())
-		.then(res => successResponse(res, "Success Update User Bank", 201))
+		.then(() => successResponseWithoutData("Success Update User Bank", 201))
 		.catch(err => err)
 }
 
 exports.setDefaultUserBank = (user_bank_id, id) => {
+	const now = momentTimezone()
+		.tz("Asia/Jakarta")
+		.format()
+
 	const checkFieldAsync = () => {
 		return new Promise((resolve, reject) => {
 			return id ? resolve(id) : reject(errorResponse("Id cannot be null", 400))
@@ -137,7 +157,10 @@ exports.setDefaultUserBank = (user_bank_id, id) => {
 	const setDefaultUserBankAsync = () => {
 		return knex("user_banks")
 			.where("user_bank_id", user_bank_id)
-			.update({ account_default: true })
+			.update({
+				account_default: true,
+				updated_at: now
+			})
 			.then(() => parseInt(user_bank_id))
 			.catch(err => errorResponse("Internal Server Error", 500))
 	}
@@ -145,7 +168,10 @@ exports.setDefaultUserBank = (user_bank_id, id) => {
 	const knexResponse = () => {
 		return knex("user_banks")
 			.where("id", id)
-			.update({ account_default: false })
+			.update({
+				account_default: false,
+				updated_at: now
+			})
 			.then(res => res)
 			.catch(err => errorResponse("Internal Server Error", 500))
 	}
@@ -153,7 +179,9 @@ exports.setDefaultUserBank = (user_bank_id, id) => {
 	return checkFieldAsync()
 		.then(() => knexResponse())
 		.then(() => setDefaultUserBankAsync())
-		.then(res => successResponse(res, "Success Set Default User Bank", 201))
+		.then(() =>
+			successResponseWithoutData("Success Set Default User Bank", 201)
+		)
 		.catch(err => err)
 }
 
@@ -161,6 +189,6 @@ exports.deleteUserBank = user_bank_id => {
 	return knex("user_banks")
 		.where("user_bank_id", user_bank_id)
 		.del()
-		.then(() => successResponse(null, "Success Delete User Bank", 200))
+		.then(() => successResponseWithoutData("Success Delete User Bank", 200))
 		.catch(err => errorResponse(err, 500))
 }
