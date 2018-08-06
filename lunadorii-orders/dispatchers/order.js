@@ -4,6 +4,7 @@ const environment = process.env.NODE_ENV || "development"
 const configuration = require("../knexfile")[environment]
 const knex = require("knex")(configuration)
 const NestHydrationJS = require("nesthydrationjs")()
+const momentTimezone = require("moment-timezone")
 const { successResponse, errorResponse } = require("../responsers")
 const {
 	historyDefinition,
@@ -159,6 +160,9 @@ const midtransStatus = item => {
 }
 
 const knexResponseInsertOrder = (data, { billingCode, total }) => {
+	const now = momentTimezone()
+		.tz("Asia/Jakarta")
+		.format()
 	return knex("orders")
 		.insert({
 			billing_code: billingCode,
@@ -175,7 +179,9 @@ const knexResponseInsertOrder = (data, { billingCode, total }) => {
 			address: data.address,
 			city_id: data.city_id,
 			province_id: data.province_id,
-			id: data.id
+			id: data.id,
+			created_at: now,
+			updated_at: now
 		})
 		.returning("order_id")
 		.then(order_id => order_id)
