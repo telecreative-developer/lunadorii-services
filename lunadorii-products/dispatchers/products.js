@@ -66,7 +66,7 @@ const productRateAsync = data => {
 	}))
 }
 
-const checkWishlistAsync = data => {
+const checkWishlistAsync = (id, data) => {
 	return knex("wishlist")
 		.where("id", id)
 		.then(res =>
@@ -238,7 +238,7 @@ exports.getAllProductsLogged = id => {
 		.then(res => validationAvatar(res))
 		.then(res => NestHydrationJS.nest(res, productsDefinition))
 		.then(res => sortProductThumbnails(res))
-		.then(res => checkWishlistAsync(res))
+		.then(res => checkWishlistAsync(id, res))
 		.then(res => productRateAsync(res))
 		.then(res =>
 			successResponseWithData(res, "Success Get Products Logged", 200)
@@ -263,7 +263,7 @@ exports.getAllNewArrivalsProductsLogged = id => {
 		.then(res => validationAvatar(res))
 		.then(res => NestHydrationJS.nest(res, productsDefinition))
 		.then(res => sortProductThumbnails(res))
-		.then(res => checkWishlistAsync(res))
+		.then(res => checkWishlistAsync(id, res))
 		.then(res => productRateAsync(res))
 		.then(res =>
 			successResponseWithData(
@@ -294,7 +294,7 @@ exports.getBestSellerProductsLogged = id => {
 		.then(res => validationAvatar(res))
 		.then(res => NestHydrationJS.nest(res, productsBestSellerDefinition))
 		.then(res => sortProductThumbnails(res))
-		.then(res => checkWishlistAsync(res))
+		.then(res => checkWishlistAsync(id, res))
 		.then(res => productSoldAndRate(res))
 		.then(res => removeDuplicates(res, "product_id"))
 		.then(res => res.sort((a, b) => a.product_sold - b.product_sold).reverse())
@@ -321,7 +321,7 @@ exports.getSingleProductLogged = (product_id, id) => {
 		.then(res => validationAvatar(res))
 		.then(res => NestHydrationJS.nest(res, productsDefinition))
 		.then(res => sortProductThumbnails(res))
-		.then(res => checkWishlistAsync(res))
+		.then(res => checkWishlistAsync(id, res))
 		.then(res => productRateAsync(res))
 		.then(res =>
 			successResponseWithData(res, "Success Get Single Product Logged", 200)
@@ -360,7 +360,7 @@ exports.getRelatedProductsLogged = (product_id, id) => {
 		.then(res => validationAvatar(res))
 		.then(res => NestHydrationJS.nest(res, productsDefinition))
 		.then(res => sortProductThumbnails(res))
-		.then(res => checkWishlistAsync(res))
+		.then(res => checkWishlistAsync(id, res))
 		.then(res => productRateAsync(res))
 		.then(res =>
 			successResponseWithData(res, "Success Get Related Products Logged", 200)
@@ -385,7 +385,7 @@ exports.getSingleProductWithSlugLogged = (product_slug, id) => {
 		.then(res => validationAvatar(res))
 		.then(res => NestHydrationJS.nest(res, productsDefinition))
 		.then(res => sortProductThumbnails(res))
-		.then(res => checkWishlistAsync(res))
+		.then(res => checkWishlistAsync(id, res))
 		.then(res => productRateAsync(res))
 		.then(res =>
 			successResponseWithData(res, "Success Get Single Logged Product", 200)
@@ -416,7 +416,7 @@ exports.getProductsWithSubcategoryLogged = (product_subcategory_id, id) => {
 		.then(res => validationAvatar(res))
 		.then(res => NestHydrationJS.nest(res, productsDefinition))
 		.then(res => sortProductThumbnails(res))
-		.then(res => checkWishlistAsync(res))
+		.then(res => checkWishlistAsync(id, res))
 		.then(res => productRateAsync(res))
 		.then(res =>
 			successResponseWithData(res, "Success Get Product With Subcategory", 200)
@@ -441,7 +441,7 @@ exports.getProductsWithBrandLogged = (product_brand_id, id) => {
 		.then(res => validationAvatar(res))
 		.then(res => NestHydrationJS.nest(res, productsDefinition))
 		.then(res => sortProductThumbnails(res))
-		.then(res => checkWishlistAsync(res))
+		.then(res => checkWishlistAsync(id, res))
 		.then(res => productRateAsync(res))
 		.then(res =>
 			successResponseWithData(res, "Success Get Product With Brand", 200)
