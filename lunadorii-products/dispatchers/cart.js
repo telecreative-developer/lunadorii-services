@@ -39,7 +39,7 @@ const insertCart = item => {
 			created_at: now,
 			updated_at: now
 		})
-		.then(() => successResponse("Success Add Cart", 201))
+		.then(() => successResponseWithoutData("Success Add Cart", 201))
 		.catch(err => errorResponse("Internal Server Error", 500))
 }
 
@@ -115,7 +115,8 @@ exports.getCart = id => {
 		.then(res => validationAvatar(res))
 		.then(res => NestHydrationJS.nest(res, cartDefinition))
 		.then(res => subtotalAndProductRate(res))
-		.then(res => successResponse(res, "Success Get Cart", 200))
+		.then(res => successResponseWithData(res, "Success Get Cart", 200))
+		.catch(err => errorResponse("Internal Server Error", 500))
 }
 
 exports.updateCartQty = data => {
