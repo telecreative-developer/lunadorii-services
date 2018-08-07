@@ -1,0 +1,12 @@
+pm2 stop lunadorii-admin/bin/www --name admin
+pm2 stop lunadorii-auth/bin/www --name auth
+pm2 stop lunadorii-auth-admin/bin/www --name auth-admin
+pm2 stop lunadorii-banners/bin/www --name banners
+pm2 stop lunadorii-general/bin/www --name general
+pm2 stop lunadorii-orders/bin/www --name orders
+pm2 stop lunadorii-products/bin/www --name products
+pm2 stop lunadorii-promo/bin/www --name promo
+pm2 stop lunadorii-reports/bin/www --name reports
+pm2 stop lunadorii-search/bin/www --name search
+pm2 stop lunadorii-users/bin/www --name users
+pm2 stop lunadorii-gateway/server.js --name gateway
