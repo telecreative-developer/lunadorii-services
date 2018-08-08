@@ -2,15 +2,26 @@ require("dotenv").config({ path: __dirname + "/./../../.env" })
 const express = require("express")
 const Promise = require("bluebird")
 const router = express.Router()
-const { authenticationUser } = require("../../middleware/authentication")
+const {
+	authenticationUser,
+	authenticationAdmin
+} = require("../../middleware/authentication")
 const {
 	checkoutOrder,
+	getOrderHistories,
 	getOrderHistory,
 	getOrderHistorySingle,
 	getOrderRecent,
 	getOrderRecentSingle,
 	getOrderRecentSingleLogged
 } = require("../../dispatchers/order")
+
+// Get order histories
+router.get("/order/histories", authenticationAdmin, (req, res) => {
+	Promise.try(() => getOrderHistories(req.body))
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log("Error on GET_ORDER_HISTORIES", err))
+})
 
 // Checkout order
 router.post("/order/checkout", authenticationUser, (req, res) => {

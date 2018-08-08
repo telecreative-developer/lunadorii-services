@@ -65,6 +65,42 @@ const knexRecentOrders = (whereClause, id) => {
 		.catch(err => errorResponse("Internal Server Error", 500))
 }
 
+const knexOrderHistories = () => {
+	return knex("orders")
+		.innerJoin("order_products", "orders.order_id", "order_products.order_id")
+		.innerJoin("products", "order_products.product_id", "products.product_id")
+		.innerJoin(
+			"product_thumbnails",
+			"products.product_id",
+			"product_thumbnails.product_id"
+		)
+		.innerJoin(
+			"product_subcategories",
+			"products.product_subcategory_id",
+			"product_subcategories.product_subcategory_id"
+		)
+		.leftJoin(
+			"product_reviews",
+			"order_products.order_product_id",
+			"product_reviews.order_product_id"
+		)
+		.select(
+			"*",
+			"orders.order_id as order_id",
+			"order_products.order_product_id as order_product_id",
+			"order_products.product_id as product_id",
+			"product_thumbnails.product_thumbnail_id as product_thumbnail_id",
+			"product_thumbnails.thumbnail_url as product_thumbnail_url",
+			"product_subcategories.product_subcategory_id",
+			"product_reviews.id as product_reviews_user_id",
+			"orders.created_at as created_at",
+			"orders.updated_at as updated_at"
+		)
+		.orderBy("orders.created_at", "desc")
+		.then(res => res)
+		.catch(err => errorResponse("Internal Server Error", 500))
+}
+
 const knexOrderHistory = (whereClause, id) => {
 	return knex("orders")
 		.where(whereClause, id)
@@ -240,6 +276,13 @@ exports.checkoutOrder = data => {
 	return midtrans(data, { billingCode, total })
 		.then(mdResponse => knexResponse(mdResponse))
 		.then(res => successResponse(res, "Checkout Success", 201))
+		.catch(err => err)
+}
+
+exports.getOrderHistories = () => {
+	return knexOrderHistories()
+		.then(res => NestHydrationJS.nest(res, historyDefinition))
+		.then(res => successResponse(res, "Success Get Order Histories", 200))
 		.catch(err => err)
 }
 
