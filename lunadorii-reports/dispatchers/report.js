@@ -3,7 +3,9 @@ const express = require("express")
 const environment = process.env.NODE_ENV || "development"
 const configuration = require("../knexfile")[environment]
 const knex = require("knex")(configuration)
+const NestHydrationJS = require("nesthydrationjs")()
 const momentTimezone = require("moment-timezone")
+const reportsDefinition = require("../definitions/reports")
 const {
 	successResponseWithData,
 	successResponseWithoutData,
@@ -35,6 +37,7 @@ exports.replyReport = data => {
 		.insert({
 			subject: data.subject,
 			content: data.content,
+			report_id: data.report_id,
 			admin_id: data.admin_id,
 			created_at: now,
 			updated_at: now
@@ -56,8 +59,23 @@ exports.readReport = report_id => {
 
 exports.getReports = data => {
 	return knex("reports")
+		.leftJoin("report_replies", "reports.report_id", "report_replies.report_id")
+		.select(
+			"*",
+			"reports.report_id as report_id",
+			"reports.subject as report_subject",
+			"reports.content as report_content",
+			"reports.created_at as report_created_at",
+			"reports.updated_at as report_updated_at",
+			"report_replies.report_reply_id as report_reply_id",
+			"report_replies.subject as report_reply_subject",
+			"report_replies.content as report_reply_content",
+			"report_replies.created_at as report_reply_created_at",
+			"report_replies.updated_at as report_reply_updated_at"
+		)
+		.then(res => NestHydrationJS.nest(res, reportsDefinition))
 		.then(res => successResponseWithData(res, "Success Get Reports", 200))
-		.catch(err => errorResponse(err, 500))
+		.catch(err => errorResponse("Internal Server Error", 500))
 }
 
 exports.getSingleReport = report_id => {

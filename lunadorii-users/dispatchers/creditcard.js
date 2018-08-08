@@ -54,21 +54,14 @@ exports.addUserCreditCard = data => {
 		})
 	}
 
-	const searchUserCreditCardAsync = item => {
-		return knex("user_creditcard")
-			.where("user_creditcard.id", data.id)
-			.then(() => item)
-			.catch(err => errorResponse("Internal Server Error", 500))
-	}
-
-	const knexResponse = () => {
+	const checkUserLengthAsync = item => {
 		return knex("users")
-			.where("users.id", data.id)
+			.where("users.id", item.id)
 			.then(res => res)
 			.catch(err => errorResponse("Internal Server Error", 500))
 	}
 
-	const addUserCreditCardAsync = res => {
+	const addUserCreditCardAsync = (res, data) => {
 		return knex("user_creditcard")
 			.insert({
 				card_number: data.card_number,
@@ -87,14 +80,13 @@ exports.addUserCreditCard = data => {
 	}
 
 	return checkFieldAsync()
-		.then(res => knexResponse())
 		.then(res => checkUserLengthAsync(res))
 		.then(res => comparePasswordAsync(data, res))
-		.then(res => addUserCreditCardAsync(res))
+		.then(res => addUserCreditCardAsync(res, data))
 		.then(() =>
 			successResponseWithoutData("Success Update User Credit Card", 201)
 		)
-		.catch(err => err)
+		.catch(err => console.log(err))
 }
 
 exports.getUserCreditCard = id => {
@@ -119,7 +111,7 @@ exports.updateUserCreditCard = (user_creditcard_id, data) => {
 		})
 	}
 
-	const updateUserCreditCardAsync = () => {
+	const updateUserCreditCardAsync = (data, user_creditcard_id) => {
 		return knex("user_creditcard")
 			.where("user_creditcard_id", user_creditcard_id)
 			.update({
@@ -143,10 +135,9 @@ exports.updateUserCreditCard = (user_creditcard_id, data) => {
 	}
 
 	return checkFieldAsync()
-		.then(res => knexResponse())
 		.then(res => checkUserLengthAsync(res))
 		.then(res => comparePasswordAsync(data, res))
-		.then(res => updateUserCreditCardAsync())
+		.then(res => updateUserCreditCardAsync(data, user_creditcard_id))
 		.then(() =>
 			successResponseWithoutData("Success Update User Credit Card", 201)
 		)
@@ -168,7 +159,7 @@ exports.setDefaultUserCreditCard = (user_creditcard_id, id) => {
 		return knex("user_creditcard")
 			.where("user_creditcard_id", user_creditcard_id)
 			.update({ card_default: true, updated_at: now })
-			.then(() => parseInt(user_creditcard_id))
+			.then(res => parseInt(user_creditcard_id))
 			.catch(err => errorResponse("Internal Server Error", 500))
 	}
 
