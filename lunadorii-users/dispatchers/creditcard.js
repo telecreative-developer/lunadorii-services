@@ -152,7 +152,7 @@ exports.updateUserCreditCard = (user_creditcard_id, data) => {
 		.then(() =>
 			successResponseWithoutData("Success Update User Credit Card", 201)
 		)
-		.catch(err => console.log(err))
+		.catch(err => err)
 }
 
 exports.setDefaultUserCreditCard = (user_creditcard_id, id) => {
