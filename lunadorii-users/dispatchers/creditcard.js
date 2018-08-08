@@ -27,7 +27,7 @@ const comparePasswordAsync = (data, response) => {
 			.compare(data.password, response[0].password)
 			.then(res => {
 				return res
-					? resolve(data)
+					? resolve(response)
 					: reject(errorResponse("Password is incorrect", 400))
 			})
 			.catch(err => errorResponse("Internal Server Error", 500))
@@ -139,7 +139,7 @@ exports.updateUserCreditCard = (user_creditcard_id, data) => {
 		.then(res => findUserWithId(res))
 		.then(res => checkUserLengthAsync(res))
 		.then(res => comparePasswordAsync(data, res))
-		.then(res => updateUserCreditCardAsync(data, user_creditcard_id))
+		.then(() => updateUserCreditCardAsync(data, user_creditcard_id))
 		.then(() =>
 			successResponseWithoutData("Success Update User Credit Card", 201)
 		)
