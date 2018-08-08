@@ -61,6 +61,13 @@ exports.addUserCreditCard = data => {
 			.catch(err => errorResponse("Internal Server Error", 500))
 	}
 
+	const findCreditCardWithId = item => {
+		return knex("user_creditcard")
+			.where("user_creditcard.id", item.id)
+			.then(res => res)
+			.catch(err => errorResponse("Internal Server Error", 500))
+	}
+
 	const addUserCreditCardAsync = (res, data) => {
 		return knex("user_creditcard")
 			.insert({
@@ -83,6 +90,7 @@ exports.addUserCreditCard = data => {
 		.then(res => findUserWithId(res))
 		.then(res => checkUserLengthAsync(res))
 		.then(res => comparePasswordAsync(data, res))
+		.then(res => findCreditCardWithId(data))
 		.then(res => addUserCreditCardAsync(res, data))
 		.then(() =>
 			successResponseWithoutData("Success Update User Credit Card", 201)
