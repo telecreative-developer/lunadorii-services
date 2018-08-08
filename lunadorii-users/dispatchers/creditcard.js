@@ -120,16 +120,18 @@ exports.updateUserCreditCard = (user_creditcard_id, data) => {
 		})
 	}
 
+	const findUserWithId = item => {
+		return knex("users")
+			.where("users.id", item.id)
+			.then(res => res)
+			.catch(err => errorResponse("Internal Server Error", 500))
+	}
+
 	const updateUserCreditCardAsync = (data, user_creditcard_id) => {
 		return knex("user_creditcard")
 			.where("user_creditcard_id", user_creditcard_id)
 			.update({
-				card_number: data.card_number,
-				mm: data.mm,
-				yyyy: data.yyyy,
-				country: data.country,
-				card_name: data.card_name,
-				postal_code: data.postal_code,
+				...data,
 				updated_at: now
 			})
 			.then(res => res)
