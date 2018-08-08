@@ -54,7 +54,7 @@ exports.addUserCreditCard = data => {
 		})
 	}
 
-	const checkUserLengthAsync = item => {
+	const findUserWithId = item => {
 		return knex("users")
 			.where("users.id", item.id)
 			.then(res => res)
@@ -80,13 +80,14 @@ exports.addUserCreditCard = data => {
 	}
 
 	return checkFieldAsync()
+		.then(res => findUserWithId(res))
 		.then(res => checkUserLengthAsync(res))
 		.then(res => comparePasswordAsync(data, res))
 		.then(res => addUserCreditCardAsync(res, data))
 		.then(() =>
 			successResponseWithoutData("Success Update User Credit Card", 201)
 		)
-		.catch(err => console.log(err))
+		.catch(err => err)
 }
 
 exports.getUserCreditCard = id => {
@@ -135,6 +136,7 @@ exports.updateUserCreditCard = (user_creditcard_id, data) => {
 	}
 
 	return checkFieldAsync()
+		.then(res => findUserWithId(res))
 		.then(res => checkUserLengthAsync(res))
 		.then(res => comparePasswordAsync(data, res))
 		.then(res => updateUserCreditCardAsync(data, user_creditcard_id))
