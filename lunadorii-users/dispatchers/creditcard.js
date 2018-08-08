@@ -127,20 +127,19 @@ exports.updateUserCreditCard = (user_creditcard_id, data) => {
 			.catch(err => errorResponse("Internal Server Error", 500))
 	}
 
-	const updateUserCreditCardAsync = (data, user_creditcard_id) => {
+	const updateUserCreditCardAsync = (item, user_creditcard_id) => {
 		return knex("user_creditcard")
 			.where("user_creditcard_id", user_creditcard_id)
 			.update({
-				...data,
+				card_number: item.card_number,
+				mm: item.mm,
+				yyyy: item.yyyy,
+				country: item.country,
+				card_name: item.card_name,
+				postal_code: item.postal_code,
+				id: item.id,
 				updated_at: now
 			})
-			.then(res => res)
-			.catch(err => errorResponse("Internal Server Error", 500))
-	}
-
-	const knexResponse = () => {
-		return knex("users")
-			.where("users.id", data.id)
 			.then(res => res)
 			.catch(err => errorResponse("Internal Server Error", 500))
 	}
@@ -153,7 +152,7 @@ exports.updateUserCreditCard = (user_creditcard_id, data) => {
 		.then(() =>
 			successResponseWithoutData("Success Update User Credit Card", 201)
 		)
-		.catch(err => err)
+		.catch(err => console.log(err))
 }
 
 exports.setDefaultUserCreditCard = (user_creditcard_id, id) => {
