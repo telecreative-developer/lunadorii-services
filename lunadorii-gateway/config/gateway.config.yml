@@ -119,6 +119,9 @@ pipelines:
     apiEndpoints:
       - auth
     policies:
+      - cors:
+        - action:
+            origin: '*'
       - proxy:
           - action:
               serviceEndpoint: authService
@@ -128,6 +131,9 @@ pipelines:
     apiEndpoints:
       - authAdmin
     policies:
+      - cors:
+        - action:
+            origin: '*'
       - proxy:
           - action:
               serviceEndpoint: authAdminService
@@ -137,6 +143,9 @@ pipelines:
     apiEndpoints:
       - users
     policies:
+      - cors:
+        - action:
+            origin: '*'
       - proxy:
           - action:
               serviceEndpoint: usersService
@@ -146,6 +155,9 @@ pipelines:
     apiEndpoints:
       - admin
     policies:
+      - cors:
+        - action:
+            origin: '*'
       - proxy:
           - action:
               serviceEndpoint: adminService
@@ -155,6 +167,9 @@ pipelines:
     apiEndpoints:
       - products
     policies:
+      - cors:
+        - action:
+            origin: '*'
       - proxy:
           - action:
               serviceEndpoint: productsService
@@ -164,6 +179,9 @@ pipelines:
     apiEndpoints:
       - banners
     policies:
+      - cors:
+        - action:
+            origin: '*'
       - proxy:
           - action:
               serviceEndpoint: bannersService
@@ -173,6 +191,9 @@ pipelines:
     apiEndpoints:
       - general
     policies:
+      - cors:
+        - action:
+            origin: '*'
       - proxy:
           - action:
               serviceEndpoint: generalService
@@ -182,6 +203,9 @@ pipelines:
     apiEndpoints:
       - report
     policies:
+      - cors:
+        - action:
+            origin: '*'
       - proxy:
           - action:
               serviceEndpoint: reportService
@@ -191,6 +215,9 @@ pipelines:
     apiEndpoints:
       - search
     policies:
+      - cors:
+        - action:
+            origin: '*'
       - proxy:
           - action:
               serviceEndpoint: searchService
@@ -199,6 +226,9 @@ pipelines:
     apiEndpoints:
       - orders
     policies:
+      - cors:
+        - action:
+            origin: '*'
       - proxy:
           - action:
               serviceEndpoint: ordersService
@@ -207,6 +237,9 @@ pipelines:
     apiEndpoints:
       - promo
     policies:
+      - cors:
+        - action:
+            origin: '*'
       - proxy:
           - action:
               serviceEndpoint: promoService
