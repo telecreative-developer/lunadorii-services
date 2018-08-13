@@ -7,7 +7,7 @@ const historyDefinition = [
 		bank: { column: "bank" },
 		paid_method: { column: "paid_method" },
 		receipt_time: { column: "receipt_time" },
-		delivery_number: { column: "delivery_number" },
+		receipt_number: { column: "receipt_number" },
 		delivery_service: { column: "delivery_service" },
 		delivery_price: { column: "delivery_price" },
 		delivery_time: { column: "delivery_time" },
