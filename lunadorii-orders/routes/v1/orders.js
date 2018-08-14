@@ -42,7 +42,12 @@ router.get(
 	"/order/history/single/:order_id",
 	authenticationUser,
 	(req, res) => {
-		Promise.try(() => getOrderHistorySingle(req.params.order_id))
+		Promise.try(
+			() =>
+				req.query.id
+					? getOrderHistorySingleLogged(req.params.order_id, req.query.id)
+					: getOrderHistorySingle(req.params.order_id)
+		)
 			.then(response => res.status(response.status).json(response))
 			.catch(err => console.log("Error on GET_ORDER_HISTORY", err))
 	}

@@ -302,6 +302,15 @@ exports.getOrderHistorySingle = order_id => {
 		.catch(err => err)
 }
 
+exports.getOrderHistorySingleLogged = (order_id, id) => {
+	return knexOrderHistory("orders.order_id", order_id)
+		.then(res => NestHydrationJS.nest(res, historyDefinition))
+		.then(res => midtransStatus(res))
+		.then(res => checkReviewed(id, res))
+		.then(res => successResponse(res, "Success Get Order History", 200))
+		.catch(err => err)
+}
+
 exports.getOrderRecent = id => {
 	return knexRecentOrders("orders.id", id)
 		.then(res => NestHydrationJS.nest(res, historyDefinition))
