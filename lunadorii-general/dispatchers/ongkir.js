@@ -6,7 +6,7 @@ const knex = require("knex")(configuration)
 const NestHydrationJS = require("nesthydrationjs")()
 const axios = require("axios")
 const Promise = require("bluebird")
-const { successResponse, errorResponse } = require("../responsers")
+const { successResponseWithData, errorResponse } = require("../responsers")
 const envRajaOngkirApiKey = process.env.RAJA_ONGKIR_API_KEY
 
 const axiosOptions = data => {
@@ -40,6 +40,6 @@ exports.getOngkir = data => {
 		fetchOngkir(data, "jne"),
 		fetchOngkir(data, "pos")
 	])
-		.then(response => successResponse(response, "Success", 200))
+		.then(res => successResponseWithData(res, "Success", 200))
 		.catch(err => err)
 }

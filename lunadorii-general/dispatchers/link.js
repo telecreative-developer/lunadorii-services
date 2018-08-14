@@ -3,7 +3,7 @@ const Promise = require("bluebird")
 const express = require("express")
 const nodemailer = require("nodemailer")
 const mg = require("nodemailer-mailgun-transport")
-const { successResponse, errorResponse } = require("../responsers")
+const { successResponseWithoutData, errorResponse } = require("../responsers")
 const handlebars = require("handlebars")
 const fs = require("fs")
 const fsReadFileAsync = Promise.promisify(fs.readFile)
@@ -28,7 +28,7 @@ const readHTMLFile = path => {
 const nodemailerMailgunAsync = (email, template, data) => {
 	return nodemailerMailgun
 		.sendMail(mailOptions(email, template, data))
-		.then(res => successResponse(null, "Success Send Link", 200))
+		.then(res => successResponseWithoutData("Success Send Link", 200))
 		.catch(err => errorResponse("Internal Server Error", 500))
 }
 

@@ -5,7 +5,7 @@ const environment = process.env.NODE_ENV || "development"
 const configuration = require("../knexfile")[environment]
 const moment = require("moment")
 const knex = require("knex")(configuration)
-const { successResponse, errorResponse } = require("../responsers")
+const { successResponseWithData, errorResponse } = require("../responsers")
 
 function removeDuplicates(arr, key) {
 	if (!(arr instanceof Array) || (key && typeof key !== "string")) {
@@ -89,7 +89,7 @@ exports.getDashboardInfo = () => {
 		getReports(),
 		getBanners()
 	]).then(res =>
-		successResponse(
+		successResponseWithData(
 			{
 				users: res[0],
 				products: res[1],
