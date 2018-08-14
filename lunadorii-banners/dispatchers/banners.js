@@ -120,6 +120,7 @@ exports.addBanner = data => {
 
 exports.getBannersAdmin = () => {
 	return knex("banners")
+		.orderBy("created_at", "desc")
 		.then(res => successResponse(res, "Success Get Banners", 200))
 		.catch(err => errorResponse("Internal Server Error", 500))
 }
@@ -128,6 +129,7 @@ exports.getBanners = () => {
 	return knex("banners")
 		.where("banners.category", "general")
 		.andWhere("banners.active", true)
+		.orderBy("created_at", "desc")
 		.then(res => successResponse(res, "Success Get Banners", 200))
 		.catch(err => errorResponse("Internal Server Error", 500))
 }
@@ -168,6 +170,7 @@ exports.getBannersBestSeller = () => {
 	return knex("banners")
 		.where("banners.category", "best-seller")
 		.andWhere("banners.active", true)
+		.orderBy("created_at", "desc")
 		.then(res => successResponse(res, "Success Get Banners Best Seller", 200))
 		.catch(err => errorResponse("Internal Server Error", 500))
 }
