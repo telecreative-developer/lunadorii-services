@@ -6,6 +6,7 @@ const knex = require("knex")(configuration)
 const NestHydrationJS = require("nesthydrationjs")()
 const { successResponse, errorResponse } = require("../responsers")
 const productsDefinition = require("../definitions/products")
+const momentTimezone = require("moment-timezone")
 const envDefaultAvatar = process.env.AWS_IMAGE_DEFAULT_URL
 
 const validationAvatar = data => {
@@ -94,13 +95,18 @@ exports.addBanner = data => {
 	}
 
 	const insertBanner = item => {
+		const now = momentTimezone()
+			.tz("Asia/Jakarta")
+			.format()
 		return knex("banners")
 			.insert({
 				title: item.title,
 				thumbnail_url: item.thumbnail_url,
 				type: item.type,
 				category: item.category,
-				active: true
+				active: true,
+				created_at: now,
+				updated_at: now
 			})
 			.then(res => res)
 			.catch(err => errorResponse("Internal Server Error", 500))
