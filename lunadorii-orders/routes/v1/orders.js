@@ -11,6 +11,7 @@ const {
 	getOrderHistories,
 	getOrderHistory,
 	getOrderHistorySingle,
+	getOrderHistorySingleLogged,
 	getOrderRecent,
 	getOrderRecentSingle,
 	getOrderRecentSingleLogged
