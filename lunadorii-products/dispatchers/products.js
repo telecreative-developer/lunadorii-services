@@ -610,18 +610,6 @@ exports.addProduct = data => {
 		.tz("Asia/Jakarta")
 		.format()
 
-	const insertThumbnails = (item, product_id) => {
-		return knex("product_thumbnails")
-			.insert(
-				item.thumbnails.map(d => ({
-					thumbnail_url: d.thumbnail_url,
-					product_id: product_id
-				}))
-			)
-			.then(res => res)
-			.catch(err => errorResponse("Internal Server Error", 500))
-	}
-
 	return knex("products")
 		.insert({
 			product: data.product,
@@ -639,8 +627,9 @@ exports.addProduct = data => {
 			updated_at: now
 		})
 		.returning("product_id")
-		.then(product_id => insertThumbnails(data, parseInt(product_id)))
-		.then(() => successResponseWithoutData("Success Add Product", 201))
+		.then(product_id =>
+			successResponseWithData({ product_id }, "Success Add Product", 201)
+		)
 		.catch(err => errorResponse(err, 500))
 }
 
