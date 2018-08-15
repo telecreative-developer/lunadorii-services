@@ -25,6 +25,7 @@ const {
 	getProductSubcategories,
 	getProductSubcategoriesWithProducts,
 	addProduct,
+	addProductThumbnails,
 	updateProduct,
 	deleteProduct,
 	getAllNewArrivalsProductsLogged,
@@ -153,6 +154,13 @@ router.post("/product", authenticationAdmin, (req, res) => {
 	Promise.try(() => addProduct(req.body))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on ADD_PRODUCT", err))
+})
+
+// Add product thumbnails
+router.post("/product-thumbnails", authenticationAdmin, (req, res) => {
+	Promise.try(() => addProductThumbnails(req.body))
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log("Error on ADD_PRODUCT_THUMBNAILS", err))
 })
 
 // Update Product

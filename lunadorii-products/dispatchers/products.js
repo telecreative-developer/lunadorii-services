@@ -644,6 +644,20 @@ exports.addProduct = data => {
 		.catch(err => errorResponse(err, 500))
 }
 
+exports.addProductThumbnails = thumbnails => {
+	return knex("product_thumbnails")
+		.insert(
+			thumbnails.map(d => ({
+				thumbnail_url: d.thumbnail_url,
+				product_id: d.product_id
+			}))
+		)
+		.then(() =>
+			successResponseWithoutData("Success Add Product Thumbnails", 201)
+		)
+		.catch(err => errorResponse("Internal Server Error", 500))
+}
+
 exports.updateProduct = (product_id, data) => {
 	const now = momentTimezone()
 		.tz("Asia/Jakarta")
