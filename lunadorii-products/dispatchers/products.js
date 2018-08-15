@@ -634,11 +634,17 @@ exports.addProduct = data => {
 }
 
 exports.addProductThumbnails = thumbnails => {
+	const now = momentTimezone()
+		.tz("Asia/Jakarta")
+		.format()
+
 	return knex("product_thumbnails")
 		.insert(
 			thumbnails.map(d => ({
 				thumbnail_url: d.thumbnail_url,
-				product_id: d.product_id
+				product_id: d.product_id,
+				created_at: now,
+				updated_at: now
 			}))
 		)
 		.then(() =>
