@@ -39,6 +39,7 @@ apiEndpoints:
     paths:
       - '/api/v1/products'
       - '/api/v1/products/*'
+      - '/api/v1/product'
       - '/api/v1/product/*'
       - '/api/v1/product-thumbnails'
       - '/api/v1/product-brands'
