@@ -633,20 +633,18 @@ exports.addProduct = data => {
 		.catch(err => errorResponse(err, 500))
 }
 
-exports.addProductThumbnails = thumbnails => {
+exports.addProductThumbnails = data => {
 	const now = momentTimezone()
 		.tz("Asia/Jakarta")
 		.format()
 
 	return knex("product_thumbnails")
-		.insert(
-			thumbnails.map(d => ({
-				thumbnail_url: d.thumbnail_url,
-				product_id: d.product_id,
-				created_at: now,
-				updated_at: now
-			}))
-		)
+		.insert({
+			thumbnail_url: data.thumbnail_url,
+			product_id: data.product_id,
+			created_at: now,
+			updated_at: now
+		})
 		.then(() =>
 			successResponseWithoutData("Success Add Product Thumbnails", 201)
 		)
