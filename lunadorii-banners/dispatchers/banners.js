@@ -146,7 +146,7 @@ exports.removeBanner = banner_id => {
 	return knex("banners")
 		.where("banner_id", banner_id)
 		.del()
-		.then(res => successResponse(res, "Success Delete Banner", 201))
+		.then(res => successResponse(res, "Success Delete Banner", 200))
 		.catch(err => errorResponse("Internal Server Error", 500))
 }
 
