@@ -212,8 +212,11 @@ exports.registerUser = data => {
 	const registerUserAsync = (item, hashPassword) => {
 		return knex("users")
 			.insert({
-				...data,
+				first_name: item.first_name,
+				last_name: item.last_name,
+				email: item.email,
 				password: hashPassword,
+				provider: item.provider ? item.provider : "local",
 				verified: false,
 				created_at: now,
 				updated_at: now
@@ -254,7 +257,7 @@ exports.registerUser = data => {
 			// 	)
 			// })
 			.then(id => successResponseWithData(id, "Register Success", 201))
-			.catch(err => console.log(err))
+			.catch(err => err)
 	)
 }
 
