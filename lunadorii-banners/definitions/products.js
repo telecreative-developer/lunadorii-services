@@ -7,7 +7,7 @@ const productsDefinition = [
 		description: { column: "description" },
 		detail: { column: "detail" },
 		to_use: { column: "to_use" },
-		wight_gram: { column: "weight_gram" },
+		weight_gram: { column: "weight_gram" },
 		price: { column: "price" },
 		discount: { column: "discount" },
 		discount_percentage: { column: "discount_percentage" },
