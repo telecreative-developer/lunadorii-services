@@ -61,7 +61,7 @@ router.post("/auth/user", (req, res) => {
 	)(req, res)
 })
 
-router.post("/auth/facebook", (req, res) => {
+router.post("/auth/user/facebook", (req, res) => {
 	Promise.try(() => authFacebook(req.body))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on AUTH_FACEBOOK", err))
