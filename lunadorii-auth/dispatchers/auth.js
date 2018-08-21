@@ -98,7 +98,7 @@ exports.authFacebook = data => {
 		.then(res => {
 			return successResponse(res, "Success Authenticate with Facebook", 201)
 		})
-		.catch(err => err)
+		.catch(err => console.log(err))
 }
 
 exports.authGoogle = data => {
