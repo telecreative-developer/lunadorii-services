@@ -54,6 +54,22 @@ router.get(
 	}
 )
 
+// Order history single
+router.get(
+	"/order/history/single/:order_id/admin",
+	authenticationAdmin,
+	(req, res) => {
+		Promise.try(
+			() =>
+				req.query.id
+					? getOrderHistorySingleLogged(req.params.order_id, req.query.id)
+					: getOrderHistorySingle(req.params.order_id)
+		)
+			.then(response => res.status(response.status).json(response))
+			.catch(err => console.log("Error on GET_ORDER_HISTORY", err))
+	}
+)
+
 // Order recent
 router.get("/order/recent/:id", authenticationUser, (req, res) => {
 	Promise.try(() => getOrderRecent(req.params.id))

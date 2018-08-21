@@ -46,7 +46,7 @@ const productsDefinition = [
       }
     ]
   }
-];
+]
 
 const productsBestSellerDefinition = [
   {
@@ -96,7 +96,7 @@ const productsBestSellerDefinition = [
       }
     ]
   }
-];
+]
 
 const productBrandsDefinition = [
   {
@@ -116,7 +116,7 @@ const productBrandsDefinition = [
       }
     ]
   }
-];
+]
 
 const productCategoriesDefinition = [
   {
@@ -130,7 +130,7 @@ const productCategoriesDefinition = [
       }
     ]
   }
-];
+]
 
 const productSubcategoriesDefinition = [
   {
@@ -150,7 +150,7 @@ const productSubcategoriesDefinition = [
       }
     ]
   }
-];
+]
 
 module.exports = {
   productsDefinition,
@@ -158,4 +158,4 @@ module.exports = {
   productCategoriesDefinition,
   productSubcategoriesDefinition,
   productsBestSellerDefinition
-};
+}
