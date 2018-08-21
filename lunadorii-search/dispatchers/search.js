@@ -77,7 +77,7 @@ const validationAvatar = data => {
 const productRateAndDiscount = data => {
 	return data.map(res => ({
 		...res,
-		price_discount: res.price - (res.price / res.discount_percentage) * 100,
+		price_discount: res.price - (res.price * res.discount_percentage) / 100,
 		product_rate: res.reviews.length
 			? res.reviews.map(r => r.review_rate).reduce((a, b) => a + b) /
 			  res.reviews.length
