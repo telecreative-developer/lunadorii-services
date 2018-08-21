@@ -49,8 +49,8 @@ const registerUserWithFacebookAsync = data => {
 	return new Promise((resolve, reject) => {
 		return fetch(fbUrl + data.id + fbFields + data.accessToken)
 			.then(res => res.json())
-			.then(async res => {
-				const knexResponse = await knex("users")
+			.then(res => {
+				return knex("users")
 					.insert({
 						first_name: res.first_name,
 						last_name: res.last_name,
@@ -59,9 +59,9 @@ const registerUserWithFacebookAsync = data => {
 						provider: "facebook"
 					})
 					.returning("id")
-				return resolve(parseInt(id))
+					.then(id => resolve(parseInt(id)))
 			})
-			.catch(err => reject(err))
+			.catch(err => err)
 	})
 }
 
@@ -78,7 +78,7 @@ exports.authFacebook = data => {
 		return new Promise((resolve, reject) => {
 			return data.id && data.email && data.accessToken
 				? resolve(data)
-				: reject("Missing Credentials")
+				: reject(errorResponse("Missing Credentials", 400))
 		})
 	}
 
@@ -92,13 +92,13 @@ exports.authFacebook = data => {
 		.then(res => {
 			return res.status === "login"
 				? checkProviderAsync(res.data, "facebook")
-				: registerUserWithFacebookAsync(res.data)
+				: registerUserWithFacebookAsync(data)
 		})
 		.then(id => generateTokenAsync(id))
 		.then(res => {
 			return successResponse(res, "Success Authenticate with Facebook", 201)
 		})
-		.catch(err => errorResponse(err, 400))
+		.catch(err => err)
 }
 
 exports.authGoogle = data => {
