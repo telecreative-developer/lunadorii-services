@@ -9,6 +9,7 @@ const {
 	successResponseWithData,
 	errorResponse
 } = require("../responsers")
+const momentTimezone = require("moment-timezone")
 const wishlistDefinition = require("../definitions/wishlist")
 const envDefaultAvatar = process.env.AWS_IMAGE_DEFAULT_URL
 
@@ -30,8 +31,17 @@ const productRateAsync = data => {
 }
 
 exports.addWishlist = data => {
+	const now = momentTimezone()
+		.tz("Asia/Jakarta")
+		.format()
+
 	return knex("wishlist")
-		.insert(data)
+		.insert({
+			product_id: data.product_id,
+			id: data.id,
+			created_at: now,
+			updated_at: now
+		})
 		.then(() => successResponseWithoutData("Success Add Wishlist", 201))
 		.catch(err => errorResponse(err, 500))
 }
