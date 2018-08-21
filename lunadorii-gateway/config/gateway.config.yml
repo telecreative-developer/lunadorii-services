@@ -8,7 +8,7 @@ apiEndpoints:
     host: ec2-18-136-126-168.ap-southeast-1.compute.amazonaws.com
     paths:
       - '/api/v1/auth/user'
-      - '/api/v1/auth/user/*'
+      - '/api/v1/auth/user/facebook'
       - '/api/v1/request/user/forgot-password'
       - '/api/v1/confirm/user/forgot-password'
   authAdmin:
