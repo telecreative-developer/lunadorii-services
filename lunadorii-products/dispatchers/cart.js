@@ -120,6 +120,10 @@ exports.getCart = id => {
 }
 
 exports.updateCartQty = data => {
+	const now = momentTimezone()
+		.tz("Asia/Jakarta")
+		.format()
+
 	if (data.cart_id) {
 		return knex("cart")
 			.where("cart_id", data.cart_id)
