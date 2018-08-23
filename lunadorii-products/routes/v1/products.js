@@ -26,6 +26,7 @@ const {
 	getProductSubcategoriesWithProducts,
 	addProduct,
 	addProductThumbnails,
+	removeProductThumbnail,
 	updateProduct,
 	deleteProduct,
 	getAllNewArrivalsProductsLogged,
@@ -162,6 +163,17 @@ router.post("/product-thumbnails", authenticationAdmin, (req, res) => {
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on ADD_PRODUCT_THUMBNAILS", err))
 })
+
+// Delete product thumbnails
+router.delete(
+	"/product-thumbnail/:product_thumbnail_id",
+	authenticationAdmin,
+	(req, res) => {
+		Promise.try(() => removeProductThumbnail(req.params.product_thumbnail_id))
+			.then(response => res.status(response.status).json(response))
+			.catch(err => console.log("Error on DELETE_PRODUCT_THUMBNAIL", err))
+	}
+)
 
 // Update Product
 router.put("/product/:product_id", authenticationAdmin, (req, res) => {

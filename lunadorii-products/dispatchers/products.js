@@ -651,6 +651,16 @@ exports.addProductThumbnails = data => {
 		.catch(err => errorResponse("Internal Server Error", 500))
 }
 
+exports.removeProductThumbnail = product_thumbnail_id => {
+	return knex("product_thumbnails")
+		.where("product_thumbnail_id", product_thumbnail_id)
+		.del()
+		.then(() =>
+			successResponseWithoutData("Success Remove Product Thumbnail", 201)
+		)
+		.catch(err => errorResponse("Internal Server Error", 500))
+}
+
 exports.updateProduct = (product_id, data) => {
 	const now = momentTimezone()
 		.tz("Asia/Jakarta")
