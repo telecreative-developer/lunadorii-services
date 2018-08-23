@@ -659,7 +659,10 @@ exports.updateProduct = (product_id, data) => {
 	return knex("products")
 		.where("product_id", product_id)
 		.update({ ...data, updated_at: now })
-		.then(() => successResponseWithoutData("Success Update Product", 201))
+		.returning("product_id")
+		.then(product_id =>
+			successResponseWithData({ product_id }, "Success Update Product", 201)
+		)
 		.catch(err => errorResponse(err, 500))
 }
 
