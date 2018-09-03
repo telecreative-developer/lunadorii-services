@@ -44,25 +44,17 @@ const checkProviderAsync = (data, provider) => {
 }
 
 const registerUserWithFacebookAsync = data => {
-	// const fbUrl = "https://graph.facebook.com/"
-	// const fbFields = "?fields=id,first_name,last_name,email,picture&access_token="
-	return new Promise((resolve, reject) => {
-		// return fetch(fbUrl + data.id + fbFields + data.accessToken)
-		// 	.then(res => res.json())
-		// 	.then(res => {
-				return knex("users")
-					.insert({
-						first_name: data.first_name,
-						last_name: data.last_name,
-						email: data.email,
-						avatar_url: data.avatar_url,
-						provider: "facebook"
-					})
-					.returning("id")
-					.then(id => resolve(parseInt(id)))
-			// })
-			.catch(err => err)
-	})
+	return knex("users")
+		.insert({
+			first_name: data.first_name,
+			last_name: data.last_name,
+			email: data.email,
+			avatar_url: data.avatar_url,
+			provider: "facebook"
+		})
+		.returning("id")
+		.then(id => parseInt(id))
+		.catch(err => errorResponse("Authentication With Facebook failed", 500))
 }
 
 const registerUserWithGoogleAsync = data => {
