@@ -98,7 +98,7 @@ const generateTokenAsync = id => {
 exports.authFacebook = data => {
 	const checkFieldAsync = data => {
 		return new Promise((resolve, reject) => {
-			return data.id && data.email && data.accessToken
+			return data.id && data.first_name && data.last_name && data.avatar_url && data.email && data.accessToken
 				? resolve(data)
 				: reject(errorResponse("Missing Credentials", 400))
 		})
