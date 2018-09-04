@@ -9,6 +9,7 @@ apiEndpoints:
     paths:
       - '/api/v1/auth/user'
       - '/api/v1/auth/user/facebook'
+      - '/api/v1/auth/user/google'
       - '/api/v1/request/user/forgot-password'
       - '/api/v1/confirm/user/forgot-password'
   authAdmin:

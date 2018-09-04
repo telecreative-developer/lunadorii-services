@@ -8,6 +8,7 @@ This API reference is organized by resource type. Each resource type has one or 
 |----|-------------|----------------------------|---------------|
 | 1  | POST        | /api/v1/auth/user          | 201, 400, 500 |
 | 2  | POST        | /api/v1/auth/user/facebook | 201, 400, 500 |
+| 3  | POST        | /api/v1/auth/user/google   | 201, 400, 500 |
 
 ### Description
 #### 1. Authentication user
