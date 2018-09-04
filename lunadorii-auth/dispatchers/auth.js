@@ -66,25 +66,20 @@ const registerUserWithFacebookAsync = data => {
 }
 
 const registerUserWithGoogleAsync = data => {
-	const fbUrl = "https://graph.facebook.com/"
-	const fbFields = "?fields=id,first_name,last_name,email,picture&access_token="
-	return new Promise((resolve, reject) => {
-		return fetch(fbUrl + data.id + fbFields + data.accessToken)
-			.then(res => res.json())
-			.then(res => {
-				return knex("users")
-					.insert({
-						first_name: res.first_name,
-						last_name: res.last_name,
-						email: res.email,
-						avatar_url: res.picture.data.url,
-						provider: "facebook"
-					})
-					.returning("id")
-					.then(id => resolve(parseInt(id)))
-			})
-			.catch(err => err)
-	})
+	return knex("users")
+		.insert({
+			first_name: data.first_name,
+			last_name: data.last_name,
+			email: data.email,
+			avatar_url: data.avatar_url,
+			provider: "google",
+			verified: true,
+			created_at: now,
+			updated_at: now
+		})
+		.returning("id")
+		.then(id => parseInt(id))
+		.catch(err => errorResponse(err, "Authentication With Google failed", 500))
 }
 
 const generateTokenAsync = id => {
@@ -120,17 +115,29 @@ exports.authFacebook = data => {
 		.then(res => {
 			return successResponse(res, "Success Authenticate with Facebook", 201)
 		})
-		.catch(err => err)
+		.catch(err => errorResponse(err))
 }
 
 exports.authGoogle = data => {
-	return knex("users")
-		.where("email", data.email)
+	const checkFieldAsync = data => {
+		return new Promise((resolve, reject) => {
+			return data.id && data.first_name && data.last_name && data.avatar_url && data.email && data.accessToken
+				? resolve(data)
+				: reject(errorResponse("Missing Credentials", 400))
+		})
+	}
+
+	const findUserWithEmailAsync = data => {
+		return knex("users").where("email", data.email)
+	}
+
+	return checkFieldAsync(data)
+		.then(res => findUserWithEmailAsync(res))
 		.then(res => checkUserAsync(res))
 		.then(res => {
 			return res.status === "login"
-				? checkProviderAsync(res.data, "google")
-				: registerUserWithGoogleAsync(res.data)
+			? checkProviderAsync(res.data, "google")
+			: registerUserWithGoogleAsync(res.data)
 		})
 		.then(id => generateTokenAsync(id))
 		.then(res => {
