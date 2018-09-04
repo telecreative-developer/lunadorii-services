@@ -43,6 +43,10 @@ const checkProviderAsync = (data, provider) => {
 	})
 }
 
+const now = momentTimezone()
+		.tz("Asia/Jakarta")
+		.format()
+
 const registerUserWithFacebookAsync = data => {
 	return knex("users")
 		.insert({
@@ -50,7 +54,10 @@ const registerUserWithFacebookAsync = data => {
 			last_name: data.last_name,
 			email: data.email,
 			avatar_url: data.avatar_url,
-			provider: "facebook"
+			provider: "facebook",
+			verified: true,
+			created_at: now,
+			updated_at: now
 		})
 		.returning("id")
 		.then(id => parseInt(id))
