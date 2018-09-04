@@ -6,6 +6,7 @@ const configuration = require("../knexfile")[environment]
 const knex = require("knex")(configuration)
 const fetch = require("node-fetch")
 const jwt = require("jsonwebtoken")
+const momentTimezone = require("moment-timezone")
 const { successResponse, errorResponse } = require("../responsers")
 const {
 	accessTokenUserJwtObejct,
@@ -61,7 +62,7 @@ const registerUserWithFacebookAsync = data => {
 		})
 		.returning("id")
 		.then(id => parseInt(id))
-		.catch(err => errorResponse("Authentication With Facebook failed", 500))
+		.catch(err => errorResponse(err, "Authentication With Facebook failed", 500))
 }
 
 const registerUserWithGoogleAsync = data => {
