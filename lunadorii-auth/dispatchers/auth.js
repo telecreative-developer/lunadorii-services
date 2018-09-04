@@ -121,7 +121,7 @@ exports.authFacebook = data => {
 exports.authGoogle = data => {
 	const checkFieldAsync = data => {
 		return new Promise((resolve, reject) => {
-			return data.id && data.first_name && data.last_name && data.avatar_url && data.email && data.accessToken
+			return data.id && data.first_name && data.last_name && data.avatar_url && data.email
 				? resolve(data)
 				: reject(errorResponse("Missing Credentials", 400))
 		})
