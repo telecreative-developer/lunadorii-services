@@ -40,7 +40,7 @@ const checkUserAsync = data => {
 const checkProviderAsync = (data, provider) => {
 	return new Promise((resolve, reject) => {
 		const check = !!data.filter(res => res.provider === provider).length
-		return check ? resolve(data[0].id) : reject("Email is already exists")
+		return check ? resolve(data[0].id) : reject(errorResponse("Email already exists", 409))
 	})
 }
 
@@ -121,7 +121,7 @@ exports.authFacebook = data => {
 exports.authGoogle = data => {
 	const checkFieldAsync = data => {
 		return new Promise((resolve, reject) => {
-			return data.id && data.first_name && data.last_name && data.avatar_url && data.email
+			return data.first_name && data.last_name && data.avatar_url && data.email
 				? resolve(data)
 				: reject(errorResponse("Missing Credentials", 400))
 		})
