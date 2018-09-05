@@ -40,7 +40,7 @@ const checkUserAsync = data => {
 const checkProviderAsync = (data, provider) => {
 	return new Promise((resolve, reject) => {
 		const check = !!data.filter(res => res.provider === provider).length
-		return check ? resolve(data[0].id) : reject(errorResponse("Email already exists", 409))
+		return check ? resolve(data[0].id) : resolve(data[0].id)
 	})
 }
 
