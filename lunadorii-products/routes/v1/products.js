@@ -225,7 +225,7 @@ router.get("/product-categories", (req, res) => {
 		.catch(err => console.log("Error on GET_ALL_PRODUCT_CATEGORIES", err))
 })
 
-// Get All Product Categories
+// Get All Product sub categories
 router.get("/product-subcategories", (req, res) => {
 	Promise.try(
 		() =>
@@ -235,6 +235,12 @@ router.get("/product-subcategories", (req, res) => {
 	)
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on GET_ALL_PRODUCT_SUBCATEGORIES", err))
+})
+
+router.post("/product-subcategories/create", (req, res) => {
+	res.status(200).json({
+		message: "Router active"
+	})
 })
 
 // Get Best Seller Subcategories
