@@ -22,7 +22,7 @@ const {
 	getTopProductBrandsWithProducts,
 	getProductCategories,
 	getProductCategoriesWithSubcategories,
-	getProductSubcategories,
+	addProductSubcategories,
 	getProductSubcategoriesWithProducts,
 	addProduct,
 	addProductThumbnails,
@@ -237,10 +237,10 @@ router.get("/product-subcategories", (req, res) => {
 		.catch(err => console.log("Error on GET_ALL_PRODUCT_SUBCATEGORIES", err))
 })
 
-router.post("/product-subcategories/create", (req, res) => {
-	res.status(200).json({
-		message: "Router active"
-	})
+router.post("/product-subcategories", (req, res) => {
+	Promise.try(() => addProductSubcategories(req.body))
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log("Error on POST_PRODUCT_SUBCATEGORIES", err))
 })
 
 // Get Best Seller Subcategories
