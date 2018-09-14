@@ -599,6 +599,17 @@ exports.addProductSubcategories = (body) => {
 		.catch(err => errorResponse(err, 500))
 }
 
+exports.deleteProductSubcategories = (product_subcategory_id) => {
+	return knex('product_subcategories')
+		.where("product_subcategory_id",product_subcategory_id)
+		.del()
+		.returning("product_subcategory_id")
+		.then(product_subcategory_id =>
+			successResponseWithData({ product_subcategory_id }, "Success delete subcategory", 200)
+		)
+		.catch(err => errorResponse(err, 500))
+}
+
 exports.updateProductSubcategories = (product_subcategory_id, body) => {
 	const now = momentTimezone()
 		.tz("Asia/Jakarta")

@@ -24,6 +24,7 @@ const {
 	getProductCategoriesWithSubcategories,
 	addProductSubcategories,
 	updateProductSubcategories,
+	deleteProductSubcategories,
 	getProductSubcategories,
 	getProductSubcategoriesWithProducts,
 	addProduct,
@@ -246,11 +247,18 @@ router.post("/product-subcategories", (req, res) => {
 		.catch(err => console.log("Error on POST_PRODUCT_SUBCATEGORIES", err))
 })
 
-// Update new product sub category gua
+// Update new product sub category
 router.put("/product-subcategories/:product_subcategory_id", (req, res) => {
 	Promise.try(() => updateProductSubcategories(req.params.product_subcategory_id, req.body))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on PUT_PRODUCT_SUBCATEGORIES", err))
+})
+
+// Delete new product sub category
+router.delete("/product-subcategories/:product_subcategory_id", (req, res) => {
+	Promise.try(() => deleteProductSubcategories(req.params.product_subcategory_id))
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log("Error on DELETE_PRODUCT_SUBCATEGORIES", err))
 })
 
 // Get Best Seller Subcategories
