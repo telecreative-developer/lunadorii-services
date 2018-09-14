@@ -584,36 +584,19 @@ exports.addProductSubcategories = (body) => {
 		.tz("Asia/Jakarta")
 		.format()
 
-	// Post or add new Product subcategories
-	const addProductSubcategories = (body) => {
-		return knex('product_subcategories')
-			.insert({
-				subcategory: body.subcategory,
-				thumbnail_url: body.subcategory,
-				product_category_id: body.product_category_id,
-				created_at: now,
-				updated_at: now
-			})
-	}
-	
-	// Verify
-	const verify = (body) => {
-		return new Promise((resolve, reject) => {
-			body.subcategory && body.thumbnail_url && body.product_category_id
-			?
-				resolve(body)
-			:
-				reject(errorResponse("Field cannot be null", 409))
+	return knex('product_subcategories')
+		.insert({
+			subcategory: body.subcategory,
+			thumbnail_url: body.subcategory,
+			product_category_id: body.product_category_id,
+			created_at: now,
+			updated_at: now
 		})
-	}
-
-	// Processing
-	return(
-		verify(body)
-			.then(result => addProductSubcategories(result))
-			.then(() => successResponseWithoutData("Success Add Subcategory", 201))
-			.catch(error => error)
-	)
+		.returning("product_subcategory_id")
+		.then(product_subcategory_id =>
+			successResponseWithData({ product_subcategory_id }, "Success add subcategory", 201)
+		)
+		.catch(err => errorResponse(err, 500))
 }
 
 exports.getProductSubcategories = () => {
