@@ -18,6 +18,8 @@ const {
 	getProductsWithBrandLogged,
 	getProductBrands,
 	postProductBrands,
+	updateProductBrands,
+	deleteProductBrands,
 	getProductBrandsWithProducts,
 	getTopProductBrands,
 	getTopProductBrandsWithProducts,
@@ -210,6 +212,20 @@ router.post("/product-brands", (req, res) => {
 	Promise.try(() => postProductBrands(req.body))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on POST_PRODUCT_BRANDS", err))
+})
+
+// Put product brands
+router.put("/product-brands/:product_brand_id", (req, res) => {
+	Promise.try(() => updateProductBrands(req.body,req.params.product_brand_id))
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log("Error on PUT_PRODUCT_BRANDS", err))
+})
+
+// delete product brands
+router.put("/product-brands/:product_brand_id", (req, res) => {
+	Promise.try(() => deleteProductBrands(req.params.product_brand_id))
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log("Error on DELETE_PRODUCT_BRANDS", err))
 })
 
 // Get Top Product Brands

@@ -476,6 +476,36 @@ exports.postProductBrands = (body) => {
 		.catch(err => errorResponse(err, 500))
 }
 
+exports.updateProductBrands = (body, product_brand_id) => {
+	const now = momentTimezone()
+		.tz("Asia/Jakarta")
+		.format()
+
+	return knex('product_brands')
+		.where("product_brand_id", product_brand_id)
+		.update({
+			brand: body.brand,
+			logo_url: body.logo_url,
+			updated_at: now
+		})
+		.returning("product_brand_id")
+		.then(product_brand_id =>
+			successResponseWithData({ product_brand_id }, "Success update brand", 201)
+		)
+		.catch(err => errorResponse(err, 500))
+}
+
+exports.deleteProductBrands = (product_brand_id) => {
+	return knex('product_brands')
+		.where("product_brand_id", product_brand_id)
+		.del()
+		.returning("product_brand_id")
+		.then(product_brand_id =>
+			successResponseWithData({ product_brand_id }, "Success delete brand", 200)
+		)
+		.catch(err => errorResponse(err, 500))
+}
+
 exports.getTopProductBrands = () => {
 	return knex("order_products")
 		.innerJoin("products", "order_products.product_id", "products.product_id")
