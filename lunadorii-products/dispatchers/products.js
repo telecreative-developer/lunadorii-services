@@ -587,7 +587,7 @@ exports.addProductSubcategories = (body) => {
 	return knex('product_subcategories')
 		.insert({
 			subcategory: body.subcategory,
-			thumbnail_url: body.subcategory,
+			thumbnail_url: body.thumbnail_url,
 			product_category_id: body.product_category_id,
 			created_at: now,
 			updated_at: now
