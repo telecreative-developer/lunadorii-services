@@ -579,6 +579,45 @@ exports.getBestSellerSubcategories = () => {
 		.catch(err => errorResponse("Internal Server Error", 500))
 }
 
+exports.addProductSubcategories = (body) => {
+	const now = momentTimezone()
+		.tz("Asia/Jakarta")
+		.format()
+
+	// Post or add new Product subcategories
+	const addProductSubcategories = (body) => {
+		return knex('product_subcategories')
+			.insert({
+				subcategory: body.subcategory,
+				thumbnail_url: body.subcategory,
+				product_category_id: body.product_category_id,
+				created_at: now,
+				updated_at: now
+			})
+			.returning("product_subcategory_id")
+			.then(product_subcategory_id => product_subcategory_id)
+	}
+	
+	// Verify
+	const verify = (body) => {
+		return new Promise((resolve, reject) => {
+			body.subcategory && body.thumbnail_url && body.product_category_id
+			?
+				resolve(body)
+			:
+				reject(errorResponse("Field cannot be null", 409))
+		})
+	}
+
+	// Processing
+	return(
+		verify(body)
+			.then(result => addProductSubcategories(result))
+			.then(result => successResponseWithData({ result }, "Success Add Subcategory", 201))
+			.catch(error => error)
+	)
+}
+
 exports.getProductSubcategories = () => {
 	return knex("product_subcategories")
 		.then(res =>
