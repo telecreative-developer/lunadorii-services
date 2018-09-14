@@ -23,6 +23,7 @@ const {
 	getProductCategories,
 	getProductCategoriesWithSubcategories,
 	addProductSubcategories,
+	getProductSubcategories,
 	getProductSubcategoriesWithProducts,
 	addProduct,
 	addProductThumbnails,
@@ -237,6 +238,7 @@ router.get("/product-subcategories", (req, res) => {
 		.catch(err => console.log("Error on GET_ALL_PRODUCT_SUBCATEGORIES", err))
 })
 
+// Post new product sub category
 router.post("/product-subcategories", (req, res) => {
 	Promise.try(() => addProductSubcategories(req.body))
 		.then(response => res.status(response.status).json(response))
