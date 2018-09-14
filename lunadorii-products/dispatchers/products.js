@@ -457,6 +457,26 @@ exports.getProductBrands = () => {
 		.catch(err => errorResponse(err, 500))
 }
 
+exports.postProductBrands = (body) => {
+	const now = momentTimezone()
+		.tz("Asia/Jakarta")
+		.format()
+
+	return knex('product_brands')
+		.insert({
+			subcategory: body.subcategory,
+			thumbnail_url: body.thumbnail_url,
+			product_category_id: body.product_category_id,
+			created_at: now,
+			updated_at: now
+		})
+		.returning("product_subcategory_id")
+		.then(product_subcategory_id =>
+			successResponseWithData({ product_subcategory_id }, "Success add ", 201)
+		)
+		.catch(err => errorResponse(err, 500))
+}
+
 exports.getTopProductBrands = () => {
 	return knex("order_products")
 		.innerJoin("products", "order_products.product_id", "products.product_id")

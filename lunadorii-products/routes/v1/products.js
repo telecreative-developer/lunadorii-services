@@ -204,6 +204,11 @@ router.get("/product-brands", (req, res) => {
 		.catch(err => console.log("Error on GET_ALL_PRODUCT_BRANDS", err))
 })
 
+// Post product brands
+router.post("/product-brands", (req, res) => {
+	res.status(201).json(req.body)
+})
+
 // Get Top Product Brands
 router.get("/product-brands/top", (req, res) => {
 	Promise.try(
