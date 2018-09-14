@@ -599,6 +599,27 @@ exports.addProductSubcategories = (body) => {
 		.catch(err => errorResponse(err, 500))
 }
 
+exports.updateProductSubcategories = (product_subcategory_id, body) => {
+	const now = momentTimezone()
+		.tz("Asia/Jakarta")
+		.format()
+
+	return knex('product_subcategories')
+		.where('product_subcategory_id', product_subcategory_id)
+		.update({
+			subcategory: body.subcategory,
+			thumbnail_url: body.thumbnail_url,
+			product_category_id: body.product_category_id,
+			created_at: now,
+			updated_at: now
+		})
+		.returning("product_subcategory_id")
+		.then(product_subcategory_id =>
+			successResponseWithData({ product_subcategory_id }, "Success update subcategory", 201)
+		)
+		.catch(err => errorResponse(err, 500))
+}
+
 exports.getProductSubcategories = () => {
 	return knex("product_subcategories")
 		.then(res =>
