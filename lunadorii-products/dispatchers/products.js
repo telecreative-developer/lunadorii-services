@@ -594,8 +594,6 @@ exports.addProductSubcategories = (body) => {
 				created_at: now,
 				updated_at: now
 			})
-			.returning("product_subcategory_id")
-			.then(product_subcategory_id => product_subcategory_id)
 	}
 	
 	// Verify
@@ -613,7 +611,7 @@ exports.addProductSubcategories = (body) => {
 	return(
 		verify(body)
 			.then(result => addProductSubcategories(result))
-			.then(result => successResponseWithData({ result }, "Success Add Subcategory", 201))
+			.then(() => successResponseWithoutData("Success Add Subcategory", 201))
 			.catch(error => error)
 	)
 }
