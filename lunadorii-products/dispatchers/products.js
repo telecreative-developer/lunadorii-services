@@ -610,7 +610,6 @@ exports.updateProductSubcategories = (product_subcategory_id, body) => {
 			subcategory: body.subcategory,
 			thumbnail_url: body.thumbnail_url,
 			product_category_id: body.product_category_id,
-			created_at: now,
 			updated_at: now
 		})
 		.returning("product_subcategory_id")
