@@ -464,15 +464,14 @@ exports.postProductBrands = (body) => {
 
 	return knex('product_brands')
 		.insert({
-			subcategory: body.subcategory,
-			thumbnail_url: body.thumbnail_url,
-			product_category_id: body.product_category_id,
+			brand: body.brand,
+			logo_url: body.logo_url,
 			created_at: now,
 			updated_at: now
 		})
-		.returning("product_subcategory_id")
-		.then(product_subcategory_id =>
-			successResponseWithData({ product_subcategory_id }, "Success add ", 201)
+		.returning("product_brand_id")
+		.then(product_brand_id =>
+			successResponseWithData({ product_brand_id }, "Success add new brand", 201)
 		)
 		.catch(err => errorResponse(err, 500))
 }

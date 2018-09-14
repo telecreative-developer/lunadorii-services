@@ -17,6 +17,7 @@ const {
 	getProductsWithBrand,
 	getProductsWithBrandLogged,
 	getProductBrands,
+	postProductBrands,
 	getProductBrandsWithProducts,
 	getTopProductBrands,
 	getTopProductBrandsWithProducts,
@@ -206,7 +207,9 @@ router.get("/product-brands", (req, res) => {
 
 // Post product brands
 router.post("/product-brands", (req, res) => {
-	res.status(201).json(req.body)
+	Promise.try(() => postProductBrands(req.body))
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log("Error on POST_PRODUCT_BRANDS", err))
 })
 
 // Get Top Product Brands
