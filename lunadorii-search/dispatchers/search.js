@@ -26,6 +26,12 @@ const knexSearchEngine = attributes => {
 				builder.where("products.product_brand_id", attributes.productBrand)
 			)
 		})
+		.where(builder => {
+			return (
+				attributes.titleWithBrands &&
+				builder.where('products.product', attributes.titleWithBrands)
+			)
+		})
 		.innerJoin(
 			"product_subcategories",
 			"products.product_subcategory_id",
