@@ -11,7 +11,6 @@ const envDefaultAvatar = process.env.AWS_IMAGE_DEFAULT_URL
 const knexSearchEngine = attributes => {
 	return knex("products")
 		.whereRaw("LOWER(product) LIKE ?", `%${attributes.payload.toLowerCase()}%`)
-		.whereRaw("LOWER()")
 		.where(builder => {
 			return (
 				attributes.subcategories &&
