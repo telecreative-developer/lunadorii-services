@@ -346,10 +346,25 @@ exports.getOrderRecent = id => {
 
 exports.getOrderRecentSingle = order_id => {
 
+	const sortProductThumbnails = data => {
+		let list = data.map(res_data => res_data)
+		return list.map(l => {
+			let list_map = l.list
+			console.log("Is an array " + Array.isArray(l))
+			return list_map.map(res => ({
+				...l,
+				thumbnails: res.thumbnails.sort(
+					(a, b) => a.product_thumbnail_id - b.product_thumbnail_id
+				)
+			}))
+		})
+	}
+
 	return knexRecentOrders("orders.order_id", order_id)
 		.then(res => NestHydrationJS.nest(res, historyDefinition))
 		.then(res => midtransStatus(res))
-		.then(res => successResponse(res, "Success Get Order Recent", 200))
+		.then(res => sortProductThumbnails(res))
+		.then(res => successResponse(res[0], "Success Get Order Recent", 200))
 
 }
 
