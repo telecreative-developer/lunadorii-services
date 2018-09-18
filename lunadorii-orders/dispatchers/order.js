@@ -328,11 +328,11 @@ exports.getOrderRecent = id => {
 	// 				(a, b) => a.product_thumbnail_id - b.product_thumbnail_id
 	// 			)
 	const sortProductThumbnails = data => {
-		return data.map(res_data => {
-			return res_data.map(res => {
-				console.log('REsult ',res)
-			})
-		})
+
+		let list = data.map(res_data => res_data)
+
+		console.log('listsss', list)
+
 	}
 
 	return knexRecentOrders("orders.id", id)
