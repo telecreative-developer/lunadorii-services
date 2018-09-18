@@ -111,7 +111,7 @@ exports.getCart = id => {
 			"product_reviews_users.last_name as product_reviews_last_name",
 			"product_reviews.created_at as product_reviews_created_at",
 			"product_reviews.updated_at as product_reviews_updated_at"
-		)
+		).orderBy("id", "desc")
 		.then(res => validationAvatar(res))
 		.then(res => NestHydrationJS.nest(res, cartDefinition))
 		.then(res => subtotalAndProductRate(res))
