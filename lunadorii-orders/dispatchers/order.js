@@ -29,9 +29,9 @@ Array.prototype.count = function() {
 }
 
 const sortProductThumbnails = data => {
-	return data.map(res => ({
+	return data.list.map(res => ({
 		...res,
-		thumbnails: res.list.thumbnails.sort(
+		thumbnails: res.thumbnails.sort(
 			(a, b) => a.product_thumbnail_id - b.product_thumbnail_id
 		)
 	}))
