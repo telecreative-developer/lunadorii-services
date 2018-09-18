@@ -328,7 +328,7 @@ exports.getOrderRecent = id => {
 		list.map(l => {
 			let list_map = l.list
 			list_map.map(res => {
-				console.log(res.thumbnails)
+				console.log(res)
 			})
 		})
 	}
