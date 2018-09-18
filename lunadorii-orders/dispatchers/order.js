@@ -328,16 +328,17 @@ exports.getOrderRecent = id => {
 		list.map(l => {
 			let list_map = l.list
 			list_map.map(res => {
-				let thumbnails_map = res.thumbnails
-				return thumbnails_map.map(res => ({
-					...res,
-					thumbnails: res.thumbnails.sort(
-						(a, b) => a.product_thumbnail_id - b.product_thumbnail_id
-					)
-				}))
+				console.log(res.thumbnails)
 			})
 		})
 	}
+
+	// return thumbnails_map.map(res => ({
+	// 	...res,
+	// 	thumbnails: res.thumbnails.sort(
+	// 		(a, b) => a.product_thumbnail_id - b.product_thumbnail_id
+	// 	)
+	// }))
 
 	return knexRecentOrders("orders.id", id)
 		.then(res => NestHydrationJS.nest(res, historyDefinition))
