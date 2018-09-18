@@ -323,16 +323,13 @@ exports.getOrderHistorySingleLogged = (order_id, id) => {
 
 exports.getOrderRecent = id => {
 
-	Array.prototype.first = function () {
-    return this[0]
-	}
-
 	const sortProductThumbnails = data => {
 		let list = data.map(res_data => res_data)
 		return list.map(l => {
 			let list_map = l.list
+			console.log("Is an array " + Array.isArray(l))
 			return list_map.map(res => ({
-				...l.shift(),
+				...l,
 				thumbnails: res.thumbnails.sort(
 					(a, b) => a.product_thumbnail_id - b.product_thumbnail_id
 				)
