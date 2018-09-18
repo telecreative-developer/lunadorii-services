@@ -324,9 +324,8 @@ exports.getOrderHistorySingleLogged = (order_id, id) => {
 exports.getOrderRecent = id => {
 
 	const sortProductThumbnails = data => {
-		const {list} = data
-		console.log(list)
-		return list.map(res => ({
+		console.log(data)
+		return data.map(res => ({
 			...res,
 			thumbnails: res.thumbnails.sort(
 				(a, b) => a.product_thumbnail_id - b.product_thumbnail_id
