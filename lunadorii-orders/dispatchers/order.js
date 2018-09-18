@@ -29,6 +29,7 @@ Array.prototype.count = function() {
 }
 
 const sortProductThumbnails = data => {
+	console.log(data)
 	return data.list.map(res => ({
 		...res,
 		thumbnails: res.thumbnails.sort(
@@ -331,7 +332,7 @@ exports.getOrderRecentSingle = order_id => {
 	return knexRecentOrders("orders.order_id", order_id)
 		.then(res => NestHydrationJS.nest(res, historyDefinition))
 		.then(res => midtransStatus(res))
-		// .then(res => sortProductThumbnails(res))
+		.then(res => sortProductThumbnails(res))
 		.then(res => successResponse(res, "Success Get Order Recent", 200))
 }
 
