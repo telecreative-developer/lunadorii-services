@@ -324,13 +324,14 @@ exports.getOrderHistorySingleLogged = (order_id, id) => {
 exports.getOrderRecent = id => {
 
 	const sortProductThumbnails = data => {
+		// ...res,
+		// 	thumbnails: res.thumbnails.sort(
+		// 		(a, b) => a.product_thumbnail_id - b.product_thumbnail_id
+		// 	)
 		console.log(data)
-		return data.map(res => ({
-			...res,
-			thumbnails: res.thumbnails.sort(
-				(a, b) => a.product_thumbnail_id - b.product_thumbnail_id
-			)
-		}))
+		return data.map(res => {
+			console.log(res)
+		})
 	}
 
 	return knexRecentOrders("orders.id", id)
