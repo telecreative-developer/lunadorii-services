@@ -329,9 +329,10 @@ exports.getOrderRecent = id => {
 	// 			)
 	const sortProductThumbnails = data => {
 
-		let list = data.list.map(res_data => res_data)
-
-		console.log('listsss', list)
+		let list = data.map(res_data => res_data)
+		return list.map(res => {
+			console.log("listt ress", res)
+		})
 
 	}
 
