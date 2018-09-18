@@ -327,7 +327,6 @@ exports.getOrderRecent = id => {
 		let list = data.map(res_data => res_data)
 		return list.map(l => {
 			let list_map = l.list
-			console.log("Is an array " + Array.isArray(l))
 			return list_map.map(res => ({
 				...l,
 				thumbnails: res.thumbnails.sort(
@@ -350,7 +349,6 @@ exports.getOrderRecentSingle = order_id => {
 		let list = data.map(res_data => res_data)
 		return list.map(l => {
 			let list_map = l.list
-			console.log("Is an array " + Array.isArray(l))
 			return list_map.map(res => ({
 				...l,
 				thumbnails: res.thumbnails.sort(
