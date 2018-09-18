@@ -30,6 +30,15 @@ const productRateAsync = data => {
 	}))
 }
 
+const sortProductThumbnails = data => {
+	return data.map(res => ({
+		...res,
+		thumbnails: res.thumbnails.sort(
+			(a, b) => a.product_thumbnail_id - b.product_thumbnail_id
+		)
+	}))
+}
+
 exports.addWishlist = data => {
 	const now = momentTimezone()
 		.tz("Asia/Jakarta")
@@ -88,6 +97,7 @@ exports.getWishlist = id => {
 		)
 		.then(res => validationAvatar(res))
 		.then(res => NestHydrationJS.nest(res, wishlistDefinition))
+		.then(res => sortProductThumbnails(res))
 		.then(res => productRateAsync(res))
 		.then(res => successResponseWithData(res, "Success Get Wishlist", 200))
 		.catch(err => err)
