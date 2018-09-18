@@ -340,8 +340,8 @@ exports.getOrderRecent = id => {
 	return knexRecentOrders("orders.id", id)
 		.then(res => NestHydrationJS.nest(res, historyDefinition))
 		.then(res => checkReviewed(id, res))
-		.then(res => sortProductThumbnails([res]))
-		.then(res => successResponse(res, "Success Get Order Recent", 200))
+		.then(res => sortProductThumbnails(res))
+		.then(res => successResponse(res[0], "Success Get Order Recent", 200))
 }
 
 exports.getOrderRecentSingle = order_id => {
