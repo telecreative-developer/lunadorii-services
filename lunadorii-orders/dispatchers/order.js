@@ -330,7 +330,7 @@ exports.getOrderRecent = id => {
 	const sortProductThumbnails = data => {
 		console.log(data)
 		data.map(res_data => {
-			return res_data.map(res => {
+			res_data.map(res => {
 				console.log(res)
 			})
 		})
