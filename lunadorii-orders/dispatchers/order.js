@@ -328,17 +328,15 @@ exports.getOrderRecent = id => {
 		list.map(l => {
 			let list_map = l.list
 			list_map.map(res => {
-				let thumbnail_map = res.thumbnails
-				console.log(thumbnail_map)
+				let thumbnails_map = res.thumbnails
+				return thumbnails_map.map(res => ({
+					...res,
+					thumbnails: res.thumbnails.sort(
+						(a, b) => a.product_thumbnail_id - b.product_thumbnail_id
+					)
+				}))
 			})
 		})
-
-		// return thumbnails.map(res => ({
-			// ...res,
-			// thumbnails: res.thumbnails.sort(
-			// 	(a, b) => a.product_thumbnail_id - b.product_thumbnail_id
-			// )
-		// }))
 	}
 
 	return knexRecentOrders("orders.id", id)
