@@ -328,7 +328,7 @@ exports.getOrderRecent = id => {
 		return list.map(l => {
 			let list_map = l.list
 			return list_map.map(res => ({
-				...res,
+				...l,
 				thumbnails: res.thumbnails.sort(
 					(a, b) => a.product_thumbnail_id - b.product_thumbnail_id
 				)
@@ -338,8 +338,8 @@ exports.getOrderRecent = id => {
 
 	return knexRecentOrders("orders.id", id)
 		.then(res => NestHydrationJS.nest(res, historyDefinition))
-		.then(res => sortProductThumbnails(res))
 		.then(res => checkReviewed(id, res))
+		.then(res => sortProductThumbnails(res))
 		.then(res => successResponse(res, "Success Get Order Recent", 200))
 }
 
