@@ -777,23 +777,34 @@ exports.updateProduct = (product_id, data) => {
 }
 
 exports.deleteProduct = product_id => {
+
 	const deleteThumbnailsAsync = product_id => {
 		return knex("product_thumbnails")
 			.where("product_id", product_id)
 			.del()
-			.then(() => successResponseWithoutData("Success Delete Product", 200))
-			.catch(err => errorResponse("Internal Server Error", 500))
 	}
 
 	const deleteProductAsync = product_id => {
 		return knex("products")
 			.where("product_id", product_id)
 			.del()
-			.then(() => successResponseWithoutData("Success Delete Product", 200))
-			.catch(err => errorResponse("Internal Server Error", 500))
 	}
 
-	return deleteThumbnailsAsync(product_id)
-		.then(res => deleteProductAsync(product_id))
-		.catch(err => err)
+	const verify = (product_id) => {
+		return new Promise((resolve, reject) => {
+			typeof product_id == 'number'
+			?
+				resolve(product_id)
+			:
+				reject(errorResponse('Invalid id', 409))
+		})
+	}
+
+	return(
+		verify(product_id)
+			.then(() => deleteThumbnailsAsync(product_id))
+			.then(() => deleteProductAsync(product_id))
+			.then(() => successResponseWithoutData("Succesfully delete product", 200))
+			.catch(error => error)
+	)
 }
