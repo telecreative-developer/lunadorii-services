@@ -63,6 +63,15 @@ const subtotalAndProductRate = data => {
 	}))
 }
 
+const sortProductThumbnails = data => {
+	return data.map(res => ({
+		...res,
+		thumbnails: res.thumbnails.sort(
+			(a, b) => a.product_thumbnail_id - b.product_thumbnail_id
+		)
+	}))
+}
+
 exports.addCart = data => {
 	return knex("cart")
 		.where("id", data.id)
@@ -114,6 +123,7 @@ exports.getCart = id => {
 		)
 		.then(res => validationAvatar(res))
 		.then(res => NestHydrationJS.nest(res, cartDefinition))
+		.then(res => sortProductThumbnails(res))
 		.then(res => subtotalAndProductRate(res))
 		.then(res => successResponseWithData(res, "Success Get Cart", 200))
 		.catch(err => errorResponse("Internal Server Error", 500))
