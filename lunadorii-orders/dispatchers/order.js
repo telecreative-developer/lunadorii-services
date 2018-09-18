@@ -336,17 +336,10 @@ exports.getOrderRecent = id => {
 		})
 	}
 
-	// return thumbnails_map.map(res => ({
-		// ...res,
-		// thumbnails: res.thumbnails.sort(
-		// 	(a, b) => a.product_thumbnail_id - b.product_thumbnail_id
-		// )
-	// }))
-
 	return knexRecentOrders("orders.id", id)
 		.then(res => NestHydrationJS.nest(res, historyDefinition))
-		.then(res => sortProductThumbnails(res))
 		.then(res => checkReviewed(id, res))
+		.then(res => sortProductThumbnails(res))
 		.then(res => successResponse(res, "Success Get Order Recent", 200))
 }
 
