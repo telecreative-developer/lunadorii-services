@@ -112,12 +112,22 @@ const wishlist = (attributes, data) => {
 		.catch(err => errorResponse("Internal Server Error", 500))
 }
 
+const sortProductThumbnails = data => {
+	return data.map(res => ({
+		...res,
+		thumbnails: res.thumbnails.sort(
+			(a, b) => a.product_thumbnail_id - b.product_thumbnail_id
+		)
+	}))
+}
+
 exports.search = attributes => {
 	return knexSearchEngine(attributes)
 		.then(res => validationAvatar(res))
 		.then(res => NestHydrationJS.nest(res, searchDefinition))
 		.then(res => productRateAndDiscount(res))
 		.then(res => filterPrice(attributes, res))
+		.then(res => sortProductThumbnails(res))
 		.then(res => successResponse(res, `Keyword: ${attributes.payload}`, 200))
 		.catch(err => err)
 }
@@ -129,6 +139,7 @@ exports.searchLogged = attributes => {
 		.then(res => wishlist(attributes, res))
 		.then(res => productRateAndDiscount(res))
 		.then(res => filterPrice(attributes, res))
+		.then(res => sortProductThumbnails(res))
 		.then(res => successResponse(res, `Keyword: ${attributes.payload}`, 200))
 		.catch(err => err)
 }
