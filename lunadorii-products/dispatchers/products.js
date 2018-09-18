@@ -792,7 +792,7 @@ exports.deleteProduct = product_id => {
 
 	const verify = (product_id) => {
 		return new Promise((resolve, reject) => {
-			typeof product_id == 'number'
+			typeof product_id == 'string' && product_id != 0
 			?
 				resolve(product_id)
 			:
