@@ -778,6 +778,12 @@ exports.updateProduct = (product_id, data) => {
 
 exports.deleteProduct = product_id => {
 
+	const deleteOrderProductsAsync = (product_id) => {
+		return knex('order_products')
+			.where("product_id", product_id)
+			.del()
+	}
+
 	const deleteThumbnailsAsync = product_id => {
 		return knex("product_thumbnails")
 			.where("product_id", product_id)
@@ -802,9 +808,11 @@ exports.deleteProduct = product_id => {
 
 	return(
 		verify(product_id)
+			.then(() => deleteOrderProductsAsync(product_id))
 			.then(() => deleteThumbnailsAsync(product_id))
 			.then(() => deleteProductAsync(product_id))
 			.then(() => successResponseWithoutData("Succesfully delete product", 200))
 			.catch(error => error)
 	)
+
 }
