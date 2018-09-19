@@ -297,10 +297,25 @@ exports.getOrderHistories = () => {
 }
 
 exports.getOrderHistory = id => {
+
+	const sortProductThumbnails = data => {
+		let list = data.map(res_data => res_data)
+		return list.map(l => {
+			let list_map = l.list
+			return list_map.map(res => ({
+				...l,
+				thumbnails: res.thumbnails.sort(
+					(a, b) => a.product_thumbnail_id - b.product_thumbnail_id
+				)
+			}))
+		})
+	}
+
 	return knexOrderHistory("orders.id", id)
 		.then(res => NestHydrationJS.nest(res, historyDefinition))
 		.then(res => checkReviewed(id, res))
-		.then(res => successResponse(res, "Success Get Order History", 200))
+		.then(res => sortProductThumbnails(res))
+		.then(res => successResponse(res[0], "Success Get Order History", 200))
 		.catch(err => err)
 }
 
