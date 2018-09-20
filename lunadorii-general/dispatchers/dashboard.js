@@ -39,6 +39,7 @@ exports.getDashboardInfo = () => {
 
 	const getProducts = () => {
 		return knex("products")
+			.where("available", true)
 			.then(res => getWishlist(res.length))
 			.catch(err => errorResponse("Internal Server Error", 500))
 	}

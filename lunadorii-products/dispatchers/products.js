@@ -93,6 +93,7 @@ const productSoldAndRate = data => {
 
 const knexProductsAsync = () => {
 	return knex("products")
+		.where('available', true)
 		.innerJoin(
 			"product_subcategories",
 			"products.product_subcategory_id",
@@ -778,22 +779,24 @@ exports.updateProduct = (product_id, data) => {
 
 exports.deleteProduct = product_id => {
 
-	const deleteOrderProductsAsync = (product_id) => {
-		return knex('order_products')
-			.where("product_id", product_id)
-			.del()
-	}
+	// const deleteOrderProductsAsync = (product_id) => {
+	// 	return knex('order_products')
+	// 		.where("product_id", product_id)
+	// 		.del()
+	// }
 
-	const deleteThumbnailsAsync = product_id => {
-		return knex("product_thumbnails")
-			.where("product_id", product_id)
-			.del()
-	}
+	// const deleteThumbnailsAsync = product_id => {
+	// 	return knex("product_thumbnails")
+	// 		.where("product_id", product_id)
+	// 		.del()
+	// }
 
 	const deleteProductAsync = product_id => {
 		return knex("products")
-			.where("product_id", product_id)
-			.del()
+			.where({product_id: product_id, available: true})
+			.update({
+				available: false
+			})
 	}
 
 	const verify = (product_id) => {
@@ -808,8 +811,8 @@ exports.deleteProduct = product_id => {
 
 	return(
 		verify(product_id)
-			.then(() => deleteOrderProductsAsync(product_id))
-			.then(() => deleteThumbnailsAsync(product_id))
+			// .then(() => deleteOrderProductsAsync(product_id))
+			// .then(() => deleteThumbnailsAsync(product_id))
 			.then(() => deleteProductAsync(product_id))
 			.then(() => successResponseWithoutData("Succesfully delete product", 200))
 			.catch(error => error)
