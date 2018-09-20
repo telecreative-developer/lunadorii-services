@@ -12,7 +12,7 @@ const knexSearchEngine = attributes => {
 	return knex("products")
 		.where("available", true)
 		.whereRaw("LOWER(product_brands.brand) LIKE ?", `%${attributes.payload.toLowerCase()}%`)
-		.whereRaw("LOWER(product) LIKE ?", `%${attributes.payload.toLowerCase()}%`)
+		// .whereRaw("LOWER(product) LIKE ?", `%${attributes.payload.toLowerCase()}%`)
 		.where(builder => {
 			return (
 				attributes.subcategories &&
