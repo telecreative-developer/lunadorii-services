@@ -790,12 +790,17 @@ exports.deleteProduct = product_id => {
 	// 		.where("product_id", product_id)
 	// 		.del()
 	// }
+	
+	const now = momentTimezone()
+		.tz("Asia/Jakarta")
+		.format()
 
 	const deleteProductAsync = product_id => {
 		return knex("products")
 			.where({product_id: product_id, available: true})
 			.update({
-				available: false
+				available: false,
+				updated_at: now
 			})
 	}
 
