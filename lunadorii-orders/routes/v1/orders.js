@@ -19,8 +19,8 @@ const {
 } = require("../../dispatchers/order")
 
 // Switch order status to Packing
-router.put("/order/status/packing/:id", (req, res) => {
-	Promise.try(() => swicthOrderStatusToPacking(req.params.id))
+router.put("/order/status/packing/:billing_code", (req, res) => {
+	Promise.try(() => swicthOrderStatusToPacking(req.params.billing_code))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on PUT_SWITCH_ORDER_STATUS", err))
 })

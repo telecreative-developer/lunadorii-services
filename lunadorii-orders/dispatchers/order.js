@@ -300,7 +300,7 @@ exports.swicthOrderStatusToPacking = (billing_code) => {
 	const now = momentTimezone()
 		.tz("Asia/Jakarta")
 		.format()
-
+	console.log(billing_code)
 	return knex('order')
 		.where('billing_code', billing_code)
 		.update({
@@ -308,7 +308,7 @@ exports.swicthOrderStatusToPacking = (billing_code) => {
 			updated_at: now
 		})
 		.then(res => successResponse(res, "Success switch Order Status", 201))
-		.catch(err => errorResponse("Internal Server Error", 500))
+		.catch(err => errorResponse(err, 500))
 }
 
 exports.getOrderHistory = id => {
