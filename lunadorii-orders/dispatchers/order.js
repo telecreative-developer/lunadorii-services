@@ -296,6 +296,21 @@ exports.getOrderHistories = () => {
 		.catch(err => err)
 }
 
+exports.swicthOrderStatusToPacking = (billing_code) => {
+	const now = momentTimezone()
+		.tz("Asia/Jakarta")
+		.format()
+
+	return knex('order')
+		.where('billing_code', billing_code)
+		.update({
+			order_status:"Packing",
+			updated_at: now
+		})
+		.then(result => result)
+		.catch(err => err)
+}
+
 exports.getOrderHistory = id => {
 
 	const sortProductThumbnails = data => {

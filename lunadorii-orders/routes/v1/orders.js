@@ -14,8 +14,16 @@ const {
 	getOrderHistorySingleLogged,
 	getOrderRecent,
 	getOrderRecentSingle,
-	getOrderRecentSingleLogged
+	getOrderRecentSingleLogged,
+	swicthOrderStatusToPacking
 } = require("../../dispatchers/order")
+
+// Switch order status to Packing
+router.put("/order/status/packing/:id", (req, res) => {
+	Promise.try(() => swicthOrderStatusToPacking(req.params.id))
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log("Error on GET_ORDER_HISTORIES", err))
+})
 
 // Get order histories
 router.get("/order/histories", authenticationAdmin, (req, res) => {
