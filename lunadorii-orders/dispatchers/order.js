@@ -346,6 +346,29 @@ exports.swicthOrderStatusToShipping = (billing_code, body) => {
 
 }
 
+exports.swicthOrderStatusToDelivered = (billing_code) => {
+	const now = momentTimezone()
+		.tz("Asia/Jakarta")
+		.format()
+	return knex('orders')
+		.where('billing_code', billing_code)
+		.update({
+			order_status:"Delivered",
+			updated_at: now
+		})
+		.then(res => successResponse(res, "Success switch Order Status", 201))
+		.catch(err => errorResponse(err, 500))
+	}
+
+	return(
+		verify(body)
+			.then(result => switchToShipping(billing_code, result))
+			.then(result => successResponse(result, "Success switch Order Status", 201))
+			.catch(err => errorResponse(err, 500))
+	)
+
+}
+
 exports.getOrderHistory = id => {
 
 	const sortProductThumbnails = data => {

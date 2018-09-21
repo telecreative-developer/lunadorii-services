@@ -16,21 +16,29 @@ const {
 	getOrderRecentSingle,
 	getOrderRecentSingleLogged,
 	swicthOrderStatusToPacking,
-	swicthOrderStatusToShipping
+	swicthOrderStatusToShipping,
+	swicthOrderStatusToDelivered
 } = require("../../dispatchers/order")
 
 // Switch order status to Packing
 router.put("/order/status/packing/:billing_code", authenticationAdmin, (req, res) => {
 	Promise.try(() => swicthOrderStatusToPacking(req.params.billing_code))
 		.then(response => res.status(response.status).json(response))
-		.catch(err => console.log("Error on PUT_SWITCH_ORDER_STATUS", err))
+		.catch(err => console.log("Error on PUT_SWITCH_ORDER_PACKING_STATUS", err))
 })
 
 // Switch order status to Shipping
 router.put("/order/status/shipping/:billing_code", authenticationAdmin, (req, res) => {
 	Promise.try(() => swicthOrderStatusToShipping(req.params.billing_code, req.body))
 		.then(response => res.status(response.status).json(response))
-		.catch(err => console.log("Error on PUT_SWITCH_ORDER_STATUS", err))
+		.catch(err => console.log("Error on PUT_SWITCH_ORDER_SHIPPING_STATUS", err))
+})
+
+// Switch order status to Delivered
+router.put("/order/status/delivered/:billing_code", authenticationAdmin, (req, res) => {
+	Promise.try(() => swicthOrderStatusToDelivered(req.params.billing_code))
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log("Error on PUT_SWITCH_ORDER_DELIVERED_STATUS", err))
 })
 
 // Get order histories
