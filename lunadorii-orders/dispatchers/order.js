@@ -302,7 +302,7 @@ exports.swicthOrderStatusToPacking = (billing_code) => {
 		.format()
 	console.log(billing_code)
 	return knex('order')
-		.where('billing_code', billing_code)
+		.where('order.billing_code', billing_code)
 		.update({
 			order_status:"Packing",
 			updated_at: now
