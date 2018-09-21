@@ -301,8 +301,8 @@ exports.swicthOrderStatusToPacking = (billing_code) => {
 		.tz("Asia/Jakarta")
 		.format()
 	console.log(billing_code)
-	return knex('order')
-		.where('order.billing_code', billing_code)
+	return knex('orders')
+		.where('billing_code', billing_code)
 		.update({
 			order_status:"Packing",
 			updated_at: now
