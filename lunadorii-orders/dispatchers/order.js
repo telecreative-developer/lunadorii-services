@@ -300,7 +300,6 @@ exports.swicthOrderStatusToPacking = (billing_code) => {
 	const now = momentTimezone()
 		.tz("Asia/Jakarta")
 		.format()
-	console.log(billing_code)
 	return knex('orders')
 		.where('billing_code', billing_code)
 		.update({
@@ -309,6 +308,42 @@ exports.swicthOrderStatusToPacking = (billing_code) => {
 		})
 		.then(res => successResponse(res, "Success switch Order Status", 201))
 		.catch(err => errorResponse(err, 500))
+}
+
+exports.swicthOrderStatusToShipping = (billing_code, body) => {
+	const now = momentTimezone()
+		.tz("Asia/Jakarta")
+		.format()
+
+	const switchToShipping = (billing_code, body) => {
+		return knex('orders')
+		.where('billing_code', billing_code)
+		.update({
+			receipt_number: body.receipt_number,
+			order_status:"Shipping",
+			updated_at: now
+		})
+		.then(result => result)
+		.catch(err => err)
+	}
+
+	const verify = (body) => {
+		return new Promise((resolve, reject) => {
+			body.receipt_number
+			?
+				resolve(body)
+			:
+				reject(errorResponse("receipt_number field is null", 409))
+		})
+	}
+
+	return(
+		verify(body)
+			.then(result => switchToShipping(billing_code, result))
+			.then(result => successResponse(result, "Success switch Order Status", 201))
+			.catch(err => errorResponse(err, 500))
+	)
+
 }
 
 exports.getOrderHistory = id => {

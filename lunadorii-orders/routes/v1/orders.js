@@ -15,12 +15,20 @@ const {
 	getOrderRecent,
 	getOrderRecentSingle,
 	getOrderRecentSingleLogged,
-	swicthOrderStatusToPacking
+	swicthOrderStatusToPacking,
+	swicthOrderStatusToShipping
 } = require("../../dispatchers/order")
 
 // Switch order status to Packing
 router.put("/order/status/packing/:billing_code", authenticationAdmin, (req, res) => {
 	Promise.try(() => swicthOrderStatusToPacking(req.params.billing_code))
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log("Error on PUT_SWITCH_ORDER_STATUS", err))
+})
+
+// Switch order status to Shipping
+router.put("/order/status/shipping/:billing_code", authenticationAdmin, (req, res) => {
+	Promise.try(() => swicthOrderStatusToShipping(req.params.billing_code, req.body))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on PUT_SWITCH_ORDER_STATUS", err))
 })
