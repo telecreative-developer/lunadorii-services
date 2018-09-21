@@ -306,7 +306,7 @@ exports.swicthOrderStatusToPacking = (billing_code) => {
 			order_status:"Packing",
 			updated_at: now
 		})
-		.then(res => successResponse(res, "Success switch Order Status", 201))
+		.then(res => successResponse(res, "Success switch Order Status to Packing", 201))
 		.catch(err => errorResponse(err, 500))
 }
 
@@ -340,7 +340,7 @@ exports.swicthOrderStatusToShipping = (billing_code, body) => {
 	return(
 		verify(body)
 			.then(result => switchToShipping(billing_code, result))
-			.then(result => successResponse(result, "Success switch Order Status", 201))
+			.then(result => successResponse(result, "Success switch Order Status Shipping", 201))
 			.catch(err => errorResponse(err, 500))
 	)
 
@@ -356,17 +356,8 @@ exports.swicthOrderStatusToDelivered = (billing_code) => {
 			order_status:"Delivered",
 			updated_at: now
 		})
-		.then(res => successResponse(res, "Success switch Order Status", 201))
+		.then(res => successResponse(res, "Success switch Order Status Delivered", 201))
 		.catch(err => errorResponse(err, 500))
-	}
-
-	return(
-		verify(body)
-			.then(result => switchToShipping(billing_code, result))
-			.then(result => successResponse(result, "Success switch Order Status", 201))
-			.catch(err => errorResponse(err, 500))
-	)
-
 }
 
 exports.getOrderHistory = id => {
