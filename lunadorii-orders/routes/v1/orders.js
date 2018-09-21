@@ -22,7 +22,7 @@ const {
 router.put("/order/status/packing/:id", (req, res) => {
 	Promise.try(() => swicthOrderStatusToPacking(req.params.id))
 		.then(response => res.status(response.status).json(response))
-		.catch(err => console.log("Error on GET_ORDER_HISTORIES", err))
+		.catch(err => console.log("Error on PUT_SWITCH_ORDER_STATUS", err))
 })
 
 // Get order histories

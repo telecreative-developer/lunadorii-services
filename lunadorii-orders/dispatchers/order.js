@@ -307,7 +307,7 @@ exports.swicthOrderStatusToPacking = (billing_code) => {
 			order_status:"Packing",
 			updated_at: now
 		})
-		.then(result => result)
+		.then(res => successResponse(res, "Success switch Order Status", 201))
 		.catch(err => err)
 }
 
