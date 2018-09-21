@@ -308,7 +308,7 @@ exports.swicthOrderStatusToPacking = (billing_code) => {
 			updated_at: now
 		})
 		.then(res => successResponse(res, "Success switch Order Status", 201))
-		.catch(err => err)
+		.catch(err => errorResponse("Internal Server Error", 500))
 }
 
 exports.getOrderHistory = id => {
