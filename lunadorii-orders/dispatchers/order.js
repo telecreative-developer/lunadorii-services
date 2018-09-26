@@ -383,8 +383,8 @@ exports.getOrderHistory = id => {
 	return knexOrderHistory("orders.id", id)
 		.then(res => NestHydrationJS.nest(res, historyDefinition))
 		.then(res => checkReviewed(id, res))
-		.then(res => sortProductThumbnails(res))
-		.then(res => merging(res))
+		// .then(res => sortProductThumbnails(res))
+		// .then(res => merging(res))
 		.then(res => successResponse(res, "Success Get Order History", 200))
 		.catch(err => err)
 }
