@@ -6,6 +6,7 @@ const {
 	authenticationUser,
 	authenticationAdmin
 } = require("../../middleware/authentication")
+
 const {
 	checkoutOrder,
 	getOrderHistories,
@@ -35,7 +36,7 @@ router.put("/order/status/shipping/:billing_code", authenticationAdmin, (req, re
 })
 
 // Switch order status to Delivered
-router.put("/order/status/delivered/:billing_code", authenticationAdmin, (req, res) => {
+router.put("/order/status/delivered/:billing_code", authenticationUser, (req, res) => {
 	Promise.try(() => swicthOrderStatusToDelivered(req.params.billing_code))
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on PUT_SWITCH_ORDER_DELIVERED_STATUS", err))
