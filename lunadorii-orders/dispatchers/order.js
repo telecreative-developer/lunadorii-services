@@ -379,7 +379,7 @@ exports.getOrderHistory = id => {
 		.then(res => NestHydrationJS.nest(res, historyDefinition))
 		.then(res => checkReviewed(id, res))
 		.then(res => sortProductThumbnails(res))
-		.then(res => successResponse(res, "Success Get Order History", 200))
+		.then(res => successResponse(res => res.map(r => r), "Success Get Order History", 200))
 		.catch(err => err)
 }
 
