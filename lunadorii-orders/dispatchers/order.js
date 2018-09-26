@@ -377,9 +377,7 @@ exports.getOrderHistory = id => {
 
 	const merging = (data) => {
 		console.log(data.map(d => d))
-		return data.map(d => ({
-			...d
-		}))
+		return data.map(d => d)
 	}
 
 	return knexOrderHistory("orders.id", id)
