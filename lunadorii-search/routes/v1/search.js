@@ -15,9 +15,7 @@ router.get("/search", (req, res) => {
 // Search base on brands
 router.get("/search/brands", (req, res) => {
 	Promise.try(() => searchBaseOnBrands(req.query))
-		.then(response => res.status(200).json({
-			message: "Success"
-		}))
+		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on SEARCH BASE ON BRANDS", err))
 })
 
