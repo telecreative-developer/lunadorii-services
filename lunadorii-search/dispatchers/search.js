@@ -67,9 +67,24 @@ const knexSearchEngine = attributes => {
 }
 
 const knexSearchEngineBaseOnBrands = (attributes) => {
-	return knex("brands")
+	return knex("products")
 		.where("available", true)
-		.whereRaw("LOWER(brands) LIKE ?", `%${attributes.payload.toLowerCase()}%`)
+		.whereRaw("LOWER(product) LIKE ?", `%${attributes.payload.toLowerCase()}%`)
+		.where(builder => {
+			return (
+				attributes.subcategories &&
+				builder.whereIn(
+					"products.product_subcategory_id",
+					JSON.parse(attributes.subcategories)
+				)
+			)
+		})
+		.where(builder => {
+			return (
+				attributes.productBrand &&
+				builder.where("products.product_brand_id", attributes.productBrand)
+			)
+		})
 		.innerJoin(
 			"product_subcategories",
 			"products.product_subcategory_id",
