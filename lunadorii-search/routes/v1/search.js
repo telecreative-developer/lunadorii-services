@@ -1,7 +1,7 @@
 const express = require("express")
 const Promise = require("bluebird")
 const router = express.Router()
-const { search, searchLogged } = require("../../dispatchers/search")
+const { search, searchLogged, searchBaseOnBrands } = require("../../dispatchers/search")
 
 // Search
 router.get("/search", (req, res) => {
@@ -10,6 +10,15 @@ router.get("/search", (req, res) => {
 	)
 		.then(response => res.status(response.status).json(response))
 		.catch(err => console.log("Error on SEARCH", err))
+})
+
+// Search base on brands
+router.get("/search/brands", (req, res) => {
+	Promise.try(() => searchBaseOnBrands(req.query))
+		.then(response => res.status(200).json({
+			message: "Success"
+		}))
+		.catch(err => console.log("Error on SEARCH BASE ON BRANDS", err))
 })
 
 module.exports = router
