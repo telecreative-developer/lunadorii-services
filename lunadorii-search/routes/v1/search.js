@@ -14,12 +14,9 @@ router.get("/search", (req, res) => {
 
 // Search base on brands
 router.get("/search/brands", (req, res) => {
-	res.status(200).json({
-		message: "Bisa cuy"
-	})
-	// Promise.try(() => searchBaseOnBrands(req.query))
-	// 	.then(response => res.status(response.status).json(response))
-	// 	.catch(err => console.log("Error on SEARCH BASE ON BRANDS", err))
+	Promise.try(() => searchBaseOnBrands(req.query))
+		.then(response => res.status(response.status).json(response))
+		.catch(err => console.log("Error on SEARCH BASE ON BRANDS", err))
 })
 
 module.exports = router

@@ -180,16 +180,16 @@ const sortProductThumbnails = data => {
 	}))
 }
 
-// exports.searchBaseOnBrands = (attributes) => {
-// 	return knexSearchEngineBaseOnBrands(attributes)
-// 		.then(res => validationAvatar(res))
-// 		.then(res => NestHydrationJS.nest(res, searchDefinition))
-// 		.then(res => productRateAndDiscount(res))
-// 		.then(res => filterPrice(attributes, res))
-// 		.then(res => sortProductThumbnails(res))
-// 		.then(res => successResponse(res, `Keyword: ${attributes.payload}`, 200))
-// 		.catch(err => err)
-// }
+exports.searchBaseOnBrands = (attributes) => {
+	return knexSearchEngineBaseOnBrands(attributes)
+		.then(res => validationAvatar(res))
+		.then(res => NestHydrationJS.nest(res, searchDefinition))
+		.then(res => productRateAndDiscount(res))
+		.then(res => filterPrice(attributes, res))
+		.then(res => sortProductThumbnails(res))
+		.then(res => successResponse(res, `Keyword: ${attributes.payload}`, 200))
+		.catch(err => err)
+}
 
 exports.search = attributes => {
 	return knexSearchEngine(attributes)
