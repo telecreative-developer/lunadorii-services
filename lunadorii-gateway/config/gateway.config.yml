@@ -77,6 +77,7 @@ apiEndpoints:
     host: ec2-18-136-126-168.ap-southeast-1.compute.amazonaws.com
     paths:
       - '/api/v1/search'
+      - '/api/v1/search/brands'
   orders:
     host: ec2-18-136-126-168.ap-southeast-1.compute.amazonaws.com
     paths:
