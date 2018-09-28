@@ -228,7 +228,7 @@ exports.getAllProducts = () => {
 	return knexProductsAsync()
 		.then(res => validationAvatar(res))
 		.then(res => NestHydrationJS.nest(res, productsDefinition))
-		.then(res => sortProductThumbnails(res))
+		// .then(res => sortProductThumbnails(res))
 		.then(res => productRateAsync(res))
 		.then(res => successResponseWithData(res, "Success Get Products", 200))
 		.catch(err => err)
@@ -238,7 +238,7 @@ exports.getAllProductsLogged = id => {
 	return knexProductsAsync()
 		.then(res => validationAvatar(res))
 		.then(res => NestHydrationJS.nest(res, productsDefinition))
-		.then(res => sortProductThumbnails(res))
+		// .then(res => sortProductThumbnails(res))
 		.then(res => checkWishlistAsync(id, res))
 		.then(res => productRateAsync(res))
 		.then(res =>
