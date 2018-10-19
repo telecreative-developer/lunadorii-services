@@ -137,7 +137,7 @@ const knexProductsAsync = () => {
 
 const knexSingleProductAsync = (id, where_clause) => {
 	return knex("products")
-		.where({where_clause: id, available: true})
+		.where({where_clause: id, "available": true})
 		.innerJoin(
 			"product_subcategories",
 			"products.product_subcategory_id",
@@ -334,7 +334,7 @@ exports.getSingleProductLogged = (product_id, id) => {
 
 exports.getRelatedProducts = product_id => {
 	return knex("products")
-		.where({product_id: product_id, available: true})
+		.where({"product_id": product_id, "available": true})
 		.then(res =>
 			knexSingleProductAsync(
 				res[0].product_subcategory_id,
@@ -353,7 +353,7 @@ exports.getRelatedProducts = product_id => {
 
 exports.getRelatedProductsLogged = (product_id, id) => {
 	return knex("products")
-		.where({product_id: product_id, available: true})
+		.where({"product_id": product_id, "available": true})
 		.then(res =>
 			knexSingleProductAsync(
 				res[0].product_subcategory_id,
@@ -800,7 +800,7 @@ exports.deleteProduct = product_id => {
 
 	const deleteProductAsync = product_id => {
 		return knex("products")
-			.where({product_id: product_id, available: true})
+			.where({"product_id": product_id, "available": true})
 			.update({
 				available: false,
 				updated_at: now
