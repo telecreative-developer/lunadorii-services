@@ -137,7 +137,7 @@ const knexProductsAsync = () => {
 
 const knexSingleProductAsync = (id, where_clause) => {
 	return knex("products")
-		.where(where_clause, id)
+		.where({where_clause: id, "products.available": true})
 		.innerJoin(
 			"product_subcategories",
 			"products.product_subcategory_id",
@@ -175,6 +175,7 @@ const knexSingleProductAsync = (id, where_clause) => {
 			"product_reviews.created_at as product_reviews_created_at",
 			"product_reviews.updated_at as product_reviews_updated_at"
 		)
+		.where('products.available', true)
 		.orderBy("products.created_at", "desc")
 		.then(res => res)
 		.catch(err => errorResponse("Internal Server Error", 500))
@@ -333,7 +334,7 @@ exports.getSingleProductLogged = (product_id, id) => {
 
 exports.getRelatedProducts = product_id => {
 	return knex("products")
-		.where("products.product_id", product_id)
+		.where({"products.product_id": product_id, "products.available": true})
 		.then(res =>
 			knexSingleProductAsync(
 				res[0].product_subcategory_id,
@@ -352,7 +353,7 @@ exports.getRelatedProducts = product_id => {
 
 exports.getRelatedProductsLogged = (product_id, id) => {
 	return knex("products")
-		.where("products.product_id", product_id)
+		.where({"products.product_id": product_id, "products.available": true})
 		.then(res =>
 			knexSingleProductAsync(
 				res[0].product_subcategory_id,
