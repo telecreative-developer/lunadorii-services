@@ -601,6 +601,7 @@ exports.getBestSellerSubcategories = () => {
 			"product_subcategories.subcategory as subcategory",
 			"product_subcategories.thumbnail_url as subcategory_thumbnail_url"
 		)
+		.where('products.available', true)
 		.then(res =>
 			NestHydrationJS.nest(res, [
 				{
