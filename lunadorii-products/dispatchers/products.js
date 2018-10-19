@@ -220,6 +220,7 @@ const knexProductsBestSellerAsync = () => {
 			"product_reviews.created_at as product_reviews_created_at",
 			"product_reviews.updated_at as product_reviews_updated_at"
 		)
+		.where('products.available', true)
 		.then(res => res)
 		.catch(err => errorResponse("Internal Server Error", 500))
 }
