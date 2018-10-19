@@ -137,7 +137,8 @@ const knexProductsAsync = () => {
 
 const knexSingleProductAsync = (id, where_clause) => {
 	return knex("products")
-		.where({where_clause: id, "available": true})
+		.where(where_clause, id)
+		.where("available", true)
 		.innerJoin(
 			"product_subcategories",
 			"products.product_subcategory_id",
