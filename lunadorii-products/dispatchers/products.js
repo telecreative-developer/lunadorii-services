@@ -130,7 +130,6 @@ const knexProductsAsync = () => {
 			"product_reviews.created_at as product_reviews_created_at",
 			"product_reviews.updated_at as product_reviews_updated_at"
 		)
-		.where('product_brands.available', true)
 		.orderBy("products.created_at", "desc")
 		.then(res => res)
 		.catch(err => errorResponse("Internal Server Error", 500))
@@ -178,7 +177,6 @@ const knexSingleProductAsync = (id, where_clause) => {
 			"product_reviews.updated_at as product_reviews_updated_at"
 		)
 		.where('products.available', true)
-		.where('product_brands.available', true)
 		.orderBy("products.created_at", "desc")
 		.then(res => res)
 		.catch(err => errorResponse("Internal Server Error", 500))
@@ -225,7 +223,6 @@ const knexProductsBestSellerAsync = () => {
 			"product_reviews.updated_at as product_reviews_updated_at"
 		)
 		.where('products.available', true)
-		.where('product_brands.available', true)
 		.then(res => res)
 		.catch(err => errorResponse("Internal Server Error", 500))
 }
@@ -458,7 +455,6 @@ exports.getProductsWithBrandLogged = (product_brand_id, id) => {
 
 exports.getProductBrands = () => {
 	return knex("product_brands")
-		.where('product_brands.available', true)
 		.then(res =>
 			successResponseWithData(res, "Success Get Product Brands", 200)
 		)
@@ -522,7 +518,6 @@ exports.getTopProductBrands = () => {
 			"products.product_brand_id",
 			"product_brands.product_brand_id"
 		)
-		.where('product_brands.available', true)
 		.limit(5)
 		.then(res => NestHydrationJS.nest(res, topBrandsDefinition))
 		.then(res =>
@@ -539,7 +534,6 @@ exports.getTopProductBrandsWithProducts = () => {
 			"products.product_brand_id",
 			"product_brands.product_brand_id"
 		)
-		.where('product_brands.available', true)
 		.orderBy("order_products.created_at", "desc")
 		.limit(5)
 		.then(res => NestHydrationJS.nest(res, topBrandsWithProductsDefinition))
@@ -556,7 +550,6 @@ exports.getProductBrandsWithProducts = () => {
 			"product_brands.product_brand_id",
 			"products.product_brand_id"
 		)
-		.where('product_brands.available', true)
 		.then(res => NestHydrationJS.nest(res, productBrandsDefinition))
 		.then(res =>
 			successResponseWithData(
