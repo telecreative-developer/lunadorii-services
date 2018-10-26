@@ -287,6 +287,29 @@ exports.updateEmail = (id, email) => {
 		.tz("Asia/Jakarta")
 		.format()
 
+	const checkEmailAfterUpdateAsync = (id, data) => {
+		const now = momentTimezone()
+			.tz("Asia/Jakarta")
+			.format()
+	
+		return new Promise((resolve, reject) => {
+			if (data.length) {
+				data[0].id === id
+					? resolve(parseInt(id))
+					: reject(errorResponse("Email already exists", 409))
+			} else {
+				return knex("users")
+					.where("id", id)
+					.update({
+						email: email,
+						updated_at: now
+					})
+					.then(() => resolve(parseInt(id)))
+					.catch(err => reject(errorResponse("Internal Server Error", 500)))
+			}
+		})
+	}
+
 	const checkFieldAsync = email => {
 		return new Promise((resolve, reject) => {
 			email
