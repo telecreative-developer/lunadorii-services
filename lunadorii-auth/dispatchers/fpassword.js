@@ -56,7 +56,8 @@ const sendEmailForgotPassword = (email, token) => {
 		.then(html => handlebars.compile(html))
 		.then(hbs =>
 			nodemailerMailgunAsync(email, hbs, {
-				link: `http://54.169.224.248:3000/reset-password?token=` + token
+				name: email.split('@')[0],
+				link: `http://13.251.98.8/reset-password?token=` + token
 			})
 		)
 		.catch(err => errorResponse("Internal Server Error", 500))
