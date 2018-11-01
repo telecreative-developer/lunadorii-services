@@ -92,6 +92,11 @@ exports.replyReport = data => {
 	const now = momentTimezone()
 		.tz("Asia/Jakarta")
 		.format()
+	const findReportId = (id) => {
+		return knex("reports")
+			.where("report_id", id)
+			.then(result => result)
+	}
 	return knex("report_replies")
 		.insert({
 			subject: data.subject,
@@ -101,7 +106,8 @@ exports.replyReport = data => {
 			created_at: now,
 			updated_at: now
 		})
-		.then(() => console.log("data user", data))
+		.then(() => findReportId(data.report_id))
+		.then(res => console.log("report id is ", res))
 		.then(() => successResponseWithoutData("Success Reply Report", 201))
 		.catch(err => errorResponse(err, 500))
 }
