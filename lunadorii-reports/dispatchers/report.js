@@ -12,7 +12,6 @@ const {
 	errorResponse
 } = require("../responsers")
 
-const bcrypt = require("bcrypt")
 const Promise = require("bluebird")
 const jwt = require("jsonwebtoken")
 const nodemailer = require("nodemailer")
@@ -22,7 +21,6 @@ const { forgotPasswordJwtObject } = require("../objects")
 const handlebars = require("handlebars")
 const fs = require("fs")
 const fsReadFileAsync = Promise.promisify(fs.readFile)
-const envForgetPassword = process.env.JWT_SECRET_USER_FORGOT_PASSWORD
 const emailTemplateForgotPassword =
 	"/./../../lunadorii-email-templates/reply-report.html"
 const authMg = {
