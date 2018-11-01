@@ -79,7 +79,8 @@ exports.sendReport = data => {
 		.insert({
 			name: data.name,
 			email: data.email,
-			subject: data.content,
+			subject: data.subject,
+			content: data.content,
 			read: false,
 			created_at: now,
 			updated_at: now
