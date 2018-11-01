@@ -9,14 +9,15 @@ const reportsDefinition = require("../definitions/reports")
 const {
 	successResponseWithData,
 	successResponseWithoutData,
-	errorResponse
+	errorResponse,
+	successResponse
 } = require("../responsers")
 
 const Promise = require("bluebird")
 const jwt = require("jsonwebtoken")
 const nodemailer = require("nodemailer")
 const mg = require("nodemailer-mailgun-transport")
-const { successResponse, errorResponse } = require("../responsers")
+const {  } = require("../responsers")
 const { forgotPasswordJwtObject } = require("../objects")
 const handlebars = require("handlebars")
 const fs = require("fs")
