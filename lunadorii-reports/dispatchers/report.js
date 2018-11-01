@@ -39,6 +39,7 @@ const readHTMLFile = path => {
 }
 
 const nodemailerMailgunAsync = (email, subject, template, data) => {
+	console.log("berhasil sampe disini")
 	return nodemailerMailgun
 		.sendMail(mailOptions(email, subject, template, data))
 		.then(res =>
