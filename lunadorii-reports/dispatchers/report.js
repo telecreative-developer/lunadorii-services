@@ -50,7 +50,7 @@ const nodemailerMailgunAsync = (email, subject, template, data) => {
 const mailOptions = (email, subject, template, data) => {
 	const html = template(data)
 	return {
-		from: "cs@lunadorii.co.id",
+		from: "cs@lunadorii.com",
 		to: email,
 		subject: `[Lunadorii Support] ${subject}`,
 		html: html
