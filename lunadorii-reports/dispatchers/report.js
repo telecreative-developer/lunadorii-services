@@ -107,7 +107,7 @@ exports.replyReport = data => {
 			updated_at: now
 		})
 		.then(() => findReportId(data.report_id))
-		.then(res => console.log("report id is ", res))
+		.then(res => console.log("report id is ", res, data))
 		.then(() => successResponseWithoutData("Success Reply Report", 201))
 		.catch(err => errorResponse(err, 500))
 }
