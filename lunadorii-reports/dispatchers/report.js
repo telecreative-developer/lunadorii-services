@@ -57,13 +57,13 @@ const mailOptions = (email, subject, template, data) => {
 	}
 }
 
-const sendEmailReplyReport = (data) => {
+const sendEmailReplyReport = (email, name, subject, content) => {
 	return readHTMLFile(__dirname + emailTemplateForgotPassword)
 		.then(html => handlebars.compile(html))
 		.then(hbs =>
-			nodemailerMailgunAsync(data.email, data.subject, hbs, {
-				name: data.name,
-				content: data.content
+			nodemailerMailgunAsync(email, subject, hbs, {
+				name: name,
+				content: content
 			})
 		)
 		.catch(err => errorResponse("Internal Server Error", 500))
@@ -108,7 +108,7 @@ exports.replyReport = data => {
 			updated_at: now
 		})
 		.then(() => findReportId(data.report_id))
-		.then(res => console.log("report id is ", res, data))
+		.then(res => sendEmailReplyReport(res[0].name, res[0].email, data.subject, data.content))
 		.then(() => successResponseWithoutData("Success Reply Report", 201))
 		.catch(err => errorResponse(err, 500))
 }
