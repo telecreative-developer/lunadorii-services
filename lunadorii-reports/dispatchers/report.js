@@ -101,7 +101,7 @@ exports.replyReport = data => {
 			created_at: now,
 			updated_at: now
 		})
-		.then(res => console.log(res))
+		.then(data => console.log(data))
 		.then(() => successResponseWithoutData("Success Reply Report", 201))
 		.catch(err => errorResponse(err, 500))
 }
