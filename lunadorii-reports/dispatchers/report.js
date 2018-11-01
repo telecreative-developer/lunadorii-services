@@ -12,6 +12,68 @@ const {
 	errorResponse
 } = require("../responsers")
 
+const bcrypt = require("bcrypt")
+const Promise = require("bluebird")
+const jwt = require("jsonwebtoken")
+const nodemailer = require("nodemailer")
+const mg = require("nodemailer-mailgun-transport")
+const { successResponse, errorResponse } = require("../responsers")
+const { forgotPasswordJwtObject } = require("../objects")
+const handlebars = require("handlebars")
+const fs = require("fs")
+const fsReadFileAsync = Promise.promisify(fs.readFile)
+const envForgetPassword = process.env.JWT_SECRET_USER_FORGOT_PASSWORD
+const emailTemplateForgotPassword =
+	"/./../../lunadorii-email-templates/reply-report.html"
+const authMg = {
+	auth: {
+		api_key: process.env.MAILGUN_API_KEY,
+		domain: process.env.MAILGUN_DOMAIN
+	}
+}
+const nodemailerMailgun = Promise.promisifyAll(
+	nodemailer.createTransport(mg(authMg))
+)
+
+const readHTMLFile = path => {
+	return fsReadFileAsync(path, { encoding: "utf-8" })
+		.then(html => html)
+		.catch(err => err)
+}
+
+const nodemailerMailgunAsync = (email, subject, template, data) => {
+	return nodemailerMailgun
+		.sendMail(mailOptions(email, subject, template, data))
+		.then(res =>
+			successResponse(null, "Success Send Request Forgot Password", 200)
+		)
+		.catch(err => errorResponse("Internal Server Error", 500))
+}
+
+const mailOptions = (email, subject, template, data) => {
+	const html = template(data)
+	return {
+		from: "cs@lunadorii.co.id",
+		to: email,
+		subject: `[Lunadorii Support] ${subject}`,
+		html: html
+	}
+}
+
+const sendEmailReplyReport = (data) => {
+	return readHTMLFile(__dirname + emailTemplateForgotPassword)
+		.then(html => handlebars.compile(html))
+		.then(hbs =>
+			nodemailerMailgunAsync(data.email, data.subject, hbs, {
+				name: data.name,
+				content: data.content
+			})
+		)
+		.catch(err => errorResponse("Internal Server Error", 500))
+}
+
+
+
 exports.sendReport = data => {
 	const now = momentTimezone()
 		.tz("Asia/Jakarta")
@@ -42,6 +104,7 @@ exports.replyReport = data => {
 			created_at: now,
 			updated_at: now
 		})
+		.then(res => console.log(res))
 		.then(() => successResponseWithoutData("Success Reply Report", 201))
 		.catch(err => errorResponse(err, 500))
 }
