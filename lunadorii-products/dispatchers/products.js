@@ -706,8 +706,7 @@ exports.addProductSubcategories = (body) => {
 		.then(product_subcategory_id =>
 			successResponseWithData({ product_subcategory_id }, "Success add subcategory", 201)
 		)
-		.catch(err => console.log(err))
-		// .catch(err => errorResponse(err, 500))
+		.catch(err => errorResponse(err, 500))
 }
 
 exports.deleteProductSubcategories = (product_subcategory_id) => {
@@ -725,8 +724,7 @@ exports.deleteProductSubcategories = (product_subcategory_id) => {
 		.then(product_subcategory_id =>
 			successResponseWithData({ product_subcategory_id }, "Success delete subcategory", 200)
 		)
-		.catch(err => console.log(err))
-		// .catch(err => errorResponse(err, 500))
+		.catch(err => errorResponse(err, 500))
 }
 
 exports.updateProductSubcategories = (product_subcategory_id, body) => {
