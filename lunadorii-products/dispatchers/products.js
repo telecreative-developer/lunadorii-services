@@ -711,6 +711,10 @@ exports.addProductSubcategories = (body) => {
 }
 
 exports.deleteProductSubcategories = (product_subcategory_id) => {
+	const now = momentTimezone()
+		.tz("Asia/Jakarta")
+		.format()
+		
 	return knex('product_subcategories')
 		.where({"product_subcategory_id": product_subcategory_id, "available": true})
 		.update({
