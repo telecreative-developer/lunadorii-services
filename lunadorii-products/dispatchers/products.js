@@ -716,7 +716,7 @@ exports.deleteProductSubcategories = (product_subcategory_id) => {
 		.format()
 
 	return knex('product_subcategories')
-		.where({"product_subcategory_id": product_subcategory_id, "available": true})
+		.where({"product_subcategory_id": product_subcategory_id, "subcategory_available": true})
 		.update({
 			subcategory_available: false,
 			updated_at: now
