@@ -710,8 +710,11 @@ exports.addProductSubcategories = (body) => {
 
 exports.deleteProductSubcategories = (product_subcategory_id) => {
 	return knex('product_subcategories')
-		.where("product_subcategory_id",product_subcategory_id)
-		.del()
+		.where({"product_subcategory_id": product_subcategory_id, "available": true})
+		.update({
+			subcategory_available: false,
+			updated_at: now
+		})
 		.returning("product_subcategory_id")
 		.then(product_subcategory_id =>
 			successResponseWithData({ product_subcategory_id }, "Success delete subcategory", 200)
@@ -741,6 +744,7 @@ exports.updateProductSubcategories = (product_subcategory_id, body) => {
 
 exports.getProductSubcategories = () => {
 	return knex("product_subcategories")
+		.where('subcategory_available', true)
 		.then(res =>
 			successResponseWithData(res, "Success Get Product Subcategories", 200)
 		)
