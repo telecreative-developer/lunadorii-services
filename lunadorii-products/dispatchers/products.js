@@ -699,7 +699,8 @@ exports.addProductSubcategories = (body) => {
 			thumbnail_url: body.thumbnail_url,
 			product_category_id: body.product_category_id,
 			created_at: now,
-			updated_at: now
+			updated_at: now,
+			subcategory_available: true
 		})
 		.returning("product_subcategory_id")
 		.then(product_subcategory_id =>
