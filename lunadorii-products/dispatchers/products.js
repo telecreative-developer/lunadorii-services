@@ -718,7 +718,7 @@ exports.deleteProductSubcategories = (product_subcategory_id) => {
 		.where({"product_subcategory_id": product_subcategory_id, "subcategory_available": true})
 		.update({
 			subcategory_available: false,
-			updated_at: now
+			deleted_at: now
 		})
 		.returning("product_subcategory_id")
 		.then(product_subcategory_id =>
@@ -868,7 +868,7 @@ exports.deleteProduct = product_id => {
 			.where({"product_id": product_id, "available": true})
 			.update({
 				available: false,
-				updated_at: now
+				deleted_at: now
 			})
 	}
 
