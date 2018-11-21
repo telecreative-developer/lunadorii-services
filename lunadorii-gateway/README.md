@@ -15,3 +15,5 @@ This API reference is organized by resource type. Each resource type has one or 
 | 7  | GENERAL     | http://localhost:9007/* | http://localhost:8080 | :x:                  |
 | 8  | REPORTS     | http://localhost:9008/* | http://localhost:8080 | :x:                  |
 | 9  | SEARCH      | http://localhost:9009/* | http://localhost:8080 | :x:                  |
+| 10 | ORDERS      | http://localhost:9010/* | http://localhost:8080 | :x:                  |
+| 11 | PROMO       | http://localhost:9011/* | http://localhost:8080 | :x:                  |
